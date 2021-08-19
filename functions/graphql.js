@@ -3,7 +3,8 @@ const { ApolloServer } = require("apollo-server-lambda");
 const schema = require("./schema/index.js");
 
 const server = new ApolloServer({
-  schema,
+  typeDefs: schema.typeDefs,
+  resolvers: schema.resolvers,
   context: null,
   introspection: true,
   playground: true,

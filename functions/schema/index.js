@@ -33,13 +33,13 @@ const resolvers = {
 };
 
 // A new schema is created combining our schema and the accounts-js schema
-const schema = makeExecutableSchema({
+const schema = {
   typeDefs: mergeTypeDefs([User, Course, typeDefs]),
   resolvers: mergeResolvers([
     resolvers,
     userResolvers,
     courseResolvers,
   ]),
-});
+}
 
 module.exports = schema;
