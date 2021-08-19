@@ -31,7 +31,7 @@ exports.resolvers = {
     courses: async (user) => {
       const filter = {
         _id: {
-          $in: user.courses?.map((id) => mongoose.Types.ObjectId(id)) ?? [],
+          $in: []
         },
       };
 
@@ -44,8 +44,8 @@ exports.resolvers = {
 
   Query: {
     users: async (_, args) => {
-      const limit = args?.pagination?.limit ?? 10;
-      const page = args?.pagination?.page ?? 1;
+      const limit = 10;
+      const page = 1;
       const skip = limit * (page - 1);
 
       const filter = {};
