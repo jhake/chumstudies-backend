@@ -4,7 +4,7 @@ const schema = require("./schema/index.js");
 
 const server = new ApolloServer({
   schema,
-  context: accountsGraphQL,
+  context: accountsGraphQL.context,
   introspection: true,
   playground: true,
 });
