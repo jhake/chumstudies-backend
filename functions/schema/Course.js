@@ -1,4 +1,4 @@
-const { gql, AuthenticationError } = require("apollo-server");
+const { gql, AuthenticationError } = require("apollo-server-lambda");
 const mongoose = require("mongoose");
 
 const Course = require("../models/Course.js");

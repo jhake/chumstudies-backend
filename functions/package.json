@@ -19,7 +19,6 @@
     "@accounts/mongo": "^0.33.4",
     "@graphql-tools/merge": "^8.0.1",
     "@graphql-tools/schema": "^8.1.1",
-    "apollo-server": "^3.1.2",
     "apollo-server-lambda": "^2.18.2",
     "mongoose": "^5.13.7"
   }
