@@ -1,10 +1,10 @@
 const { ApolloServer } = require("apollo-server-lambda");
-// const accountsGraphQL = require("./accounts.js");
+const accountsGraphQL = require("./accounts.js");
 const schema = require("./schema/index.js");
 
 const server = new ApolloServer({
   schema,
-  context: null,
+  context: accountsGraphQL,
   introspection: true,
   playground: true,
 });
