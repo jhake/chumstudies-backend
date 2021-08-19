@@ -9,7 +9,7 @@ exports.typeDef = gql`
     users(pagination: PaginationInput): UsersResult
   }
 
-  type User {
+  extend type User {
     isTeacher: Boolean
     courses: CoursesResult
   }
@@ -19,7 +19,7 @@ exports.typeDef = gql`
     pagination: Pagination
   }
 
-  type CreateUserInput {
+  extend type CreateUserInput {
     username: String!
     email: String!
     password: String!

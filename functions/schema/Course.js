@@ -9,7 +9,7 @@ exports.typeDef = gql`
     courses(pagination: PaginationInput): CoursesResult
   }
 
-  type Mutation {
+  extend type Mutation {
     createCourse(course: CreateCourseInput!): Course
     joinCourse(input: JoinCourseInput): joinCourseResult
   }
@@ -57,14 +57,6 @@ exports.resolvers = {
 
   Query: {
     courses: async (_, args) => {
-      return {
-        data: [{name: "ASD"}, {name: "QWE"}],
-        pagination: {
-          totalCount: 2,
-          totalPages: 4,
-        },
-      };
-
       const limit = args?.pagination?.limit ?? 10;
       const page = args?.pagination?.page ?? 1;
       const skip = limit * (page - 1);
