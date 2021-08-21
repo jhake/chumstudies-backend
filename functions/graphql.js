@@ -4,7 +4,11 @@ const schema = require("./schema/index.js");
 
 const server = new ApolloServer({
   schema,
-  context: accountsGraphQL.context,
+  context: async ({ event }) => {
+    return await accountsGraphQL.context({
+      req: { headers: { authorization: event.headers.authorization } },
+    });
+  },
   introspection: true,
   playground: true,
 });
