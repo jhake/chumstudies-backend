@@ -11,8 +11,15 @@ const server = new ApolloServer({
   },
   introspection: true,
   playground: true,
+  origin: process.env.ALLOWED_ORIGINS,
+  credentials: true,
 });
 
-const handler = server.createHandler();
+const handler = server.createHandler({
+  cors: {
+    origin: process.env.ALLOWED_ORIGINS,
+    credentials: true,
+  },
+});
 
 module.exports = { handler };
