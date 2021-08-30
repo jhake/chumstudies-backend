@@ -30,6 +30,14 @@ const resolvers = {
       return "Sensitive info";
     },
   },
+  Mutation: {
+    impersonate: () => {
+      throw new Error("This mutation is disabled");
+    },
+    addEmail: () => {
+      throw new Error("This mutation is disabled");
+    },
+  },
 };
 
 // A new schema is created combining our schema and the accounts-js schema
