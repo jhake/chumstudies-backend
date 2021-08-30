@@ -3,7 +3,6 @@ const { Schema, model } = require("mongoose");
 const User = model(
   "User",
   Schema({
-    isTeacher: Boolean,
     services: {
       password: {
         bcrypt: String,
@@ -13,6 +12,8 @@ const User = model(
     updatedAt: Number,
     username: String,
     emails: [{ address: String, verified: Boolean }],
+
+    isTeacher: Boolean,
     courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
   })
 );
