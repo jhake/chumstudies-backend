@@ -17,17 +17,14 @@ const accountsPassword = new AccountsPassword({
   // This option is called when a new user create an account
   // Inside we can apply our logic to validate the user fields
   validateNewUser: (user) => {
-    // For example we can allow only some kind of emails
-    if (user.email.endsWith(".xyz")) {
-      throw new Error("Invalid email");
-    }
-
     return { ...user, isTeacher: false };
   },
 });
 
 const accountsServer = new AccountsServer(
   {
+    ambiguousErrorMessages: false,
+    enableAutologin: true,
     // We link the mongo adapter to the server
     db: accountsMongo,
     // Replace this value with a strong random secret
