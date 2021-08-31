@@ -8,20 +8,20 @@ Notable libraries used.
 - [accounts-js](https://www.accountsjs.com/)
 - [mongoose](https://mongoosejs.com/)
 
-# Setup local development
+## Setup local development
 
-## Prerequisites
+### Prerequisites
 
 - Node 14 or later
 - MongoDB database
 
-## Install Netlify CLI globally
+### Install Netlify CLI globally
 
 ```console
 $ npm install netlify-cli -g
 ```
 
-## Install node modules
+### Install node modules
 
 Go to the functions folder then run `npm install`
 
@@ -30,7 +30,7 @@ $ cd functions
 $ npm install
 ```
 
-## Set environment variables
+### Set environment variables
 
 Create the environment file (`.env`) on the root directory. The required variables are in the `.env-example` file provided.
 
@@ -60,7 +60,7 @@ ALLOWED_ORIGINS="http://localhost:3000"
 
 `ALLOWED_ORIGINS` is the allowed frontend URL to use the backend functions. You should use `"http://localhost:3000"` if you're using the default react port locally.
 
-## Run the netlify functions locally
+### Run the netlify functions locally
 
 You should be in the root directory, then run this.
 
