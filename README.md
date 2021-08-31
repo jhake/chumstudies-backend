@@ -69,3 +69,14 @@ $ netlify dev
 ```
 
 The graphql API should now be available by default in `http://localhost:8888/.netlify/functions/graphql`
+
+## Folder structure
+
+The directories mentioned in this section are relative to the `functions` folder.
+
+- `accounts.js` contains the setup for accounts-js and also the mongoose connection.
+- `graphql.js` contains the setup for the apollo server.
+- `models` folder contains the Mongoose models. Each file there should represent an entity. For example `models/user.js` contains the Mongoose model for the User entity.
+- `schema` folder contains the graphql schema. Each file will contain graphql typeDefs and resolvers related to the entity. For example, `schema/course.js` contains the typeDefs and resolvers related to the Course entity (like the `joinCourse` mutation). Each file here should be imported in the `schema/index.js` to be merged together.
+
+Most (if not all) of the development will happen inside the `models` and `schema` folders.
