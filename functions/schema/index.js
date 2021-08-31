@@ -3,8 +3,8 @@ const { makeExecutableSchema } = require("@graphql-tools/schema");
 const { mergeTypeDefs, mergeResolvers } = require("@graphql-tools/merge");
 
 const accountsGraphQL = require("../accounts.js");
-const { typeDef: User, resolvers: userResolvers } = require("./User.js");
-const { typeDef: Course, resolvers: courseResolvers } = require("./Course.js");
+const { typeDef: User, resolvers: userResolvers } = require("./user.js");
+const { typeDef: Course, resolvers: courseResolvers } = require("./course.js");
 
 const typeDefs = gql`
   type Query {

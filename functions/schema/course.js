@@ -1,8 +1,8 @@
 const { gql, AuthenticationError } = require("apollo-server-lambda");
 const mongoose = require("mongoose");
 
-const Course = require("../models/Course.js");
-const User = require("../models/User.js");
+const Course = require("../models/course.js");
+const User = require("../models/user.js");
 
 exports.typeDef = gql`
   extend type Query {
