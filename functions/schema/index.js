@@ -1,4 +1,4 @@
-const { gql, AuthenticationError } = require("apollo-server-lambda");
+const { gql } = require("apollo-server-lambda");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 const { mergeTypeDefs, mergeResolvers } = require("@graphql-tools/merge");
 
@@ -6,6 +6,7 @@ const accountsGraphQL = require("../accounts.js");
 const { typeDef: User, resolvers: userResolvers } = require("./user.js");
 const { typeDef: Course, resolvers: courseResolvers } = require("./course.js");
 const { typeDef: Post, resolvers: postResolvers } = require("./post.js");
+const { loginCheck } = require("../utils/checks.js");
 
 const typeDefs = gql`
   type Query {
@@ -26,7 +27,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     sensitiveInformation: (_, __, context) => {
-      if (!context.user) throw new AuthenticationError("you must be logged in");
+      loginCheck(context);
 
       return "Sensitive info";
     },

@@ -1,8 +1,9 @@
-const { gql, AuthenticationError } = require("apollo-server-lambda");
+const { gql } = require("apollo-server-lambda");
 const { updateMetadata, destroy } = require("../utils/cloudinary");
 
 const Post = require("../models/post.js");
 const User = require("../models/user.js");
+const { loginCheck } = require("../utils/checks");
 
 exports.typeDef = gql`
   extend type Mutation {
@@ -30,7 +31,7 @@ exports.resolvers = {
 
   Mutation: {
     createPost: async (_, args, context) => {
-      if (!context.user) throw new AuthenticationError("you must be logged in");
+      loginCheck(context);
 
       const { content, attachment } = args.input;
 
@@ -48,7 +49,7 @@ exports.resolvers = {
     },
 
     destroyPost: async (_, args, context) => {
-      if (!context.user) throw new AuthenticationError("you must be logged in");
+      loginCheck(context);
 
       const post = await Post.findById(args.id, "author attachment");
       if (!post) throw new Error("post not found");

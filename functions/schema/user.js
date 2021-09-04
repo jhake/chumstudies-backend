@@ -1,9 +1,10 @@
-const { gql, AuthenticationError } = require("apollo-server-lambda");
+const { gql } = require("apollo-server-lambda");
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary");
 
 const User = require("../models/user.js");
 const Course = require("../models/course.js");
+const { loginCheck } = require("../utils/checks.js");
 
 exports.typeDef = gql`
   extend type Query {
@@ -50,6 +51,8 @@ exports.resolvers = {
 
   Query: {
     users: async (_, args) => {
+      loginCheck();
+
       const limit = args?.pagination?.limit ?? 10;
       const page = args?.pagination?.page ?? 1;
       const skip = limit * (page - 1);
@@ -71,7 +74,7 @@ exports.resolvers = {
 
   Mutation: {
     createUploadPreset: async (_, __, context) => {
-      if (!context.user) throw new AuthenticationError("you must be logged in");
+      loginCheck();
       if (context.user.uploadPreset)
         throw new Error("already has upload preset");
 

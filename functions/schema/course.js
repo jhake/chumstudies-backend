@@ -1,8 +1,9 @@
-const { gql, AuthenticationError } = require("apollo-server-lambda");
+const { gql } = require("apollo-server-lambda");
 const mongoose = require("mongoose");
 
 const Course = require("../models/course.js");
 const User = require("../models/user.js");
+const { loginCheck } = require("../utils/checks.js");
 
 exports.typeDef = gql`
   extend type Query {
@@ -57,6 +58,7 @@ exports.resolvers = {
 
   Query: {
     courses: async (_, args) => {
+      loginCheck();
       const limit = args?.pagination?.limit ?? 10;
       const page = args?.pagination?.page ?? 1;
       const skip = limit * (page - 1);
@@ -78,7 +80,7 @@ exports.resolvers = {
 
   Mutation: {
     createCourse: async (_, args, context) => {
-      if (!context.user) throw new AuthenticationError("you must be logged in");
+      loginCheck(context);
       // if (!context.user.isTeacher)
       //   throw new Error("you must be a teacher to create a course");
 
@@ -87,7 +89,7 @@ exports.resolvers = {
     },
 
     joinCourse: async (_, args, context) => {
-      if (!context.user) throw new AuthenticationError("you must be logged in");
+      loginCheck(context);
 
       const userId = context.user.id;
       const courseId = args.input.courseId;
