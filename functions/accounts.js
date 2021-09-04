@@ -3,6 +3,13 @@ const mongoose = require("mongoose");
 const { Mongo } = require("@accounts/mongo");
 const { AccountsServer } = require("@accounts/server");
 const { AccountsPassword } = require("@accounts/password");
+const cloudinary = require("cloudinary");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // We connect mongoose to our local mongodb database
 mongoose.connect(process.env.MONGODB_CONNECTION, {

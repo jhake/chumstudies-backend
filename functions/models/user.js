@@ -15,6 +15,7 @@ const User = model(
 
     isTeacher: Boolean,
     courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+    uploadPreset: String,
   })
 );
 
