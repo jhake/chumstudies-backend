@@ -1,5 +1,6 @@
-const { gql } = require("apollo-server-lambda");
+const { gql, AuthenticationError } = require("apollo-server-lambda");
 const mongoose = require("mongoose");
+const cloudinary = require("cloudinary");
 
 const User = require("../models/user.js");
 const Course = require("../models/course.js");
@@ -9,9 +10,14 @@ exports.typeDef = gql`
     users(pagination: PaginationInput): UsersResult
   }
 
+  extend type Mutation {
+    createUploadPreset: User
+  }
+
   extend type User {
     isTeacher: Boolean
     courses: CoursesResult
+    uploadPreset: String
   }
 
   type UsersResult {
@@ -60,6 +66,28 @@ exports.resolvers = {
           totalPages,
         },
       };
+    },
+  },
+
+  Mutation: {
+    createUploadPreset: async (_, __, context) => {
+      if (!context.user) throw new AuthenticationError("you must be logged in");
+      if (context.user.uploadPreset)
+        throw new Error("already has upload preset");
+
+      const { username, id } = context.user;
+      const folder = `${username}_${id}`;
+
+      const presetResult = await cloudinary.v2.api.create_upload_preset({
+        unsigned: true,
+        folder,
+      });
+      const presetName = presetResult.name;
+
+      const user = await User.findById(context.user.id);
+      user.uploadPreset = presetName;
+
+      return await user.save();
     },
   },
 };
