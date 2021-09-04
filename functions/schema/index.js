@@ -5,6 +5,7 @@ const { mergeTypeDefs, mergeResolvers } = require("@graphql-tools/merge");
 const accountsGraphQL = require("../accounts.js");
 const { typeDef: User, resolvers: userResolvers } = require("./user.js");
 const { typeDef: Course, resolvers: courseResolvers } = require("./course.js");
+const { typeDef: Post, resolvers: postResolvers } = require("./post.js");
 
 const typeDefs = gql`
   type Query {
@@ -42,12 +43,19 @@ const resolvers = {
 
 // A new schema is created combining our schema and the accounts-js schema
 const schema = makeExecutableSchema({
-  typeDefs: mergeTypeDefs([User, Course, typeDefs, accountsGraphQL.typeDefs]),
+  typeDefs: mergeTypeDefs([
+    User,
+    Course,
+    Post,
+    typeDefs,
+    accountsGraphQL.typeDefs,
+  ]),
   resolvers: mergeResolvers([
     accountsGraphQL.resolvers,
     resolvers,
     userResolvers,
     courseResolvers,
+    postResolvers,
   ]),
   schemaDirectives: {
     ...accountsGraphQL.schemaDirectives,
