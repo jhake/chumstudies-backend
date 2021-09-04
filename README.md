@@ -7,6 +7,7 @@ Notable libraries used.
 - [apollo-server-lambda](https://www.npmjs.com/package/apollo-server-lambda)
 - [accounts-js](https://www.accountsjs.com/)
 - [mongoose](https://mongoosejs.com/)
+- [cloudinary](https://cloudinary.com/)
 
 ## Setup local development
 
@@ -14,6 +15,7 @@ Notable libraries used.
 
 - Node 14 or later
 - MongoDB database
+- Cloudinary
 
 ### Install Netlify CLI globally
 
@@ -52,6 +54,11 @@ The file should look like this
 MONGODB_CONNECTION=mongodb+srv://username:password@path.to.mongodb.server/dbName?retryWrites=true&w=majority
 TOKEN_SECRET=my-super-random-secret
 ALLOWED_ORIGINS="http://localhost:3000"
+
+CLOUDINARY_CLOUD_NAME=somecloudname
+CLOUDINARY_API_KEY=12345
+CLOUDINARY_API_SECRET=11111
+CLOUDINARY_METADATA_EXTERNAL_ID=22222
 ```
 
 `MONGODB_CONNECTION` should have the connection to the MongoDB database that will be used
@@ -59,6 +66,8 @@ ALLOWED_ORIGINS="http://localhost:3000"
 `TOKEN_SECRET` is a random secret for the accounts server
 
 `ALLOWED_ORIGINS` is the allowed frontend URL to use the backend functions. You should use `"http://localhost:3000"` if you're using the default react port locally.
+
+`CLOUDINARY_...` are for cloudinary stuff.
 
 ### Run the netlify functions locally
 
