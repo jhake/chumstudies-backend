@@ -4,6 +4,7 @@ const cloudinary = require("cloudinary");
 
 const User = require("../models/user.js");
 const Course = require("../models/course.js");
+const UserCourse = require("../models/userCourse.js");
 const { loginCheck } = require("../utils/checks.js");
 
 exports.typeDef = gql`
@@ -36,9 +37,13 @@ exports.typeDef = gql`
 exports.resolvers = {
   User: {
     courses: async (user) => {
+      const userCourses = await UserCourse.find({ user: user.id });
+
       const filter = {
         _id: {
-          $in: user.courses?.map((id) => mongoose.Types.ObjectId(id)) ?? [],
+          $in:
+            userCourses?.map(({ course }) => mongoose.Types.ObjectId(course)) ??
+            [],
         },
       };
 
