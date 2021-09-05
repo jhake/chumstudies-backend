@@ -4,6 +4,7 @@ const cloudinary = require("cloudinary");
 
 const User = require("../models/user.js");
 const Course = require("../models/course.js");
+const UserCourse = require("../models/userCourse.js");
 const { loginCheck } = require("../utils/checks.js");
 
 exports.typeDef = gql`
@@ -18,6 +19,10 @@ exports.typeDef = gql`
   extend type User {
     isTeacher: Boolean
     courses: CoursesResult
+    private: UserPrivate
+  }
+
+  type UserPrivate {
     uploadPreset: String
   }
 
@@ -36,9 +41,13 @@ exports.typeDef = gql`
 exports.resolvers = {
   User: {
     courses: async (user) => {
+      const userCourses = await UserCourse.find({ user: user.id });
+
       const filter = {
         _id: {
-          $in: user.courses?.map((id) => mongoose.Types.ObjectId(id)) ?? [],
+          $in:
+            userCourses?.map(({ course }) => mongoose.Types.ObjectId(course)) ??
+            [],
         },
       };
 
@@ -47,11 +56,17 @@ exports.resolvers = {
         pagination: null,
       };
     },
+    private: async (user, _, context) => {
+      if (context.user.id !== user.id)
+        throw Error("can't query other's private data");
+
+      return user;
+    },
   },
 
   Query: {
-    users: async (_, args) => {
-      loginCheck();
+    users: async (_, args, context) => {
+      loginCheck(context);
 
       const limit = args?.pagination?.limit ?? 10;
       const page = args?.pagination?.page ?? 1;

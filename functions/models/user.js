@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const User = model(
+module.exports = model(
   "User",
   Schema({
     services: {
@@ -14,9 +14,6 @@ const User = model(
     emails: [{ address: String, verified: Boolean }],
 
     isTeacher: Boolean,
-    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
     uploadPreset: String,
   })
 );
-
-module.exports = User;
