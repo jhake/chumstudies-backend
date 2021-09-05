@@ -19,6 +19,10 @@ exports.typeDef = gql`
   extend type User {
     isTeacher: Boolean
     courses: CoursesResult
+    private: UserPrivate
+  }
+
+  type UserPrivate {
     uploadPreset: String
   }
 
@@ -52,11 +56,17 @@ exports.resolvers = {
         pagination: null,
       };
     },
+    private: async (user, _, context) => {
+      if (context.user.id !== user.id)
+        throw Error("can't query other's private data");
+
+      return user;
+    },
   },
 
   Query: {
-    users: async (_, args) => {
-      loginCheck();
+    users: async (_, args, context) => {
+      loginCheck(context);
 
       const limit = args?.pagination?.limit ?? 10;
       const page = args?.pagination?.page ?? 1;

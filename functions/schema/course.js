@@ -60,8 +60,8 @@ exports.resolvers = {
   },
 
   Query: {
-    courses: async (_, args) => {
-      loginCheck();
+    courses: async (_, args, context) => {
+      loginCheck(context);
       const limit = args?.pagination?.limit ?? 10;
       const page = args?.pagination?.page ?? 1;
       const skip = limit * (page - 1);
