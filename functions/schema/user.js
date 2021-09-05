@@ -75,8 +75,7 @@ exports.resolvers = {
   Mutation: {
     createUploadPreset: async (_, __, context) => {
       loginCheck();
-      if (context.user.uploadPreset)
-        throw new Error("already has upload preset");
+      if (context.user.uploadPreset) throw Error("already has upload preset");
 
       const { username, id } = context.user;
       const folder = `${username}_${id}`;

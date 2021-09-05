@@ -1,11 +1,11 @@
 const cloudinary = require("cloudinary");
 
-module.exports.updateMetadata = async (cloudinaryString, newMetadata) => {
+module.exports.validateAttachment = async (cloudinaryString) => {
   const cloudinaryData = JSON.parse(cloudinaryString);
   const { public_id, resource_type } = cloudinaryData;
 
   return await cloudinary.v2.uploader.update_metadata(
-    `${process.env.CLOUDINARY_METADATA_EXTERNAL_ID}=${newMetadata}`,
+    `${process.env.CLOUDINARY_METADATA_EXTERNAL_ID}=YES`,
     [public_id],
     {
       resource_type,

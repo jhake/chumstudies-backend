@@ -34,10 +34,10 @@ const resolvers = {
   },
   Mutation: {
     impersonate: () => {
-      throw new Error("This mutation is disabled");
+      throw Error("This mutation is disabled");
     },
     addEmail: () => {
-      throw new Error("This mutation is disabled");
+      throw Error("This mutation is disabled");
     },
   },
 };

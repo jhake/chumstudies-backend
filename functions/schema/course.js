@@ -82,7 +82,7 @@ exports.resolvers = {
     createCourse: async (_, args, context) => {
       loginCheck(context);
       // if (!context.user.isTeacher)
-      //   throw new Error("you must be a teacher to create a course");
+      //   throw Error("you must be a teacher to create a course");
 
       const course = new Course({ name: args.course.name });
       return await course.save();
@@ -98,8 +98,7 @@ exports.resolvers = {
         _id: courseId,
       });
       if (Array.isArray(course.attendees) && course.attendees.length) {
-        if (course.attendees.includes(userId))
-          throw new Error("already in course");
+        if (course.attendees.includes(userId)) throw Error("already in course");
 
         course.attendees.push(userId);
       } else {

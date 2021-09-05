@@ -1,5 +1,5 @@
 const { gql } = require("apollo-server-lambda");
-const { updateMetadata, destroy } = require("../utils/cloudinary");
+const { validateAttachment, destroy } = require("../utils/cloudinary");
 
 const Post = require("../models/post.js");
 const User = require("../models/user.js");
@@ -8,6 +8,7 @@ const { loginCheck } = require("../utils/checks");
 exports.typeDef = gql`
   extend type Mutation {
     createPost(input: CreatePostInput!): Post
+    addAttachmentToPost(id: ID!, attachment: String!): Post
     destroyPost(id: ID!): Boolean
   }
 
@@ -20,7 +21,6 @@ exports.typeDef = gql`
 
   input CreatePostInput {
     content: String!
-    attachment: String
   }
 `;
 
@@ -33,17 +33,31 @@ exports.resolvers = {
     createPost: async (_, args, context) => {
       loginCheck(context);
 
-      const { content, attachment } = args.input;
+      const { content } = args.input;
 
       const post = new Post({
         content,
-        attachment,
         author: context.user.id,
       });
 
-      if (attachment) {
-        await updateMetadata(attachment, `Post_${post.id}`);
-      }
+      return await post.save();
+    },
+
+    addAttachmentToPost: async (_, args, context) => {
+      loginCheck(context);
+
+      const post = await Post.findById(args.id, "author attachment");
+      if (!post) throw Error("post not found");
+      if (post.author != context.user.id) throw Error("not your post");
+      if (post.attachment) throw Error("already has attachment");
+
+      const cloudinaryObject = JSON.parse(args.attachment);
+
+      if (!cloudinaryObject.public_id.includes(`Post_${args.id}`))
+        throw Error("public_id not valid attachment for the post");
+
+      await validateAttachment(args.attachment);
+      post.attachment = args.attachment;
 
       return await post.save();
     },
@@ -52,8 +66,8 @@ exports.resolvers = {
       loginCheck(context);
 
       const post = await Post.findById(args.id, "author attachment");
-      if (!post) throw new Error("post not found");
-      if (post.author != context.user.id) throw new Error("not your post");
+      if (!post) throw Error("post not found");
+      if (post.author != context.user.id) throw Error("not your post");
 
       if (post.attachment) await destroy(post.attachment);
 
