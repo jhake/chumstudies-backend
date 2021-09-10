@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const Course = require("../models/course.js");
 const Teacher = require("../models/teacher.js");
 const Student = require("../models/student.js");
@@ -7,19 +9,21 @@ const generateRandomString = require("../utils/generateRandomString.js");
 
 module.exports = {
   Course: {
-    // attendees: async (course) => {
-    //   const userCourses = await UserCourse.find({ course: course.id });
-    //   const filter = {
-    //     _id: {
-    //       $in:
-    //         userCourses?.map(({ user }) => mongoose.Types.ObjectId(user)) ?? [],
-    //     },
-    //   };
-    //   return {
-    //     data: await User.find(filter),
-    //     pagination: null,
-    //   };
-    // },
+    students: async (course) => {
+      const courseStudents = await CourseStudent.find({ course: course.id });
+      const filter = {
+        _id: {
+          $in:
+            courseStudents?.map(({ student }) =>
+              mongoose.Types.ObjectId(student)
+            ) ?? [],
+        },
+      };
+      return {
+        data: await Student.find(filter),
+        pagination: null,
+      };
+    },
     teacher: async (course) => await Teacher.findById(course.teacher),
   },
 
