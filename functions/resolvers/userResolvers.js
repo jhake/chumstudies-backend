@@ -1,31 +1,12 @@
-const mongoose = require("mongoose");
 const cloudinary = require("cloudinary");
 
 const User = require("../models/user.js");
 const Student = require("../models/student.js");
 const Teacher = require("../models/teacher.js");
-const Course = require("../models/course.js");
-const CourseStudent = require("../models/courseStudent.js");
 const { loginCheck } = require("../utils/checks.js");
 
 module.exports = {
   User: {
-    // courses: async (user) => {
-    //   const userCourses = await UserCourse.find({ user: user.id });
-
-    //   const filter = {
-    //     _id: {
-    //       $in:
-    //         userCourses?.map(({ course }) => mongoose.Types.ObjectId(course)) ??
-    //         [],
-    //     },
-    //   };
-
-    //   return {
-    //     data: await Course.find(filter),
-    //     pagination: null,
-    //   };
-    // },
     private: (user, _, context) => {
       if (context.user.id !== user.id)
         throw Error("can't query other's private data");
@@ -77,22 +58,6 @@ module.exports = {
       user.uploadPreset = presetName;
 
       return await user.save();
-    },
-    createStudent: async (_, __, context) => {
-      loginCheck(context);
-      const student = new Student({
-        _id: context.user.id,
-        user: context.user.id,
-      });
-      return await student.save();
-    },
-    createTeacher: async (_, __, context) => {
-      loginCheck(context);
-      const teacher = new Teacher({
-        _id: context.user.id,
-        user: context.user.id,
-      });
-      return await teacher.save();
     },
   },
 };

@@ -2,10 +2,15 @@ const { mergeResolvers } = require("@graphql-tools/merge");
 const { GraphQLScalarType, Kind } = require("graphql");
 
 const accountsGraphQL = require("../accounts.js");
-const courseResolvers = require("./courseResolvers.js");
-const postResolvers = require("./postResolvers.js");
-const userResolvers = require("./userResolvers.js");
 const { loginCheck } = require("../utils/checks.js");
+
+const resolvers = [
+  require("./courseResolvers.js"),
+  require("./postResolvers.js"),
+  require("./userResolvers.js"),
+  require("./studentResolvers.js"),
+  require("./teacherResolvers.js"),
+];
 
 const dateScalar = new GraphQLScalarType({
   name: "Date",
@@ -46,7 +51,5 @@ const otherResolvers = {
 module.exports = mergeResolvers([
   accountsGraphQL.resolvers,
   otherResolvers,
-  courseResolvers,
-  postResolvers,
-  userResolvers,
+  ...resolvers,
 ]);
