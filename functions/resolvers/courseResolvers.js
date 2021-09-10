@@ -25,13 +25,19 @@ module.exports = {
       };
     },
     teacher: async (course) => await Teacher.findById(course.teacher),
+    courseCode: async (course) => {
+      const courseStudent = await CourseStudent.findOne({ course: course.id });
+      if (!courseStudent) return null;
+
+      return course.courseCode;
+    },
   },
 
   Query: {
-    courses: async (_, args, context) => {
+    courses: async (_, { pagination }, context) => {
       loginCheck(context);
-      const limit = args?.pagination?.limit ?? 10;
-      const page = args?.pagination?.page ?? 1;
+      const limit = pagination?.limit ?? 10;
+      const page = pagination?.page ?? 1;
       const skip = limit * (page - 1);
 
       const filter = {};
@@ -50,16 +56,16 @@ module.exports = {
   },
 
   Mutation: {
-    createCourse: async (_, args, context) => {
+    createCourse: async (_, { input }, context) => {
       loginCheck(context);
 
       const teacher = await Teacher.findById(context.user.id);
       if (!teacher) throw Error("you must be a teacher to create a course");
 
-      const { subjCode, yearAndSection } = args.input;
+      const { subjCode, yearAndSection } = input;
 
       const course = new Course({
-        ...args.input,
+        ...input,
         courseCode: `${subjCode}-${yearAndSection}-${generateRandomString(5)}`,
         teacher: teacher.id,
       });
@@ -67,22 +73,21 @@ module.exports = {
       return await course.save();
     },
 
-    joinCourse: async (_, args, context) => {
+    joinCourse: async (_, { courseId, courseCode }, context) => {
       loginCheck(context);
 
       const student = await Student.findById(context.user.id);
       if (!student) throw Error("you must be a student to join a course");
 
-      const { courseId } = args;
-
-      const courseStudent = await CourseStudent.find({
+      const courseStudent = await CourseStudent.findOne({
         course: courseId,
         student: student.id,
       });
-      if (courseStudent.length) throw Error("already in course");
+      if (courseStudent) throw Error("already in course");
 
       const course = await Course.findById(courseId);
       if (!course) throw Error("course doesn't exist");
+      if (course.courseCode !== courseCode) throw Error("invalid course code");
 
       const newCourseStudent = new CourseStudent({
         student: student.id,
