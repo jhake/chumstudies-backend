@@ -1,62 +1,26 @@
-const { gql } = require("apollo-server-lambda");
 const mongoose = require("mongoose");
 
 const Course = require("../models/course.js");
 const User = require("../models/user.js");
-const UserCourse = require("../models/userCourse.js");
+const UserCourse = require("../models/courseStudent.js");
 const { loginCheck } = require("../utils/checks.js");
+const generateRandomString = require("../utils/generateRandomString.js");
 
-exports.typeDef = gql`
-  extend type Query {
-    courses(pagination: PaginationInput): CoursesResult
-  }
-
-  extend type Mutation {
-    createCourse(course: CreateCourseInput!): Course
-    joinCourse(input: JoinCourseInput): joinCourseResult
-  }
-
-  type Course {
-    id: ID
-    name: String
-    attendees: UsersResult
-  }
-
-  type CoursesResult {
-    data: [Course]
-    pagination: Pagination
-  }
-
-  input CreateCourseInput {
-    name: String!
-  }
-
-  input JoinCourseInput {
-    courseId: String!
-  }
-
-  type joinCourseResult {
-    course: Course
-    user: User
-  }
-`;
-
-exports.resolvers = {
+module.exports = {
   Course: {
-    attendees: async (course) => {
-      const userCourses = await UserCourse.find({ course: course.id });
-
-      const filter = {
-        _id: {
-          $in:
-            userCourses?.map(({ user }) => mongoose.Types.ObjectId(user)) ?? [],
-        },
-      };
-      return {
-        data: await User.find(filter),
-        pagination: null,
-      };
-    },
+    // attendees: async (course) => {
+    //   const userCourses = await UserCourse.find({ course: course.id });
+    //   const filter = {
+    //     _id: {
+    //       $in:
+    //         userCourses?.map(({ user }) => mongoose.Types.ObjectId(user)) ?? [],
+    //     },
+    //   };
+    //   return {
+    //     data: await User.find(filter),
+    //     pagination: null,
+    //   };
+    // },
   },
 
   Query: {
@@ -84,10 +48,17 @@ exports.resolvers = {
   Mutation: {
     createCourse: async (_, args, context) => {
       loginCheck(context);
-      // if (!context.user.isTeacher)
-      //   throw Error("you must be a teacher to create a course");
+      if (!context.user.teacher)
+        throw Error("you must be a teacher to create a course");
 
-      const course = new Course({ name: args.course.name });
+      const { subjCode, yearAndSection } = args.input;
+
+      const course = new Course({
+        ...args.input,
+        courseCode: `${subjCode}-${yearAndSection}-${generateRandomString(5)}`,
+        teacher: context.user.teacher,
+      });
+
       return await course.save();
     },
 

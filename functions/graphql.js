@@ -1,6 +1,17 @@
 const { ApolloServer } = require("apollo-server-lambda");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+
+const typeDefs = require("./typeDefs/index.js");
+const resolvers = require("./resolvers/index.js");
 const accountsGraphQL = require("./accounts.js");
-const schema = require("./schema/index.js");
+
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+  schemaDirectives: {
+    ...accountsGraphQL.schemaDirectives,
+  },
+});
 
 const server = new ApolloServer({
   schema,
