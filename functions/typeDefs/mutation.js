@@ -20,7 +20,7 @@ module.exports = gql`
   # Course
   extend type Mutation {
     createCourse(input: CreateCourseInput!): Course
-    joinCourse(input: JoinCourseInput): JoinCourseResult
+    joinCourse(courseId: ID!): JoinCourseResult
   }
 
   input CreateCourseInput {
@@ -31,13 +31,9 @@ module.exports = gql`
     endsAt: Date!
   }
 
-  input JoinCourseInput {
-    courseId: String!
-  }
-
   type JoinCourseResult {
     course: Course
-    user: User
+    student: Student
   }
 
   # Post
