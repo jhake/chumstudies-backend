@@ -1,20 +1,12 @@
 const { ApolloServer } = require("apollo-server-lambda");
-const { makeExecutableSchema } = require("@graphql-tools/schema");
 
 const typeDefs = require("./typeDefs/index.js");
 const resolvers = require("./resolvers/index.js");
 const accountsGraphQL = require("./accounts.js");
 
-const schema = makeExecutableSchema({
+const server = new ApolloServer({
   typeDefs,
   resolvers,
-  schemaDirectives: {
-    ...accountsGraphQL.schemaDirectives,
-  },
-});
-
-const server = new ApolloServer({
-  schema,
   context: async ({ event }) => {
     return await accountsGraphQL.context({
       req: { headers: { authorization: event.headers.authorization } },
