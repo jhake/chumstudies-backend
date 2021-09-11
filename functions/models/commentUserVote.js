@@ -1,9 +1,10 @@
 const { Schema, model } = require("mongoose");
 
 module.exports = model(
-  "UserCourse",
+  "CommentUserVote",
   Schema({
+    comment: { type: Schema.Types.ObjectId, ref: "Comment" },
     user: { type: Schema.Types.ObjectId, ref: "User" },
-    course: { type: Schema.Types.ObjectId, ref: "Course" },
+    vote: { type: Number, default: 0 },
   })
 );

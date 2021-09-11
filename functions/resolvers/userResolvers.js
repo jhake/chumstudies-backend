@@ -1,67 +1,20 @@
-const { gql } = require("apollo-server-lambda");
-const mongoose = require("mongoose");
 const cloudinary = require("cloudinary");
 
 const User = require("../models/user.js");
-const Course = require("../models/course.js");
-const UserCourse = require("../models/userCourse.js");
+const Student = require("../models/student.js");
+const Teacher = require("../models/teacher.js");
 const { loginCheck } = require("../utils/checks.js");
 
-exports.typeDef = gql`
-  extend type Query {
-    users(pagination: PaginationInput): UsersResult
-  }
-
-  extend type Mutation {
-    createUploadPreset: User
-  }
-
-  extend type User {
-    isTeacher: Boolean
-    courses: CoursesResult
-    private: UserPrivate
-  }
-
-  type UserPrivate {
-    uploadPreset: String
-  }
-
-  type UsersResult {
-    data: [User]
-    pagination: Pagination
-  }
-
-  extend type CreateUserInput {
-    username: String!
-    email: String!
-    password: String!
-  }
-`;
-
-exports.resolvers = {
+module.exports = {
   User: {
-    courses: async (user) => {
-      const userCourses = await UserCourse.find({ user: user.id });
-
-      const filter = {
-        _id: {
-          $in:
-            userCourses?.map(({ course }) => mongoose.Types.ObjectId(course)) ??
-            [],
-        },
-      };
-
-      return {
-        data: await Course.find(filter),
-        pagination: null,
-      };
-    },
-    private: async (user, _, context) => {
+    private: (user, _, context) => {
       if (context.user.id !== user.id)
         throw Error("can't query other's private data");
 
       return user;
     },
+    student: async (user) => await Student.findById(user.id),
+    teacher: async (user) => await Teacher.findById(user.id),
   },
 
   Query: {
@@ -89,11 +42,11 @@ exports.resolvers = {
 
   Mutation: {
     createUploadPreset: async (_, __, context) => {
-      loginCheck();
+      loginCheck(context);
       if (context.user.uploadPreset) throw Error("already has upload preset");
 
-      const { username, id } = context.user;
-      const folder = `${username}_${id}`;
+      const { lastName, id } = context.user;
+      const folder = `${process.env.CLOUDINARY_FOLDER}/${lastName}_${id}`;
 
       const presetResult = await cloudinary.v2.api.create_upload_preset({
         unsigned: true,

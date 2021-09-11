@@ -5,7 +5,15 @@ module.exports = model(
   Schema({
     content: String,
     attachment: String,
-    createdAt: { type: Date, required: true, default: Date.now },
-    author: { type: Schema.Types.ObjectId, ref: "User" },
+    category: {
+      type: String,
+      enum: ["post", "question"],
+      default: "post",
+    },
+    createdAt: { type: Date, default: Date.now },
+    tags: [String],
+    user: { type: Schema.Types.ObjectId, ref: "User" },
+    course: { type: Schema.Types.ObjectId, ref: "Course" },
+    group: { type: Schema.Types.ObjectId, ref: "Group" },
   })
 );
