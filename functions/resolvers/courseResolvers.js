@@ -73,25 +73,24 @@ module.exports = {
       return await course.save();
     },
 
-    joinCourse: async (_, { courseId, courseCode }, context) => {
+    joinCourse: async (_, { courseCode }, context) => {
       loginCheck(context);
 
       const student = await Student.findById(context.user.id);
       if (!student) throw Error("you must be a student to join a course");
 
+      const course = await Course.findOne({ courseCode });
+      if (!course) throw Error("invalid course code");
+
       const courseStudent = await CourseStudent.findOne({
-        course: courseId,
+        course: course.id,
         student: student.id,
       });
       if (courseStudent) throw Error("already in course");
 
-      const course = await Course.findById(courseId);
-      if (!course) throw Error("course doesn't exist");
-      if (course.courseCode !== courseCode) throw Error("invalid course code");
-
       const newCourseStudent = new CourseStudent({
         student: student.id,
-        course: courseId,
+        course: course.id,
       });
       await newCourseStudent.save();
 
