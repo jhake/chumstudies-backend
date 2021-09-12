@@ -5,9 +5,4 @@ const types = require("./types.js");
 const query = require("./query.js");
 const mutation = require("./mutation.js");
 
-module.exports = mergeTypeDefs([
-  types,
-  query,
-  mutation,
-  accountsGraphQL.typeDefs,
-]);
+module.exports = mergeTypeDefs([types, query, mutation, accountsGraphQL.typeDefs]);

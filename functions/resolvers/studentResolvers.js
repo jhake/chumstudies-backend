@@ -14,10 +14,7 @@ module.exports = {
 
       const filter = {
         _id: {
-          $in:
-            courseStudents?.map(({ course }) =>
-              mongoose.Types.ObjectId(course)
-            ) ?? [],
+          $in: courseStudents?.map(({ course }) => mongoose.Types.ObjectId(course)) ?? [],
         },
       };
 

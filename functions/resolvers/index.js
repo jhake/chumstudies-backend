@@ -49,8 +49,4 @@ const otherResolvers = {
   Date: dateScalar,
 };
 
-module.exports = mergeResolvers([
-  accountsGraphQL.resolvers,
-  otherResolvers,
-  ...resolvers,
-]);
+module.exports = mergeResolvers([accountsGraphQL.resolvers, otherResolvers, ...resolvers]);

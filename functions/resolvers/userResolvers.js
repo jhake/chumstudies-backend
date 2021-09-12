@@ -8,8 +8,7 @@ const { loginCheck } = require("../utils/checks.js");
 module.exports = {
   User: {
     private: (user, _, context) => {
-      if (context.user.id !== user.id)
-        throw Error("can't query other's private data");
+      if (context.user.id !== user.id) throw Error("can't query other's private data");
 
       return user;
     },

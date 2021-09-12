@@ -15,8 +15,12 @@ module.exports = {
 
       const studentId = context.user.id;
 
-      const courseStudents = await CourseStudent.find({ student: studentId });
-      const groupsStudents = await GroupStudent.find({ student: studentId });
+      const courseStudents = await CourseStudent.find({
+        student: studentId,
+      });
+      const groupsStudents = await GroupStudent.find({
+        student: studentId,
+      });
 
       console.log(courseStudents);
 
@@ -24,42 +28,32 @@ module.exports = {
         $or: [
           {
             course: {
-              $in:
-                courseStudents?.map(({ course }) =>
-                  mongoose.Types.ObjectId(course)
-                ) ?? [],
+              $in: courseStudents?.map(({ course }) => mongoose.Types.ObjectId(course)) ?? [],
             },
           },
           {
             group: {
-              $in:
-                groupsStudents?.map(({ group }) =>
-                  mongoose.Types.ObjectId(group)
-                ) ?? [],
+              $in: groupsStudents?.map(({ group }) => mongoose.Types.ObjectId(group)) ?? [],
             },
           },
         ],
       };
 
-      const posts = (await Post.find(filter).sort("-createdAt")).map(
-        (post) => ({
-          ...post._doc,
-          id: post.id,
-          mongooseType: "Post",
-        })
-      );
+      const posts = (await Post.find(filter).sort("-createdAt")).map((post) => ({
+        ...post._doc,
+        id: post.id,
+        mongooseType: "Post",
+      }));
       const activities = (await Activity.find(filter)).map((activity) => ({
         ...activity._doc,
         id: activity.id,
         mongooseType: "Activity",
       }));
-      const groupActivities = (await GroupActivity.find(filter)).map(
-        (groupActivity) => ({
-          ...groupActivity._doc,
-          id: groupActivity.id,
-          mongooseType: "GroupActivity",
-        })
-      );
+      const groupActivities = (await GroupActivity.find(filter)).map((groupActivity) => ({
+        ...groupActivity._doc,
+        id: groupActivity.id,
+        mongooseType: "GroupActivity",
+      }));
 
       console.log(posts);
       console.log(activities);

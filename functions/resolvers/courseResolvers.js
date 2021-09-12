@@ -12,10 +12,7 @@ module.exports = {
       const courseStudents = await CourseStudent.find({ course: course.id });
       const filter = {
         _id: {
-          $in:
-            courseStudents?.map(({ student }) =>
-              mongoose.Types.ObjectId(student)
-            ) ?? [],
+          $in: courseStudents?.map(({ student }) => mongoose.Types.ObjectId(student)) ?? [],
         },
       };
       return {
