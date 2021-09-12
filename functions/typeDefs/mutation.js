@@ -44,6 +44,8 @@ module.exports = gql`
   }
 
   input CreatePostInput {
+    groupId: ID
+    courseId: ID
     content: String!
     category: String
     tags: [String]

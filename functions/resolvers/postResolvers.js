@@ -2,7 +2,12 @@ const { validateAttachment, destroy } = require("../utils/cloudinary");
 
 const Post = require("../models/post.js");
 const User = require("../models/user.js");
-const { loginCheck } = require("../utils/checks");
+const {
+  loginCheck,
+  isCourseStudent,
+  isGroupStudent,
+  isCourseTeacher,
+} = require("../utils/checks");
 
 module.exports = {
   Post: {
@@ -10,12 +15,34 @@ module.exports = {
   },
 
   Mutation: {
-    createPost: async (_, args, context) => {
+    createPost: async (_, { input }, context) => {
       loginCheck(context);
 
-      const { content, category, tags } = args.input;
+      const { courseId, groupId, content, category, tags } = input;
+
+      if (groupId && courseId)
+        throw Error("should only provide groupId OR courseId");
+      if (!groupId && !courseId)
+        throw Error("should provide groupId OR courseId");
+
+      const userId = context.user.id;
+
+      if (courseId) {
+        if (
+          !(await isCourseStudent(userId, courseId)) &&
+          !(await isCourseTeacher(userId, courseId))
+        )
+          throw Error("not in course");
+      }
+
+      if (groupId) {
+        if (!(await isGroupStudent(userId, groupId)))
+          throw Error("not in group");
+      }
 
       const post = new Post({
+        group: groupId,
+        courseId: courseId,
         content,
         category,
         tags,
