@@ -5,7 +5,6 @@ const Teacher = require("../models/teacher.js");
 const Student = require("../models/student.js");
 const CourseStudent = require("../models/courseStudent.js");
 const { loginCheck } = require("../utils/checks.js");
-const generateRandomString = require("../utils/generateRandomString.js");
 
 module.exports = {
   Course: {
@@ -62,11 +61,8 @@ module.exports = {
       const teacher = await Teacher.findById(context.user.id);
       if (!teacher) throw Error("you must be a teacher to create a course");
 
-      const { subjCode, yearAndSection } = input;
-
       const course = new Course({
         ...input,
-        courseCode: `${subjCode}-${yearAndSection}-${generateRandomString(5)}`,
         teacher: teacher.id,
       });
 
