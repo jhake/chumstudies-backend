@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 
-const Course = require("../models/course.js");
-const Teacher = require("../models/teacher.js");
-const Student = require("../models/student.js");
-const CourseStudent = require("../models/courseStudent.js");
+const { Course, Teacher, CourseStudent, Student } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
 
 module.exports = {

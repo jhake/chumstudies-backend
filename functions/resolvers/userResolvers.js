@@ -1,8 +1,6 @@
 const cloudinary = require("cloudinary");
 
-const User = require("../models/user.js");
-const Student = require("../models/student.js");
-const Teacher = require("../models/teacher.js");
+const { User, Student, Teacher } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
 
 module.exports = {

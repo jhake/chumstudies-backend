@@ -1,7 +1,6 @@
 const { validateAttachment, destroy } = require("../utils/cloudinary");
 
-const Post = require("../models/post.js");
-const User = require("../models/user.js");
+const { Post, User } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isGroupStudent, isCourseTeacher } = require("../utils/checks");
 
 module.exports = {

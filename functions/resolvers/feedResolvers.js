@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
-const Post = require("../models/post.js");
-const Activity = require("../models/activity.js");
-const GroupActivity = require("../models/groupActivity.js");
-const CourseStudent = require("../models/courseStudent.js");
-const GroupStudent = require("../models/groupStudent.js");
+const { CourseStudent, GroupStudent, Post, Activity, GroupActivity } = require("../models/index.js");
 
 const { loginCheck } = require("../utils/checks.js");
 

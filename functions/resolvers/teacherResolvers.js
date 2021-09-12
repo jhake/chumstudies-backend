@@ -1,6 +1,4 @@
-const User = require("../models/user.js");
-const Teacher = require("../models/teacher.js");
-const Course = require("../models/course.js");
+const { Course, Teacher, User } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
 
 module.exports = {

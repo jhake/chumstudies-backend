@@ -1,8 +1,6 @@
 const { AuthenticationError } = require("apollo-server-lambda");
 
-const CourseStudent = require("../models/courseStudent.js");
-const GroupStudent = require("../models/groupStudent.js");
-const Course = require("../models/course.js");
+const { Course, GroupStudent, CourseStudent } = require("../models/index.js");
 
 module.exports.loginCheck = (context) => {
   if (!context.user) throw new AuthenticationError("you must be logged in");
