@@ -30,7 +30,7 @@ module.exports = {
 
       const post = new Post({
         group: groupId,
-        courseId: courseId,
+        course: courseId,
         content,
         category,
         tags,
