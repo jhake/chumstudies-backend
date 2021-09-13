@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-
 const { User, CourseStudent, Course, Student } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
 
@@ -11,7 +9,7 @@ module.exports = {
 
       const filter = {
         _id: {
-          $in: courseStudents?.map(({ course }) => mongoose.Types.ObjectId(course)) ?? [],
+          $in: courseStudents?.map(({ course }) => course) ?? [],
         },
       };
 

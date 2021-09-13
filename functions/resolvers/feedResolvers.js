@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-
 const { CourseStudent, GroupStudent, Post, Activity, GroupActivity } = require("../models/index.js");
 
 const { loginCheck } = require("../utils/checks.js");
@@ -24,12 +22,12 @@ module.exports = {
         $or: [
           {
             course: {
-              $in: courseStudents?.map(({ course }) => mongoose.Types.ObjectId(course)) ?? [],
+              $in: courseStudents?.map(({ course }) => course) ?? [],
             },
           },
           {
             group: {
-              $in: groupsStudents?.map(({ group }) => mongoose.Types.ObjectId(group)) ?? [],
+              $in: groupsStudents?.map(({ group }) => group) ?? [],
             },
           },
         ],

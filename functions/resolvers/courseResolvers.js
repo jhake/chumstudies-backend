@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-
 const { Course, Teacher, CourseStudent, Student } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
 
@@ -9,7 +7,7 @@ module.exports = {
       const courseStudents = await CourseStudent.find({ course: course.id });
       const filter = {
         _id: {
-          $in: courseStudents?.map(({ student }) => mongoose.Types.ObjectId(student)) ?? [],
+          $in: courseStudents?.map(({ student }) => student) ?? [],
         },
       };
       return {
@@ -18,9 +16,9 @@ module.exports = {
       };
     },
     teacher: async (course) => await Teacher.findById(course.teacher),
-    courseCode: async (course) => {
-      const courseStudent = await CourseStudent.findOne({ course: course.id });
-      if (!courseStudent) return null;
+    courseCode: async (course, _, context) => {
+      const courseStudent = await CourseStudent.findOne({ course: course.id, student: context.user.id });
+      if (!courseStudent && course.teacher != context.user.id) return null;
 
       return course.courseCode;
     },
