@@ -10,6 +10,7 @@ module.exports = model(
     lastName: String,
 
     schoolIdNumber: String,
+    isAdmin: { type: Boolean, default: false },
 
     profilePicture: String,
     uploadPreset: String,

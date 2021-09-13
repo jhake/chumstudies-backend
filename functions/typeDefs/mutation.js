@@ -4,6 +4,7 @@ module.exports = gql`
   # User
   extend type Mutation {
     createUploadPreset: User
+    adminCreateUser(input: AdminCreateUserInput): User
     createStudent: Student #Temporary
     createTeacher: Teacher #Temporary
   }
@@ -15,6 +16,16 @@ module.exports = gql`
     schoolIdNumber: String!
     email: String!
     password: String!
+  }
+
+  input AdminCreateUserInput {
+    firstName: String!
+    middleName: String
+    lastName: String!
+    schoolIdNumber: String!
+    email: String!
+    password: String!
+    isTeacher: Boolean!
   }
 
   # Course

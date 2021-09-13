@@ -1,5 +1,6 @@
 const cloudinary = require("cloudinary");
 
+const { accountsPassword } = require("../accounts.js");
 const { User, Student, Teacher } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
 
@@ -52,6 +53,39 @@ module.exports = {
       const presetName = presetResult.name;
 
       const user = await User.findById(context.user.id);
+      user.uploadPreset = presetName;
+
+      return await user.save();
+    },
+    adminCreateUser: async (_, { input }, context) => {
+      loginCheck(context);
+      if (!context.user.isAdmin) throw Error("must be an admin");
+
+      const { isTeacher } = input;
+
+      const userId = await accountsPassword.createUser({
+        ...input,
+        isAdmin: false,
+      });
+
+      if (isTeacher) {
+        const teacher = new Teacher({ _id: userId, user: userId });
+        await teacher.save();
+      } else {
+        const student = new Student({ _id: userId, user: userId });
+        await student.save();
+      }
+
+      // create upload preset
+      const user = await User.findById(userId);
+      const { lastName, id } = user;
+      const folder = `${process.env.CLOUDINARY_FOLDER}/${lastName}_${id}`;
+
+      const presetResult = await cloudinary.v2.api.create_upload_preset({
+        unsigned: true,
+        folder,
+      });
+      const presetName = presetResult.name;
       user.uploadPreset = presetName;
 
       return await user.save();
