@@ -1,6 +1,6 @@
 const { AuthenticationError } = require("apollo-server-lambda");
 
-const { Course, GroupStudent, CourseStudent } = require("../models/index.js");
+const { Course, GroupStudent, CourseStudent, Group } = require("../models/index.js");
 
 module.exports.loginCheck = (context) => {
   if (!context.user) throw new AuthenticationError("you must be logged in");
@@ -8,7 +8,7 @@ module.exports.loginCheck = (context) => {
 
 module.exports.isCourseTeacher = async (teacherId, courseId) => {
   const course = await Course.findById(courseId);
-  return course.teacher === teacherId;
+  return course.teacher == teacherId;
 };
 
 module.exports.isCourseStudent = async (studentId, courseId) => {
@@ -27,4 +27,25 @@ module.exports.isGroupStudent = async (studentId, groupId) => {
   });
 
   return !!groupStudent;
+};
+
+module.exports.isCourseStudentMulti = async (studentIds, courseId) => {
+  const courseStudents = await CourseStudent.find({
+    course: courseId,
+    student: {
+      $in: studentIds?.map((studentId) => studentId),
+    },
+  });
+
+  return courseStudents.length === studentIds.length;
+};
+
+module.exports.isMemberOfClassGroupMulti = async (studentIds, courseId) => {
+  const groups = await Group.find({ course: courseId });
+  const groupStudents = await GroupStudent.find({
+    group: { $in: groups },
+    student: { $in: studentIds },
+  });
+
+  return !!groupStudents.length;
 };
