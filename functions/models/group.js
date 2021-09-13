@@ -6,7 +6,6 @@ module.exports = model(
     name: String,
     groupCode: String,
     isActive: { type: Boolean, default: true },
-    type: String,
     course: { type: Schema.Types.ObjectId, ref: "Course" },
   })
 );

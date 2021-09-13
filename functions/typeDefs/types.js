@@ -79,7 +79,6 @@ module.exports = gql`
     name: String
     groupCode: String
     isActive: Boolean
-    type: String
     course: Course
     students: StudentsResult
     leader: Student
