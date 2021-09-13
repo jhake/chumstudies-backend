@@ -63,11 +63,13 @@ module.exports = {
 
       const { isTeacher } = input;
 
+      // create user
       const userId = await accountsPassword.createUser({
         ...input,
         isAdmin: false,
       });
 
+      // create teacher or student entity
       if (isTeacher) {
         const teacher = new Teacher({ _id: userId, user: userId });
         await teacher.save();
