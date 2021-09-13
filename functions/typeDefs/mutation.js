@@ -36,6 +36,22 @@ module.exports = gql`
     student: Student
   }
 
+  # Group
+  extend type Mutation {
+    createClassGroup(input: CreateClassGroupInput!): Group
+    assignStudentsToClassGroup(input: AssignStudentsToClassGroupInput!): Group
+  }
+
+  input CreateClassGroupInput {
+    name: String!
+    courseId: ID!
+  }
+
+  input AssignStudentsToClassGroupInput {
+    groupId: ID!
+    studentIds: [ID!]!
+  }
+
   # Post
   extend type Mutation {
     createPost(input: CreatePostInput!): Post

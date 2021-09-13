@@ -9,10 +9,15 @@ module.exports = gql`
     users(pagination: PaginationInput): UsersResult
   }
 
+  # Course
   extend type Query {
     courses(pagination: PaginationInput): CoursesResult
   }
 
+  # Group
+  extend type Query {
+    groups(pagination: PaginationInput): GroupsResult
+  }
   # Feed
   extend type Query {
     studentHomeFeed: StudentHomeFeedResult
