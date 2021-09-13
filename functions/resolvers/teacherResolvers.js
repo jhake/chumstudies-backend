@@ -1,5 +1,4 @@
-const { Course, Teacher, User } = require("../models/index.js");
-const { loginCheck } = require("../utils/checks.js");
+const { Course, User } = require("../models/index.js");
 
 module.exports = {
   Teacher: {
@@ -11,17 +10,6 @@ module.exports = {
         data: await Course.find(filter),
         pagination: null,
       };
-    },
-  },
-
-  Mutation: {
-    createTeacher: async (_, __, context) => {
-      loginCheck(context);
-      const teacher = new Teacher({
-        _id: context.user.id,
-        user: context.user.id,
-      });
-      return await teacher.save();
     },
   },
 };

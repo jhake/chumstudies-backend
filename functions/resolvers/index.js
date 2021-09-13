@@ -46,6 +46,9 @@ const otherResolvers = {
     addEmail: () => {
       throw Error("This mutation is disabled");
     },
+    createUser: () => {
+      throw Error("This mutation is disabled");
+    },
   },
   Date: dateScalar,
 };

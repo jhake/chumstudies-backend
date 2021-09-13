@@ -57,6 +57,30 @@ module.exports = {
 
       return await user.save();
     },
+    createAdmin: async (_, { input }, context) => {
+      loginCheck(context);
+      if (!context.user.isAdmin) throw Error("must be an admin");
+
+      // create user
+      const userId = await accountsPassword.createUser({
+        ...input,
+        isAdmin: true,
+      });
+
+      // create upload preset
+      const user = await User.findById(userId);
+      const { lastName, id } = user;
+      const folder = `${process.env.CLOUDINARY_FOLDER}/${lastName}_${id}`;
+
+      const presetResult = await cloudinary.v2.api.create_upload_preset({
+        unsigned: true,
+        folder,
+      });
+      const presetName = presetResult.name;
+      user.uploadPreset = presetName;
+
+      return await user.save();
+    },
     adminCreateUser: async (_, { input }, context) => {
       loginCheck(context);
       if (!context.user.isAdmin) throw Error("must be an admin");
