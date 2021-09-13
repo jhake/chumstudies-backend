@@ -4,7 +4,7 @@ const { loginCheck } = require("../utils/checks.js");
 module.exports = {
   Course: {
     students: async (course) => {
-      const courseStudents = await CourseStudent.find({ course: course.id });
+      const courseStudents = await CourseStudent.find({ course });
       const filter = {
         _id: {
           $in: courseStudents?.map(({ student }) => student) ?? [],
@@ -17,7 +17,7 @@ module.exports = {
     },
     teacher: async (course) => await Teacher.findById(course.teacher),
     courseCode: async (course, _, context) => {
-      const courseStudent = await CourseStudent.findOne({ course: course.id, student: context.user.id });
+      const courseStudent = await CourseStudent.findOne({ course, student: context.user.id });
       if (!courseStudent && course.teacher != context.user.id) return null;
 
       return course.courseCode;
@@ -55,7 +55,7 @@ module.exports = {
 
       const course = new Course({
         ...input,
-        teacher: teacher.id,
+        teacher,
       });
 
       return await course.save();
@@ -71,14 +71,14 @@ module.exports = {
       if (!course) throw Error("invalid course code");
 
       const courseStudent = await CourseStudent.findOne({
-        course: course.id,
-        student: student.id,
+        course,
+        student,
       });
       if (courseStudent) throw Error("already in course");
 
       const newCourseStudent = new CourseStudent({
-        student: student.id,
-        course: course.id,
+        student,
+        course,
       });
       await newCourseStudent.save();
 

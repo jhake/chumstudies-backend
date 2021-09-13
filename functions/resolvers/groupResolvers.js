@@ -4,7 +4,7 @@ const { loginCheck, isCourseTeacher, isCourseStudentMulti, isMemberOfClassGroupM
 module.exports = {
   Group: {
     students: async (group) => {
-      const groupStudents = await GroupStudent.find({ group: group.id });
+      const groupStudents = await GroupStudent.find({ group });
       const filter = {
         _id: {
           $in: groupStudents?.map(({ student }) => student) ?? [],
@@ -16,7 +16,7 @@ module.exports = {
       };
     },
     admins: async (group) => {
-      const groupStudents = await GroupStudent.find({ group: group.id, type: "admin" });
+      const groupStudents = await GroupStudent.find({ group, type: "admin" });
       const filter = {
         _id: {
           $in: groupStudents?.map(({ student }) => student) ?? [],
@@ -28,11 +28,11 @@ module.exports = {
       };
     },
     leader: async (group) => {
-      const groupStudent = await GroupStudent.findOne({ group: group.id, type: "leader" });
+      const groupStudent = await GroupStudent.findOne({ group, type: "leader" });
       return await Student.findById(groupStudent?.student);
     },
     groupCode: async (group, _, context) => {
-      const groupStudent = await GroupStudent.findOne({ course: group.id, student: context.user.id });
+      const groupStudent = await GroupStudent.findOne({ group, student: context.user.id });
       if (!groupStudent) return null;
 
       return group.groupCode;
@@ -117,7 +117,7 @@ module.exports = {
       });
 
       await group.save();
-      const groupStudent = new GroupStudent({ group: group.id, student: student.id, type: "admin" });
+      const groupStudent = new GroupStudent({ group, student, type: "admin" });
       await groupStudent.save();
 
       return await group;
@@ -132,14 +132,14 @@ module.exports = {
       if (!group) throw Error("invalid group code");
 
       const groupStudent = await GroupStudent.findOne({
-        group: group.id,
-        student: student.id,
+        group,
+        student,
       });
       if (groupStudent) throw Error("already in group");
 
       const newGroupStudent = new GroupStudent({
-        student: student.id,
-        group: group.id,
+        student,
+        group,
       });
       await newGroupStudent.save();
 

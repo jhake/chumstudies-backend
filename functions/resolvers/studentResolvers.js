@@ -4,7 +4,7 @@ module.exports = {
   Student: {
     user: async (student) => await User.findById(student.id),
     courses: async (student) => {
-      const courseStudents = await CourseStudent.find({ student: student.id });
+      const courseStudents = await CourseStudent.find({ student });
 
       const filter = {
         _id: {
