@@ -82,10 +82,7 @@ module.exports = {
       });
       await newCourseStudent.save();
 
-      return {
-        course: course,
-        student: student,
-      };
+      return course;
     },
   },
 };
