@@ -19,7 +19,7 @@ module.exports = {
     users: async (_, args, context) => {
       loginCheck(context);
 
-      const limit = args?.pagination?.limit ?? 10;
+      const limit = args?.pagination?.limit ?? 30;
       const page = args?.pagination?.page ?? 1;
       const skip = limit * (page - 1);
 

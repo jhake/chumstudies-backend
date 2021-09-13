@@ -42,7 +42,7 @@ module.exports = {
   Query: {
     groups: async (_, { pagination }, context) => {
       loginCheck(context);
-      const limit = pagination?.limit ?? 10;
+      const limit = pagination?.limit ?? 30;
       const page = pagination?.page ?? 1;
       const skip = limit * (page - 1);
 
