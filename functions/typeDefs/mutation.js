@@ -6,8 +6,6 @@ module.exports = gql`
     createUploadPreset: User
     adminCreateUser(input: AdminCreateUserInput): User
     createAdmin(input: CreateAdminInput): User
-    createStudent: Student #Temporary
-    createTeacher: Teacher #Temporary
   }
 
   extend type CreateUserInput {
