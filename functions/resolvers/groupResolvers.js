@@ -104,5 +104,46 @@ module.exports = {
 
       return group;
     },
+    createStudyGroup: async (_, { input }, context) => {
+      loginCheck(context);
+
+      const { name } = input;
+
+      const student = await Student.findById(context.user.id);
+      if (!student) throw Error("you must be a student to create a study group");
+
+      const group = new Group({
+        name,
+      });
+
+      await group.save();
+      const groupStudent = new GroupStudent({ group: group.id, student: student.id, type: "admin" });
+      await groupStudent.save();
+
+      return await group;
+    },
+    joinStudyGroup: async (_, { groupCode }, context) => {
+      loginCheck(context);
+
+      const student = await Student.findById(context.user.id);
+      if (!student) throw Error("you must be a student to join a study group");
+
+      const group = await Group.findOne({ groupCode });
+      if (!group) throw Error("invalid group code");
+
+      const groupStudent = await GroupStudent.findOne({
+        group: group.id,
+        student: student.id,
+      });
+      if (groupStudent) throw Error("already in group");
+
+      const newGroupStudent = new GroupStudent({
+        student: student.id,
+        group: group.id,
+      });
+      await newGroupStudent.save();
+
+      return group;
+    },
   },
 };

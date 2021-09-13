@@ -53,6 +53,8 @@ module.exports = gql`
   extend type Mutation {
     createClassGroup(input: CreateClassGroupInput!): Group
     assignStudentsToClassGroup(input: AssignStudentsToClassGroupInput!): Group
+    createStudyGroup(input: CreateStudyGroupInput!): Group
+    joinStudyGroup(groupCode: String!): Group
   }
 
   input CreateClassGroupInput {
@@ -63,6 +65,10 @@ module.exports = gql`
   input AssignStudentsToClassGroupInput {
     groupId: ID!
     studentIds: [ID!]!
+  }
+
+  input CreateStudyGroupInput {
+    name: String!
   }
 
   # Post
