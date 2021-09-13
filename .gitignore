@@ -2,3 +2,6 @@
 .env
 
 **/seeds
+
+# Local Netlify folder
+.netlify
