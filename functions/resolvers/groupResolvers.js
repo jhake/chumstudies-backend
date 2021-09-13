@@ -16,7 +16,7 @@ module.exports = {
       };
     },
     admins: async (group) => {
-      const groupStudents = await GroupStudent.find({ course: group.id, type: "admin" });
+      const groupStudents = await GroupStudent.find({ group: group.id, type: "admin" });
       const filter = {
         _id: {
           $in: groupStudents?.map(({ student }) => student) ?? [],
@@ -28,8 +28,8 @@ module.exports = {
       };
     },
     leader: async (group) => {
-      const groupStudent = await GroupStudent.findOne({ course: group.id, type: "leader" });
-      return await Student.findById(groupStudent.student);
+      const groupStudent = await GroupStudent.findOne({ group: group.id, type: "leader" });
+      return await Student.findById(groupStudent?.student);
     },
     groupCode: async (group, _, context) => {
       const groupStudent = await GroupStudent.findOne({ course: group.id, student: context.user.id });
