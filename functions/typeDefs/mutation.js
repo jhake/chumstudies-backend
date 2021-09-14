@@ -71,6 +71,29 @@ module.exports = gql`
     name: String!
   }
 
+  # Activity
+  extend type Mutation {
+    createActivity(input: CreateActivityInput!): Activity
+    addAttachmentToActivity(id: ID!, attachment: String!): Activity
+    createGroupActivity(input: CreateGroupActivityInput!): GroupActivity
+    addAttachmentToGroupActivity(id: ID!, attachment: String!): GroupActivity
+  }
+
+  input CreateActivityInput {
+    title: String!
+    description: String!
+    dueDate: Date!
+    type: String!
+    courseId: ID!
+  }
+
+  input CreateGroupActivityInput {
+    title: String!
+    description: String!
+    dueDate: Date!
+    courseId: ID!
+  }
+
   # Post
   extend type Mutation {
     createPost(input: CreatePostInput!): Post
