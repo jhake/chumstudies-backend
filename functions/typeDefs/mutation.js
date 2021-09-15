@@ -71,7 +71,7 @@ module.exports = gql`
     name: String!
   }
 
-  # Activity
+  # Activity / GroupActivity
   extend type Mutation {
     createActivity(input: CreateActivityInput!): Activity
     addAttachmentToActivity(id: ID!, attachment: String!): Activity
@@ -92,6 +92,18 @@ module.exports = gql`
     description: String!
     dueDate: Date!
     courseId: ID!
+  }
+
+  # Submission
+  extend type Mutation {
+    createSubmission(input: CreateSubmissionInput!): Submission
+    addAttachmentToSubmission(id: ID!, attachment: String!): Submission
+    submitSubmission(id: ID!): Submission
+  }
+
+  input CreateSubmissionInput {
+    description: String!
+    activityId: ID!
   }
 
   # Post

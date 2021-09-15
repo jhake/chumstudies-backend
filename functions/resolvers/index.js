@@ -13,6 +13,7 @@ const resolvers = [
   require("./feedResolvers.js"),
   require("./groupResolvers.js"),
   require("./activityResolvers.js"),
+  require("./submissionResolvers.js"),
 ];
 
 const dateScalar = new GraphQLScalarType({
