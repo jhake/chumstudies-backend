@@ -12,16 +12,16 @@ module.exports = {
   },
 
   Mutation: {
-    createActivity: async (_, { input }, context) => {
+    createActivity: async (_, args, context) => {
       loginCheck(context);
 
-      const { courseId } = input;
+      const { courseId } = args;
 
       if (!(await isCourseTeacher(context.user.id, courseId)))
         throw Error("you must be the teacher of the course to create an activity");
 
       const activity = new Activity({
-        ...input,
+        ...args,
         course: courseId,
       });
 
@@ -46,16 +46,16 @@ module.exports = {
 
       return await activity.save();
     },
-    createGroupActivity: async (_, { input }, context) => {
+    createGroupActivity: async (_, args, context) => {
       loginCheck(context);
 
-      const { courseId } = input;
+      const { courseId } = args;
 
       if (!(await isCourseTeacher(context.user.id, courseId)))
         throw Error("you must be the teacher of the course to create an activity");
 
       const groupActivity = new GroupActivity({
-        ...input,
+        ...args,
         course: courseId,
       });
 
