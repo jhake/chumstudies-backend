@@ -24,7 +24,7 @@ const accountsPassword = new AccountsPassword({
   // This option is called when a new user create an account
   // Inside we can apply our logic to validate the user fields
   validateNewUser: (user) => {
-    return { ...user };
+    return { ...user, isAdmin: false };
   },
 });
 
@@ -45,5 +45,6 @@ const accountsServer = new AccountsServer(
 
 // We generate the accounts-js GraphQL module
 const accountsGraphQL = AccountsModule.forRoot({ accountsServer });
+accountsGraphQL.accountsPassword = accountsPassword;
 
 module.exports = accountsGraphQL;

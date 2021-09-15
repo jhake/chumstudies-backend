@@ -16,6 +16,9 @@ Notable libraries used.
 - Node 14 or later
 - MongoDB database
 - Cloudinary
+- VSCode extensions
+  - Prettier
+  - ESLint
 
 ### Install Netlify CLI globally
 
@@ -59,6 +62,7 @@ CLOUDINARY_CLOUD_NAME=somecloudname
 CLOUDINARY_API_KEY=12345
 CLOUDINARY_API_SECRET=11111
 CLOUDINARY_METADATA_EXTERNAL_ID=22222
+CLOUDINARY_FOLDER=
 ```
 
 `MONGODB_CONNECTION` should have the connection to the MongoDB database that will be used
@@ -86,6 +90,8 @@ The directories mentioned in this section are relative to the `functions` folder
 - `accounts.js` contains the setup for accounts-js and also the mongoose connection.
 - `graphql.js` contains the setup for the apollo server.
 - `models` folder contains the Mongoose models. Each file there should represent an entity. For example `models/user.js` contains the Mongoose model for the User entity.
-- `schema` folder contains the graphql schema. Each file will contain graphql typeDefs and resolvers related to the entity. For example, `schema/course.js` contains the typeDefs and resolvers related to the Course entity (like the `joinCourse` mutation). Each file here should be imported in the `schema/index.js` to be merged together.
+- `typeDefs` folder contains the graphql typedefs.
+- `resolvers` folder contains the graphql resolvers.
+- `utils` folder contains helper functions.
 
-Most (if not all) of the development will happen inside the `models` and `schema` folders.
+Most of the development will happen inside the `typeDefs` and `resolvers` folders.

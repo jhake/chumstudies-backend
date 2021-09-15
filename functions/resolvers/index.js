@@ -10,6 +10,10 @@ const resolvers = [
   require("./userResolvers.js"),
   require("./studentResolvers.js"),
   require("./teacherResolvers.js"),
+  require("./feedResolvers.js"),
+  require("./groupResolvers.js"),
+  require("./activityResolvers.js"),
+  require("./submissionResolvers.js"),
 ];
 
 const dateScalar = new GraphQLScalarType({
@@ -44,12 +48,11 @@ const otherResolvers = {
     addEmail: () => {
       throw Error("This mutation is disabled");
     },
+    createUser: () => {
+      throw Error("This mutation is disabled");
+    },
   },
   Date: dateScalar,
 };
 
-module.exports = mergeResolvers([
-  accountsGraphQL.resolvers,
-  otherResolvers,
-  ...resolvers,
-]);
+module.exports = mergeResolvers([accountsGraphQL.resolvers, otherResolvers, ...resolvers]);

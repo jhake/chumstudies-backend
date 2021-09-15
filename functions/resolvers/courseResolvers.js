@@ -1,22 +1,13 @@
-const mongoose = require("mongoose");
-
-const Course = require("../models/course.js");
-const Teacher = require("../models/teacher.js");
-const Student = require("../models/student.js");
-const CourseStudent = require("../models/courseStudent.js");
+const { Course, Teacher, CourseStudent, Student } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
-const generateRandomString = require("../utils/generateRandomString.js");
 
 module.exports = {
   Course: {
     students: async (course) => {
-      const courseStudents = await CourseStudent.find({ course: course.id });
+      const courseStudents = await CourseStudent.find({ course });
       const filter = {
         _id: {
-          $in:
-            courseStudents?.map(({ student }) =>
-              mongoose.Types.ObjectId(student)
-            ) ?? [],
+          $in: courseStudents?.map(({ student }) => student) ?? [],
         },
       };
       return {
@@ -25,9 +16,9 @@ module.exports = {
       };
     },
     teacher: async (course) => await Teacher.findById(course.teacher),
-    courseCode: async (course) => {
-      const courseStudent = await CourseStudent.findOne({ course: course.id });
-      if (!courseStudent) return null;
+    courseCode: async (course, _, context) => {
+      const courseStudent = await CourseStudent.findOne({ course, student: context.user.id });
+      if (!courseStudent && course.teacher != context.user.id) return null;
 
       return course.courseCode;
     },
@@ -36,7 +27,7 @@ module.exports = {
   Query: {
     courses: async (_, { pagination }, context) => {
       loginCheck(context);
-      const limit = pagination?.limit ?? 10;
+      const limit = pagination?.limit ?? 30;
       const page = pagination?.page ?? 1;
       const skip = limit * (page - 1);
 
@@ -62,12 +53,9 @@ module.exports = {
       const teacher = await Teacher.findById(context.user.id);
       if (!teacher) throw Error("you must be a teacher to create a course");
 
-      const { subjCode, yearAndSection } = input;
-
       const course = new Course({
         ...input,
-        courseCode: `${subjCode}-${yearAndSection}-${generateRandomString(5)}`,
-        teacher: teacher.id,
+        teacher,
       });
 
       return await course.save();
@@ -83,21 +71,18 @@ module.exports = {
       if (!course) throw Error("invalid course code");
 
       const courseStudent = await CourseStudent.findOne({
-        course: course.id,
-        student: student.id,
+        course,
+        student,
       });
       if (courseStudent) throw Error("already in course");
 
       const newCourseStudent = new CourseStudent({
-        student: student.id,
-        course: course.id,
+        student,
+        course,
       });
       await newCourseStudent.save();
 
-      return {
-        course: course,
-        student: student,
-      };
+      return course;
     },
   },
 };

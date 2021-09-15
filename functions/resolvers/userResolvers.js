@@ -1,15 +1,13 @@
 const cloudinary = require("cloudinary");
 
-const User = require("../models/user.js");
-const Student = require("../models/student.js");
-const Teacher = require("../models/teacher.js");
+const { accountsPassword } = require("../accounts.js");
+const { User, Student, Teacher } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
 
 module.exports = {
   User: {
     private: (user, _, context) => {
-      if (context.user.id !== user.id)
-        throw Error("can't query other's private data");
+      if (context.user.id !== user.id) throw Error("can't query other's private data");
 
       return user;
     },
@@ -21,7 +19,7 @@ module.exports = {
     users: async (_, args, context) => {
       loginCheck(context);
 
-      const limit = args?.pagination?.limit ?? 10;
+      const limit = args?.pagination?.limit ?? 30;
       const page = args?.pagination?.page ?? 1;
       const skip = limit * (page - 1);
 
@@ -55,6 +53,65 @@ module.exports = {
       const presetName = presetResult.name;
 
       const user = await User.findById(context.user.id);
+      user.uploadPreset = presetName;
+
+      return await user.save();
+    },
+    createAdmin: async (_, { input }, context) => {
+      loginCheck(context);
+      if (!context.user.isAdmin) throw Error("must be an admin");
+
+      // create user
+      const userId = await accountsPassword.createUser({
+        ...input,
+        isAdmin: true,
+      });
+
+      // create upload preset
+      const user = await User.findById(userId);
+      const { lastName, id } = user;
+      const folder = `${process.env.CLOUDINARY_FOLDER}/${lastName}_${id}`;
+
+      const presetResult = await cloudinary.v2.api.create_upload_preset({
+        unsigned: true,
+        folder,
+      });
+      const presetName = presetResult.name;
+      user.uploadPreset = presetName;
+
+      return await user.save();
+    },
+    adminCreateUser: async (_, { input }, context) => {
+      loginCheck(context);
+      if (!context.user.isAdmin) throw Error("must be an admin");
+
+      const { isTeacher } = input;
+
+      // create user
+      const userId = await accountsPassword.createUser({
+        ...input,
+        isAdmin: false,
+      });
+
+      // create teacher or student entity
+      if (isTeacher) {
+        const teacher = new Teacher({ _id: userId, user: userId });
+        await teacher.save();
+      } else {
+        const student = new Student({ _id: userId, user: userId });
+        await student.save();
+      }
+
+      // create upload preset
+      const user = await User.findById(userId);
+      const { lastName, id } = user;
+      const folder = `${process.env.CLOUDINARY_FOLDER}/${lastName}_${id}`;
+
+      const presetResult = await cloudinary.v2.api.create_upload_preset({
+        unsigned: true,
+        folder,
+      });
+      const presetName = presetResult.name;
       user.uploadPreset = presetName;
 
       return await user.save();
