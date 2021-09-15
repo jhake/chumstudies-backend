@@ -57,13 +57,13 @@ module.exports = {
 
       return await user.save();
     },
-    createAdmin: async (_, { input }, context) => {
+    createAdmin: async (_, args, context) => {
       loginCheck(context);
       if (!context.user.isAdmin) throw Error("must be an admin");
 
       // create user
       const userId = await accountsPassword.createUser({
-        ...input,
+        ...args,
         isAdmin: true,
       });
 
@@ -81,15 +81,15 @@ module.exports = {
 
       return await user.save();
     },
-    adminCreateUser: async (_, { input }, context) => {
+    adminCreateUser: async (_, args, context) => {
       loginCheck(context);
       if (!context.user.isAdmin) throw Error("must be an admin");
 
-      const { isTeacher } = input;
+      const { isTeacher } = args;
 
       // create user
       const userId = await accountsPassword.createUser({
-        ...input,
+        ...args,
         isAdmin: false,
       });
 

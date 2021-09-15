@@ -9,10 +9,10 @@ module.exports = {
   },
 
   Mutation: {
-    createPost: async (_, { input }, context) => {
+    createPost: async (_, args, context) => {
       loginCheck(context);
 
-      const { courseId, groupId, content, category, tags } = input;
+      const { courseId, groupId } = args;
 
       if (groupId && courseId) throw Error("should only provide groupId OR courseId");
       if (!groupId && !courseId) throw Error("should provide groupId OR courseId");
@@ -29,11 +29,7 @@ module.exports = {
       }
 
       const post = new Post({
-        group: groupId,
-        course: courseId,
-        content,
-        category,
-        tags,
+        ...args,
         user: context.user.id,
       });
 

@@ -62,10 +62,8 @@ module.exports = {
   },
 
   Mutation: {
-    createClassGroup: async (_, { input }, context) => {
+    createClassGroup: async (_, { courseId, name }, context) => {
       loginCheck(context);
-
-      const { courseId, name } = input;
 
       if (!(await isCourseTeacher(context.user.id, courseId)))
         throw Error("you must be the teacher of the course to create a class group");
@@ -77,10 +75,8 @@ module.exports = {
 
       return await group.save();
     },
-    assignStudentsToClassGroup: async (_, { input }, context) => {
+    assignStudentsToClassGroup: async (_, { groupId, studentIds }, context) => {
       loginCheck(context);
-
-      const { groupId, studentIds } = input;
 
       const group = await Group.findById(groupId);
 
@@ -104,10 +100,8 @@ module.exports = {
 
       return group;
     },
-    createStudyGroup: async (_, { input }, context) => {
+    createStudyGroup: async (_, { name }, context) => {
       loginCheck(context);
-
-      const { name } = input;
 
       const student = await Student.findById(context.user.id);
       if (!student) throw Error("you must be a student to create a study group");

@@ -4,120 +4,60 @@ module.exports = gql`
   # User
   extend type Mutation {
     createUploadPreset: User
-    adminCreateUser(input: AdminCreateUserInput): User
-    createAdmin(input: CreateAdminInput): User
+    adminCreateUser(
+      firstName: String!
+      middleName: String
+      lastName: String!
+      schoolIdNumber: String!
+      email: String!
+      password: String!
+      isTeacher: Boolean!
+    ): User
+    createAdmin(firstName: String!, middleName: String, lastName: String!, email: String!, password: String!): User
   }
 
-  extend type CreateUserInput {
+  extend type CreateUserInput { ## should not be used since admin will create the users
     firstName: String!
     middleName: String
     lastName: String!
     schoolIdNumber: String!
-    email: String!
-    password: String!
-  }
-
-  input AdminCreateUserInput {
-    firstName: String!
-    middleName: String
-    lastName: String!
-    schoolIdNumber: String!
-    email: String!
-    password: String!
-    isTeacher: Boolean!
-  }
-
-  input CreateAdminInput {
-    firstName: String!
-    middleName: String
-    lastName: String!
     email: String!
     password: String!
   }
 
   # Course
   extend type Mutation {
-    createCourse(input: CreateCourseInput!): Course
+    createCourse(name: String!, subjCode: String!, yearAndSection: String!, startsAt: Date!, endsAt: Date!): Course
     joinCourse(courseCode: String!): Course
-  }
-
-  input CreateCourseInput {
-    name: String!
-    subjCode: String!
-    yearAndSection: String!
-    startsAt: Date!
-    endsAt: Date!
   }
 
   # Group
   extend type Mutation {
-    createClassGroup(input: CreateClassGroupInput!): Group
-    assignStudentsToClassGroup(input: AssignStudentsToClassGroupInput!): Group
-    createStudyGroup(input: CreateStudyGroupInput!): Group
+    createClassGroup(name: String!, courseId: ID!): Group
+    assignStudentsToClassGroup(groupId: ID!, studentIds: [ID!]!): Group
+    createStudyGroup(name: String!): Group
     joinStudyGroup(groupCode: String!): Group
-  }
-
-  input CreateClassGroupInput {
-    name: String!
-    courseId: ID!
-  }
-
-  input AssignStudentsToClassGroupInput {
-    groupId: ID!
-    studentIds: [ID!]!
-  }
-
-  input CreateStudyGroupInput {
-    name: String!
   }
 
   # Activity / GroupActivity
   extend type Mutation {
-    createActivity(input: CreateActivityInput!): Activity
+    createActivity(title: String!, description: String!, dueDate: Date!, type: String!, courseId: ID!): Activity
     addAttachmentToActivity(id: ID!, attachment: String!): Activity
-    createGroupActivity(input: CreateGroupActivityInput!): GroupActivity
+    createGroupActivity(title: String!, description: String!, dueDate: Date!, courseId: ID!): GroupActivity
     addAttachmentToGroupActivity(id: ID!, attachment: String!): GroupActivity
-  }
-
-  input CreateActivityInput {
-    title: String!
-    description: String!
-    dueDate: Date!
-    type: String!
-    courseId: ID!
-  }
-
-  input CreateGroupActivityInput {
-    title: String!
-    description: String!
-    dueDate: Date!
-    courseId: ID!
   }
 
   # Submission
   extend type Mutation {
-    createSubmission(input: CreateSubmissionInput!): Submission
+    createSubmission(description: String!, activityId: ID!): Submission
     addAttachmentToSubmission(id: ID!, attachment: String!): Submission
     submitSubmission(id: ID!): Submission
   }
 
-  input CreateSubmissionInput {
-    description: String!
-    activityId: ID!
-  }
-
   # Post
   extend type Mutation {
-    createPost(input: CreatePostInput!): Post
+    createPost(groupId: ID, courseId: ID, content: String!, category: String, tags: [String]): Post
     addAttachmentToPost(id: ID!, attachment: String!): Post
     destroyPost(id: ID!): Boolean
-  }
-
-  input CreatePostInput {
-    groupId: ID
-    courseId: ID
-    content: String!
-    category: String
-    tags: [String]
   }
 `;

@@ -47,14 +47,14 @@ module.exports = {
   },
 
   Mutation: {
-    createCourse: async (_, { input }, context) => {
+    createCourse: async (_, args, context) => {
       loginCheck(context);
 
       const teacher = await Teacher.findById(context.user.id);
       if (!teacher) throw Error("you must be a teacher to create a course");
 
       const course = new Course({
-        ...input,
+        ...args,
         teacher,
       });
 
