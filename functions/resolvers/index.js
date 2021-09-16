@@ -40,6 +40,9 @@ const otherResolvers = {
 
       return "Hello World";
     },
+    getUser: () => {
+      throw Error("This query is disabled");
+    },
   },
   Mutation: {
     impersonate: () => {

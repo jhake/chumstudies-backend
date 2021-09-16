@@ -6,6 +6,7 @@ module.exports = gql`
   }
 
   extend type Query {
+    getCurrentUser: User
     users(pagination: PaginationInput): UsersResult
   }
 
