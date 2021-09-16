@@ -1,7 +1,9 @@
 const { mergeResolvers } = require("@graphql-tools/merge");
 const { GraphQLScalarType, Kind } = require("graphql");
+const { performance } = require("perf_hooks");
 
 const accountsGraphQL = require("../accounts.js");
+const { User } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
 
 const resolvers = [
@@ -39,6 +41,12 @@ const otherResolvers = {
       loginCheck(context);
 
       return "Hello World";
+    },
+    mongoLatency: async () => {
+      const t0 = performance.now();
+      await User.findOne();
+      const t1 = performance.now();
+      return t1 - t0;
     },
     getUser: () => {
       throw Error("This query is disabled");
