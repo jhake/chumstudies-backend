@@ -16,6 +16,11 @@ module.exports = {
   },
 
   Query: {
+    getCurrentUser: async (_, __, context) => {
+      loginCheck(context);
+
+      return await User.findById(context.user);
+    },
     users: async (_, args, context) => {
       loginCheck(context);
 

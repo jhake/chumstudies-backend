@@ -3,9 +3,11 @@ const { gql } = require("apollo-server-lambda");
 module.exports = gql`
   extend type Query {
     hello: String
+    mongoLatency: Float
   }
 
   extend type Query {
+    getCurrentUser: User
     users(pagination: PaginationInput): UsersResult
   }
 
