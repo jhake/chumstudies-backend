@@ -1,4 +1,4 @@
-const { User, CourseStudent, Course } = require("../models/index.js");
+const { User, CourseStudent, Course, Group, GroupStudent } = require("../models/index.js");
 
 module.exports = {
   Student: {
@@ -14,6 +14,20 @@ module.exports = {
 
       return {
         data: await Course.find(filter),
+        pagination: null,
+      };
+    },
+    groups: async (student) => {
+      const groupStudents = await GroupStudent.find({ student });
+
+      const filter = {
+        _id: {
+          $in: groupStudents?.map(({ group }) => group) ?? [],
+        },
+      };
+
+      return {
+        data: await Group.find(filter),
         pagination: null,
       };
     },
