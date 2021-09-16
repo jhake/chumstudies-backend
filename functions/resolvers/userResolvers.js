@@ -19,7 +19,7 @@ module.exports = {
     getCurrentUser: async (_, __, context) => {
       loginCheck(context);
 
-      return await User.findById(context.user);
+      return await User.findById(context.user.id);
     },
     users: async (_, args, context) => {
       loginCheck(context);
