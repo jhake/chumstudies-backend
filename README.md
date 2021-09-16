@@ -54,7 +54,8 @@ $ touch .env
 The file should look like this
 
 ```
-MONGODB_CONNECTION=mongodb+srv://username:password@path.to.mongodb.server/dbName?retryWrites=true&w=majority
+MONGODB_CONNECTION=mongodb+srv://username:password@path.to.mongodb.server
+MONGODB_DATABASE="dbName"
 TOKEN_SECRET=my-super-random-secret
 ALLOWED_ORIGINS="http://localhost:3000"
 
