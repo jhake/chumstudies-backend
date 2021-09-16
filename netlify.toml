@@ -1,8 +1,2 @@
 [build]
   functions = "functions"
-[context.branch-deploy]
-  [context.branch-deploy.environment]
-    TOKEN_SECRET="my-super-random-secret"
-    MONGODB_DATABASE="staging"
-    CLOUDINARY_FOLDER="STAGING"
-    ALLOWED_ORIGINS="http://localhost:3000"
