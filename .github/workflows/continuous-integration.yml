@@ -1,4 +1,4 @@
-name: Prettier Check
+name: Continuous Integration
 
 # This action works with pull requests and pushes
 on:
@@ -24,3 +24,18 @@ jobs:
         with:
           # This part is also where you can pass other options, for example:
           prettier_options: --check functions/**/*.js
+
+  eslint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # Make sure the actual branch is checked out when running on pull requests
+          ref: ${{ github.head_ref }}
+      - name: Install modules
+        run: cd functions && npm install
+
+      - name: Run ESLint
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx
