@@ -6,7 +6,7 @@ module.exports = model(
     title: String,
     description: String,
     attachment: String,
-    dueDate: Date,
+    dueAt: Date,
     createdAt: { type: Date, default: Date.now },
     course: { type: Schema.Types.ObjectId, ref: "Course" },
   })
