@@ -1,8 +1,9 @@
-const { Course, Teacher, CourseStudent, Student } = require("../models/index.js");
+const { Course, Teacher, CourseStudent, Student, Group } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
 
 module.exports = {
   Course: {
+    groups: async (course) => ({ data: await Group.find({ course }), pagination: null }),
     students: async (course) => {
       const courseStudents = await CourseStudent.find({ course });
       const filter = {
