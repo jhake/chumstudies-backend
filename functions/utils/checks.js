@@ -29,6 +29,16 @@ module.exports.isGroupStudent = async (studentId, groupId) => {
   return !!groupStudent;
 };
 
+module.exports.isGroupLeader = async (studentId, groupId) => {
+  const groupStudent = await GroupStudent.findOne({
+    group: groupId,
+    student: studentId,
+    type: "leader",
+  });
+
+  return !!groupStudent;
+};
+
 module.exports.isCourseStudentMulti = async (studentIds, courseId) => {
   const courseStudents = await CourseStudent.find({
     course: courseId,
