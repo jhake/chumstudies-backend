@@ -26,4 +26,5 @@ const handler = server.createHandler({
   },
 });
 
+console.log("no errors");
 module.exports = { handler };
