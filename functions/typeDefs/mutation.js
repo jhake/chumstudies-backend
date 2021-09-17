@@ -33,8 +33,7 @@ module.exports = gql`
 
   # Group
   extend type Mutation {
-    createClassGroup(name: String!, courseId: ID!): Group
-    assignStudentsToClassGroup(groupId: ID!, studentIds: [ID!]!): Group
+    createClassGroup(courseId: ID!, studentIds: [ID!]!): Group
     createStudyGroup(name: String!): Group
     joinStudyGroup(groupCode: String!): Group
   }

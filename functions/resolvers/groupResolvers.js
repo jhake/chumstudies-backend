@@ -68,43 +68,33 @@ module.exports = {
   },
 
   Mutation: {
-    createClassGroup: async (_, { courseId, name }, context) => {
+    createClassGroup: async (_, { courseId, studentIds }, context) => {
       loginCheck(context);
 
       if (!(await isCourseTeacher(context.user.id, courseId)))
         throw Error("you must be the teacher of the course to create a class group");
 
+      if (!(await isCourseStudentMulti(studentIds, courseId)))
+        throw Error("all students must be a member of the course");
+
+      if (await isMemberOfClassGroupMulti(studentIds, courseId))
+        throw Error("all students must not have a group in the course yet");
+
+      const groupsCount = await Group.countDocuments({ course: courseId });
+
       const group = new Group({
-        name,
+        name: `Group ${groupsCount + 1}`,
         course: courseId,
       });
 
-      return await group.save();
-    },
-    assignStudentsToClassGroup: async (_, { groupId, studentIds }, context) => {
-      loginCheck(context);
-
-      const group = await Group.findById(groupId);
-
-      if (!(await isCourseTeacher(context.user.id, group.course)))
-        throw Error("you must be the teacher of the course to assign students to a class group");
-
-      console.log(await isCourseStudentMulti(studentIds, group.course));
-
-      if (!(await isCourseStudentMulti(studentIds, group.course)))
-        throw Error("all students must be a member of the course");
-
-      if (await isMemberOfClassGroupMulti(studentIds, group.course))
-        throw Error("all students must not have a group in the course yet");
-
       await GroupStudent.insertMany(
         studentIds.map((studentId) => ({
-          group: groupId,
+          group: group.id,
           student: studentId,
         }))
       );
 
-      return group;
+      return await group.save();
     },
     createStudyGroup: async (_, { name }, context) => {
       loginCheck(context);
