@@ -1,4 +1,5 @@
 const { ApolloServer } = require("apollo-server-lambda");
+require("dotenv").config();
 
 const typeDefs = require("./typeDefs/index.js");
 const resolvers = require("./resolvers/index.js");
