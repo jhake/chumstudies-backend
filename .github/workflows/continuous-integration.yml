@@ -48,4 +48,6 @@ jobs:
         run: cd functions && npm install
 
       - name: Run node
+        env:
+          GITHUB_ACTION: true
         run: node functions/graphql.js | grep "no errors"

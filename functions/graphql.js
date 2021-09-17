@@ -26,5 +26,5 @@ const handler = server.createHandler({
   },
 });
 
-console.log("no errors");
+if (process.env.GITHUB_ACTION) console.log("no errors");
 module.exports = { handler };
