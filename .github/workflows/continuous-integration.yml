@@ -25,11 +25,6 @@ jobs:
           # This part is also where you can pass other options, for example:
           prettier_options: --check functions/**/*.js
 
-      - name: Install modules
-        run: cd functions && npm install
-      - name: Run ESLint
-        run: eslint . --ext .js,.jsx,.ts,.tsx
-
   eslint:
     runs-on: ubuntu-latest
 
