@@ -14,3 +14,5 @@ module.exports.Task = require("./task.js");
 module.exports.Teacher = require("./teacher.js");
 module.exports.User = require("./user.js");
 module.exports.Schedule = require("./schedule.js");
+module.exports.Notification = require("./notification.js");
+module.exports.Agenda = require("./agenda.js");
