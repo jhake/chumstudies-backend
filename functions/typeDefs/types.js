@@ -20,7 +20,7 @@ module.exports = gql`
     schoolIdNumber: String
     profilePicture: String
 
-    private: UserPrivate
+    uploadPreset: String
     isAdmin: Boolean
     student: Student
     teacher: Teacher
@@ -29,10 +29,6 @@ module.exports = gql`
   type UsersResult {
     data: [User]
     pagination: Pagination
-  }
-
-  type UserPrivate {
-    uploadPreset: String
   }
 
   type Student {

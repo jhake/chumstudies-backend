@@ -6,10 +6,9 @@ const { loginCheck } = require("../utils/checks.js");
 
 module.exports = {
   User: {
-    private: (user, _, context) => {
-      if (context.user.id !== user.id) throw Error("can't query other's private data");
-
-      return user;
+    uploadPreset: (user, _, context) => {
+      if (context.user.id !== user.id) throw Error("can't query other's upload preset");
+      return user.uploadPreset;
     },
     student: async (user) => await Student.findById(user.id),
     teacher: async (user) => await Teacher.findById(user.id),
