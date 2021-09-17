@@ -20,4 +20,4 @@ jobs:
         ref: ${{ github.head_ref }}
 
     - name: Run prettier check
-        run: yarn test
+        run: prettier --check functions/**/*.js
