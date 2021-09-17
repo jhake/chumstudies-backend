@@ -48,4 +48,4 @@ jobs:
         run: cd functions && npm install
 
       - name: Run node
-        run: node graphql.js | grep "no errors"
+        run: node functions/graphql.js | grep "no errors"
