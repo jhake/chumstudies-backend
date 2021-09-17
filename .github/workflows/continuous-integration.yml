@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  prettier:
+  ESLint and Prettier:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,3 +24,8 @@ jobs:
         with:
           # This part is also where you can pass other options, for example:
           prettier_options: --check functions/**/*.js
+
+      - name: Install modules
+        run: cd functions && npm install
+      - name: Run ESLint
+        run: eslint . --ext .js,.jsx,.ts,.tsx
