@@ -1,6 +1,6 @@
 const { validateAttachment } = require("../utils/cloudinary");
 
-const { Activity, Submission } = require("../models/index.js");
+const { Activity, Submission, User } = require("../models/index.js");
 const { loginCheck, isCourseStudent } = require("../utils/checks");
 
 module.exports = {
