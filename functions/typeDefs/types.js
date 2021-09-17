@@ -102,7 +102,7 @@ module.exports = gql`
     title: String
     description: String
     attachment: String
-    dueDate: Date
+    dueAt: Date
     type: String
     course: Course
     submissions: SubmissionsResult
@@ -118,7 +118,7 @@ module.exports = gql`
     title: String
     description: String
     attachment: String
-    dueDate: Date
+    dueAt: Date
     course: Course
     submissions: GroupSubmissionsResult
   }
@@ -162,7 +162,7 @@ module.exports = gql`
     attachment: String
     description: String
     grade: Int
-    dueDate: Date
+    dueAt: Date
     progress: Int
     student: Student
     groupSubmission: GroupSubmission
