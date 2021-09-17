@@ -1,5 +1,11 @@
 const { Group, GroupStudent, Student, Course } = require("../models/index.js");
-const { loginCheck, isCourseTeacher, isCourseStudentMulti, isMemberOfClassGroupMulti } = require("../utils/checks.js");
+const {
+  loginCheck,
+  isCourseTeacher,
+  isCourseStudentMulti,
+  isMemberOfClassGroupMulti,
+  isGroupStudent,
+} = require("../utils/checks.js");
 
 module.exports = {
   Group: {
@@ -95,6 +101,47 @@ module.exports = {
       );
 
       return await group.save();
+    },
+    becomeLeader: async (_, { groupId }, context) => {
+      loginCheck(context);
+
+      const group = await Group.findById(groupId);
+      if (!group.course) throw Error("not a class group");
+      if (!(await isGroupStudent(context.user.id, groupId))) throw Error("not a member of the group");
+
+      const groupStudentLeader = await GroupStudent.findOne({ group: groupId, type: "leader" });
+      if (groupStudentLeader) throw Error("group already has a leader");
+
+      const groupStudent = await GroupStudent.findOne({ group: groupId, student: context.user.id });
+      groupStudent.type = "leader";
+
+      await groupStudent.save();
+
+      return group;
+    },
+    transferLeadership: async (_, { groupId, studentId }, context) => {
+      loginCheck(context);
+
+      const group = await Group.findById(groupId);
+      if (!group.course) throw Error("not a class group");
+
+      const groupStudentCurrentLeader = await GroupStudent.findOne({
+        group: groupId,
+        student: context.user.id,
+        type: "leader",
+      });
+      if (!groupStudentCurrentLeader) throw Error("not group leader");
+
+      const groupStudentNewLeader = await GroupStudent.findOne({ group: groupId, student: studentId });
+      if (!groupStudentNewLeader) throw Error("can't transfer to a non-member");
+
+      groupStudentCurrentLeader.type = "regular";
+      groupStudentNewLeader.type = "leader";
+
+      await groupStudentCurrentLeader.save();
+      await groupStudentNewLeader.save();
+
+      return group;
     },
     createStudyGroup: async (_, { name }, context) => {
       loginCheck(context);
