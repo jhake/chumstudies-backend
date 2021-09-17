@@ -21,6 +21,7 @@ module.exports = gql`
     profilePicture: String
 
     private: UserPrivate
+    isAdmin: Boolean
     student: Student
     teacher: Teacher
   }
@@ -83,6 +84,12 @@ module.exports = gql`
     students: StudentsResult
     leader: Student
     admins: StudentsResult
+    type: GroupType
+  }
+
+  enum GroupType {
+    CLASS
+    STUDY
   }
 
   type GroupsResult {
