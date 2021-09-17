@@ -21,6 +21,7 @@ module.exports = gql`
     profilePicture: String
 
     private: UserPrivate
+    isAdmin: Boolean
     student: Student
     teacher: Teacher
   }
@@ -83,6 +84,12 @@ module.exports = gql`
     students: StudentsResult
     leader: Student
     admins: StudentsResult
+    type: GroupType
+  }
+
+  enum GroupType {
+    CLASS
+    STUDY
   }
 
   type GroupsResult {
@@ -95,7 +102,7 @@ module.exports = gql`
     title: String
     description: String
     attachment: String
-    dueDate: Date
+    dueAt: Date
     type: String
     course: Course
     submissions: SubmissionsResult
@@ -111,7 +118,7 @@ module.exports = gql`
     title: String
     description: String
     attachment: String
-    dueDate: Date
+    dueAt: Date
     course: Course
     submissions: GroupSubmissionsResult
   }
@@ -155,7 +162,7 @@ module.exports = gql`
     attachment: String
     description: String
     grade: Int
-    dueDate: Date
+    dueAt: Date
     progress: Int
     student: Student
     groupSubmission: GroupSubmission

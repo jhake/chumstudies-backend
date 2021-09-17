@@ -1,4 +1,4 @@
-const { Group, GroupStudent, Student } = require("../models/index.js");
+const { Group, GroupStudent, Student, Course } = require("../models/index.js");
 const { loginCheck, isCourseTeacher, isCourseStudentMulti, isMemberOfClassGroupMulti } = require("../utils/checks.js");
 
 module.exports = {
@@ -36,6 +36,12 @@ module.exports = {
       if (!groupStudent) return null;
 
       return group.groupCode;
+    },
+    course: async (group) => {
+      return await Course.findById(group.course);
+    },
+    type: (group) => {
+      return group.course ? "CLASS" : "STUDY";
     },
   },
 
