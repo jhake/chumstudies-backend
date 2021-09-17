@@ -20,9 +20,17 @@ module.exports = gql`
   extend type Query {
     groups(pagination: PaginationInput): GroupsResult
   }
+
   # Feed
   extend type Query {
+    studentLeftSidePanel: StudentLeftSidePanelResult
     studentHomeFeed: StudentHomeFeedResult
+  }
+
+  type StudentLeftSidePanelResult {
+    courses: [Course]
+    studyGroups: [Group]
+    classGroups: [Group]
   }
 
   type StudentHomeFeedResult {
