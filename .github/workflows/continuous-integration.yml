@@ -1,4 +1,4 @@
-name: Prettier Check
+name: Continuous Integration
 
 # This action works with pull requests and pushes
 on:
@@ -43,4 +43,4 @@ jobs:
         run: cd functions && npm install
 
       - name: Run ESLint
-        run: eslint . --ext .js,.jsx,.ts,.tsx
+        run: cd functions && eslint . --ext .js,.jsx,.ts,.tsx
