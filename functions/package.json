@@ -1,7 +1,18 @@
 {
-  "name": "chumstudies-backend",
+  "name": "apollo-graphql",
   "version": "1.0.0",
-  "scripts": {},
+  "description": "netlify functions:create - set up for apollo graphql",
+  "main": "apollo-graphql.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "netlify",
+    "serverless",
+    "js",
+    "apollo"
+  ],
+  "author": "Netlify",
   "license": "MIT",
   "dependencies": {
     "@accounts/graphql-api": "^0.33.0",
@@ -16,7 +27,8 @@
     "cloudinary": "^1.26.3",
     "dotenv": "^10.0.0",
     "graphql": "^15.5.1",
-    "mongoose": "^5.13.7"
+    "mongoose": "^5.13.7",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "eslint": "^7.32.0"
