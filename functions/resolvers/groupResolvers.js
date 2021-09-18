@@ -80,6 +80,8 @@ module.exports = {
       if (!(await isCourseTeacher(context.user.id, courseId)))
         throw Error("you must be the teacher of the course to create a class group");
 
+      if (!studentIds.length) throw Error("studentIds must not be empty");
+
       if (!(await isCourseStudentMulti(studentIds, courseId)))
         throw Error("all students must be a member of the course");
 
