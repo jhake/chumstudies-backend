@@ -13,13 +13,17 @@ Notable libraries used.
 
 ### Prerequisites
 
-- Node 14 or later
+- Node 14 or later (`node -v` to check version)
 - MongoDB database
 - Cloudinary
 - VSCode extensions
   - Prettier
   - ESLint
-
+- Git set properly to avoid conflicts with line-endings
+```
+$ git config core.eol lf
+$ git config core.autocrlf input
+```
 ### Install Netlify CLI globally
 
 ```console
