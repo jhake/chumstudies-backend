@@ -26,6 +26,7 @@ module.exports = {
     },
     users: async (_, args, context) => {
       loginCheck(context);
+      if (!context.user.isAdmin) throw Error("must be an admin to query users");
 
       const limit = args?.pagination?.limit ?? 30;
       const page = args?.pagination?.page ?? 1;
