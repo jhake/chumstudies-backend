@@ -10,6 +10,10 @@ module.exports = {
       if (context.user.id !== user.id) throw Error("can't query other's upload preset");
       return user.uploadPreset;
     },
+    schoolIdNumber: (user, _, context) => {
+      if (context.user.id !== user.id) throw Error("can't query other's school id number");
+      return user.schoolIdNumber;
+    },
     student: async (user) => await Student.findById(user.id),
     teacher: async (user) => await Teacher.findById(user.id),
   },
