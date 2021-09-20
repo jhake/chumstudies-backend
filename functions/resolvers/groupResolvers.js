@@ -57,6 +57,7 @@ module.exports = {
 
       const userId = context.user.id;
       const group = await Group.findById(groupId);
+      if (!group) return null;
 
       const allowedToQuery = (await isCourseTeacher(userId, group.course)) || (await isGroupStudent(userId, groupId));
       if (!allowedToQuery) throw Error("can't query group");
