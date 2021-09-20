@@ -30,10 +30,13 @@ module.exports = {
       loginCheck(context);
 
       const userId = context.user.id;
-      if (!(await isCourseStudent(userId, courseId)) && !(await isCourseTeacher(userId, courseId)))
-        throw Error("not in course");
+      const course = await Course.findById(courseId);
+      if (!course) return null;
 
-      return await Course.findById(courseId);
+      const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
+      if (!inCourse) throw Error("not in course");
+
+      return course;
     },
     courses: async (_, { pagination }, context) => {
       loginCheck(context);
