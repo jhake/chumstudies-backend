@@ -1,5 +1,5 @@
 const { Course, Teacher, CourseStudent, Student, Group } = require("../models/index.js");
-const { loginCheck } = require("../utils/checks.js");
+const { loginCheck, isCourseStudent, isCourseTeacher } = require("../utils/checks.js");
 
 module.exports = {
   Course: {
@@ -26,6 +26,15 @@ module.exports = {
   },
 
   Query: {
+    course: async (_, { courseId }, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      if (!(await isCourseStudent(userId, courseId)) && !(await isCourseTeacher(userId, courseId)))
+        throw Error("not in course");
+
+      return await Course.findById(courseId);
+    },
     courses: async (_, { pagination }, context) => {
       loginCheck(context);
       const limit = pagination?.limit ?? 30;
