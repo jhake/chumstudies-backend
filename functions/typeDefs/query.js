@@ -19,6 +19,7 @@ module.exports = gql`
 
   # Group
   extend type Query {
+    group(groupId: ID!): Group
     groups(pagination: PaginationInput): GroupsResult
   }
 

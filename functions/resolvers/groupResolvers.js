@@ -52,6 +52,17 @@ module.exports = {
   },
 
   Query: {
+    group: async (_, { groupId }, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      const group = await Group.findById(groupId);
+
+      const allowedToQuery = (await isCourseTeacher(userId, group.course)) || (await isGroupStudent(userId, groupId));
+      if (!allowedToQuery) throw Error("can't query group");
+
+      return group;
+    },
     groups: async (_, { pagination }, context) => {
       loginCheck(context);
       const limit = pagination?.limit ?? 30;
