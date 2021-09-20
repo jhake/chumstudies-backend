@@ -26,6 +26,11 @@ const accountsPassword = new AccountsPassword({
   validateNewUser: (user) => {
     return { ...user, isAdmin: false };
   },
+
+  twoFactor: {
+    // Will be the two factor name displayed to the user
+    appName: "Chumstudies",
+  },
 });
 
 const accountsServer = new AccountsServer(

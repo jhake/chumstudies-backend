@@ -9,7 +9,9 @@ module.exports = model(
     groupCode: {
       type: String,
       default: function () {
-        const { name } = this;
+        const { name, course } = this;
+
+        if (course) return null;
         return `${name.replace(/\s+/g, "")}-${generateRandomString(10)}`;
       },
     },
