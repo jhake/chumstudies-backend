@@ -1,5 +1,5 @@
 const { Course, Teacher, CourseStudent, Student, Group } = require("../models/index.js");
-const { loginCheck, isCourseStudent, isCourseTeacher } = require("../utils/checks.js");
+const { loginCheck, isCourseStudent } = require("../utils/checks.js");
 
 module.exports = {
   Course: {
