@@ -6,10 +6,13 @@ const { loginCheck } = require("../utils/checks.js");
 
 module.exports = {
   User: {
-    private: (user, _, context) => {
-      if (context.user.id !== user.id) throw Error("can't query other's private data");
-
-      return user;
+    uploadPreset: (user, _, context) => {
+      if (context.user.id !== user.id) throw Error("can't query other's upload preset");
+      return user.uploadPreset;
+    },
+    schoolIdNumber: (user, _, context) => {
+      if (context.user.id !== user.id) throw Error("can't query other's school id number");
+      return user.schoolIdNumber;
     },
     student: async (user) => await Student.findById(user.id),
     teacher: async (user) => await Teacher.findById(user.id),
@@ -23,6 +26,7 @@ module.exports = {
     },
     users: async (_, args, context) => {
       loginCheck(context);
+      if (!context.user.isAdmin) throw Error("must be an admin to query users");
 
       const limit = args?.pagination?.limit ?? 30;
       const page = args?.pagination?.page ?? 1;
