@@ -12,7 +12,7 @@ cloudinary.config({
 });
 
 // We connect mongoose to our local mongodb database
-mongoose.connect(`${process.env.MONGODB_CONNECTION}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`, {
+mongoose.connect(`${process.env.MONGODB_CONNECTION}${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

@@ -20,10 +20,12 @@ Notable libraries used.
   - Prettier
   - ESLint
 - Git set properly to avoid conflicts with line-endings
+
 ```
 $ git config core.eol lf
 $ git config core.autocrlf input
 ```
+
 ### Install Netlify CLI globally
 
 ```console
@@ -58,7 +60,7 @@ $ touch .env
 The file should look like this
 
 ```
-MONGODB_CONNECTION=mongodb+srv://username:password@path.to.mongodb.server
+MONGODB_CONNECTION=mongodb+srv://username:password@path.to.mongodb.server/
 MONGODB_DATABASE="dbName"
 TOKEN_SECRET=my-super-random-secret
 ALLOWED_ORIGINS="http://localhost:3000"

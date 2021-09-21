@@ -5,3 +5,5 @@
 
 # Local Netlify folder
 .netlify
+
+globalConfig.json
