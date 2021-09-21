@@ -13,11 +13,13 @@ module.exports = gql`
 
   # Course
   extend type Query {
+    course(courseId: ID!): Course
     courses(pagination: PaginationInput): CoursesResult
   }
 
   # Group
   extend type Query {
+    group(groupId: ID!): Group
     groups(pagination: PaginationInput): GroupsResult
   }
 

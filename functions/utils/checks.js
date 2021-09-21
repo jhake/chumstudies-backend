@@ -7,6 +7,8 @@ module.exports.loginCheck = (context) => {
 };
 
 module.exports.isCourseTeacher = async (teacherId, courseId) => {
+  if (!courseId) return false;
+
   const course = await Course.findById(courseId);
   return course.teacher == teacherId;
 };
