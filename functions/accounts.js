@@ -3,7 +3,17 @@ const mongoose = require("mongoose");
 const { Mongo } = require("@accounts/mongo");
 const { AccountsServer } = require("@accounts/server");
 const { AccountsPassword } = require("@accounts/password");
+const nodemailer = require("nodemailer");
 const cloudinary = require("cloudinary");
+
+// Initiate nodemailer
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_ADDRESS,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -35,6 +45,27 @@ const accountsPassword = new AccountsPassword({
 
 const accountsServer = new AccountsServer(
   {
+    emailTemplates: {
+      from: "Chumstudies",
+      verifyEmail: {
+        subject: (user) => `Chumstudies - Verify your account email ${user.firstName} ${user.lastName}`,
+        text: (url) => `To verify your account email please click on this link: ${url}`,
+      },
+      resetPassword: {
+        subject: (user) => `Chumstudies - Reset your password ${user.firstName} ${user.lastName}`,
+        text: (url) => `To verify your account email please click on this link: ${url}`,
+      },
+    },
+    sendMail: async ({ from, subject, to, text, html }) => {
+      await transporter.sendMail({
+        from,
+        to,
+        subject,
+        text,
+        html,
+      });
+    },
+    siteUrl: process.env.FRONTEND_URL,
     ambiguousErrorMessages: false,
     enableAutologin: true,
     // We link the mongo adapter to the server

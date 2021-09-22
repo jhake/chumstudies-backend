@@ -63,7 +63,10 @@ The file should look like this
 MONGODB_CONNECTION=mongodb+srv://username:password@path.to.mongodb.server/
 MONGODB_DATABASE="dbName"
 TOKEN_SECRET=my-super-random-secret
-ALLOWED_ORIGINS="http://localhost:3000"
+FRONTEND_URL="http://localhost:3000"
+
+EMAIL_ADDRESS=
+EMAIL_PASSWORD=
 
 CLOUDINARY_CLOUD_NAME=somecloudname
 CLOUDINARY_API_KEY=12345
@@ -76,7 +79,9 @@ CLOUDINARY_FOLDER=
 
 `TOKEN_SECRET` is a random secret for the accounts server
 
-`ALLOWED_ORIGINS` is the allowed frontend URL to use the backend functions. You should use `"http://localhost:3000"` if you're using the default react port locally.
+`FRONTEND_URL` is the allowed frontend URL to use the backend functions. You should use `"http://localhost:3000"` if you're using the default react port locally.
+
+`EMAIL_...` are for the email service.
 
 `CLOUDINARY_...` are for cloudinary stuff.
 

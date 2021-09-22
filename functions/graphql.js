@@ -15,13 +15,13 @@ const server = new ApolloServer({
   },
   introspection: true,
   playground: true,
-  origin: process.env.ALLOWED_ORIGINS,
+  origin: process.env.FRONTEND_URL,
   credentials: true,
 });
 
 const handler = server.createHandler({
   cors: {
-    origin: process.env.ALLOWED_ORIGINS,
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   },
 });
