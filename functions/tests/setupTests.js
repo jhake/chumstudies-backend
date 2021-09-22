@@ -34,7 +34,7 @@ const AUTHENTICATE = gql`
 
 global.accountsPassword = accountsPassword;
 global.login = async (email, password) => {
-  const { data } = await server.executeOperation({
+  const { data } = await global.server.executeOperation({
     query: AUTHENTICATE,
     variables: {
       email,
