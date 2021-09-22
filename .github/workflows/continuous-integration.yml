@@ -51,3 +51,18 @@ jobs:
         env:
           GITHUB_ACTION: true
         run: node functions/graphql.js | grep "no errors"
+
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # Make sure the actual branch is checked out when running on pull requests
+          ref: ${{ github.head_ref }}
+      - name: Install modules
+        run: cd functions && npm install
+
+      - name: Run jest
+        run: cd functions && npx jest
