@@ -1,88 +1,85 @@
-const { MongoClient } = require("mongodb");
-const { Mutation } = require("../resolvers/courseResolvers");
+const { gql } = require("apollo-server-lambda");
+const { GraphQLError } = require("graphql");
+
 const accountsGraphQL = require("../accounts.js");
 const { accountsPassword } = accountsGraphQL;
-const { User, Teacher, Course } = require("../models");
 
-const { ApolloServer, gql } = require("apollo-server-lambda");
+const { Teacher, Course } = require("../models");
 
-const typeDefs = require("../typeDefs/index.js");
-const resolvers = require("../resolvers/index.js");
-
-jest.useFakeTimers();
-
-const AUTHENTICATE = gql`
-  mutation authenticate($email: String!, $password: String!) {
-    authenticate(serviceName: "password", params: { user: { email: $email }, password: $password }) {
-      sessionId
-      tokens {
-        accessToken
-        refreshToken
+const CREATE_COURSE = gql`
+  mutation createCourse(
+    $name: String!
+    $subjCode: String!
+    $yearAndSection: String!
+    $startsAt: Date!
+    $endsAt: Date!
+  ) {
+    createCourse(
+      name: $name
+      subjCode: $subjCode
+      yearAndSection: $yearAndSection
+      startsAt: $startsAt
+      endsAt: $endsAt
+    ) {
+      id
+      name
+      subjCode
+      yearAndSection
+      startsAt
+      endsAt
+      teacher {
+        id
       }
     }
   }
 `;
 
-const QUERY = gql`
-  query {
-    getCurrentUser {
-      id
-      firstName
-    }
-  }
-`;
+const courseFixture = {
+  name: "Test Course",
+  subjCode: "code12345",
+  yearAndSection: "1-1",
+  startsAt: Date.now(),
+  endsAt: Date.now(),
+};
 
-describe("insert", () => {
-  let server;
-  let token;
+describe("create course", () => {
+  it("should not allow a non-teacher to create a course", async () => {
+    await accountsPassword.createUser({ email: "notteacher@email.com", password: "qwerty" });
+    await global.login("notteacher@email.com", "qwerty");
 
-  beforeAll(async () => {
-    //await accountsPassword.createUser({ email: "user@email.com", password: "qwerty" });
-
-    server = new ApolloServer({
-      typeDefs,
-      resolvers,
-      context: async () => {
-        return await accountsGraphQL.context({
-          req: { headers: { authorization: token } },
-        });
-      },
-      credentials: true,
+    const { errors } = await global.server.executeOperation({
+      query: CREATE_COURSE,
+      variables: { ...courseFixture },
     });
 
-    // const { data } = await server.executeOperation({
-    //   query: AUTHENTICATE,
-    //   variables: {
-    //     email: "user@email.com",
-    //     password: "qwerty",
-    //   },
-    // });
-
-    // console.log(data);
+    expect(errors[0]).toMatchObject(new GraphQLError("you must be a teacher to create a course"));
   });
-
-  it("should", async () => {
-    const result = await server.executeOperation({
-      query: QUERY,
-    });
-    console.log(result);
-  });
-
-  // it("should not allow a non-teacher to create a course", async () => {
-  //   const userId = await accountsPassword.createUser({ email: "notteacher@email.com", password: "qwerty" });
-  //   const user = await User.findById(userId);
-
-  //   await expect(async () => await Mutation.createCourse(null, null, { user })).rejects.toThrow();
-  // });
 
   it("should insert a new Course", async () => {
     const userId = await accountsPassword.createUser({ email: "teacher@email.com", password: "qwerty" });
-    const user = await User.findById(userId);
     await new Teacher({ _id: userId, user: userId }).save();
-    await Mutation.createCourse(null, { name: "Test Course" }, { user });
+    await global.login("teacher@email.com", "qwerty");
 
-    const createdCourse = await Course.find({ name: "Test Course" });
+    const { errors, data } = await global.server.executeOperation({
+      query: CREATE_COURSE,
+      variables: { ...courseFixture },
+    });
 
-    expect(createdCourse).toBeTruthy();
+    expect(errors).toBeFalsy();
+    const createdCourse = await Course.findById(data.createCourse.id);
+
+    for (const [key, value] of Object.entries(courseFixture)) {
+      if (["startsAt", "endsAt"].includes(key)) {
+        expect(new Date(data.createCourse[key])).toMatchObject(new Date(value));
+        expect(new Date(createdCourse[key])).toMatchObject(new Date(value));
+        continue;
+      }
+
+      expect(data.createCourse[key]).toBe(value);
+      expect(createdCourse[key]).toBe(value);
+    }
+
+    expect(data.createCourse.teacher.id).toBe(userId);
+    expect(createdCourse.teacher == userId).toBe(true);
   });
 });
