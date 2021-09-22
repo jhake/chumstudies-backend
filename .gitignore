@@ -7,3 +7,4 @@
 .netlify
 
 globalConfig.json
+**/coverage

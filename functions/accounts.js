@@ -51,5 +51,6 @@ const accountsServer = new AccountsServer(
 // We generate the accounts-js GraphQL module
 const accountsGraphQL = AccountsModule.forRoot({ accountsServer });
 accountsGraphQL.accountsPassword = accountsPassword;
+accountsGraphQL.mongoConnection = mongoose.connection;
 
 module.exports = accountsGraphQL;
