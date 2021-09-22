@@ -12,7 +12,7 @@ cloudinary.config({
 });
 
 // We connect mongoose to our local mongodb database
-mongoose.connect(`${process.env.MONGODB_CONNECTION}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`, {
+mongoose.connect(`${process.env.MONGODB_CONNECTION}${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -51,5 +51,6 @@ const accountsServer = new AccountsServer(
 // We generate the accounts-js GraphQL module
 const accountsGraphQL = AccountsModule.forRoot({ accountsServer });
 accountsGraphQL.accountsPassword = accountsPassword;
+accountsGraphQL.mongoConnection = mongoose.connection;
 
 module.exports = accountsGraphQL;
