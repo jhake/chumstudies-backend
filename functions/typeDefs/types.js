@@ -72,10 +72,6 @@ module.exports = gql`
     pagination: Pagination
   }
 
-  type CoursesData {
-    data: [Course]
-  }
-
   type Group {
     id: ID
     name: String

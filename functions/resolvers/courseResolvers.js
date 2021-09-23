@@ -1,3 +1,4 @@
+const course = require("../models/course.js");
 const { Course, Teacher, CourseStudent, Student, Group } = require("../models/index.js");
 const { loginCheck, isCourseStudent } = require("../utils/checks.js");
 
@@ -57,18 +58,17 @@ module.exports = {
         },
       };
     },
-    studentCourses: async (_, {courseId}, context) => {
+    studentCourses: async (_, __, context) => {
       loginCheck(context);
 
       const userId = context.user.id;
-      const course = await Course.findById(courseId.user);
-      if (!course) return null;
-
       const student = await Student.findById(context.user.id);
-      if (!student) throw Error("you must be a student to view your classes");
+      if (!student) throw Error("you must be logged in as a student");
 
-      return course;
-    }
+      const currentstudent = course.userId;
+
+      return { data: Course.find({ currentstudent }) };
+    },
   },
 
   Mutation: {
