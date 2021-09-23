@@ -15,6 +15,7 @@ module.exports = gql`
   extend type Query {
     course(courseId: ID!): Course
     courses(pagination: PaginationInput): CoursesResult
+    studentCourses: CoursesData
   }
 
   # Group

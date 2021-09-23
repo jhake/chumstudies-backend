@@ -57,6 +57,18 @@ module.exports = {
         },
       };
     },
+    studentCourses: async (_, {courseId}, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      const course = await Course.findById(courseId.user);
+      if (!course) return null;
+
+      const student = await Student.findById(context.user.id);
+      if (!student) throw Error("you must be a student to view your classes");
+
+      return course;
+    }
   },
 
   Mutation: {
