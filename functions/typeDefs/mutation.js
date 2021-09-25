@@ -10,10 +10,9 @@ module.exports = gql`
       lastName: String!
       schoolIdNumber: String!
       email: String!
-      password: String!
       isTeacher: Boolean!
     ): User
-    createAdmin(firstName: String!, middleName: String, lastName: String!, email: String!, password: String!): User
+    createAdmin(firstName: String!, middleName: String, lastName: String!, email: String!): User
   }
 
   extend type CreateUserInput { ## should not be used since admin will create the users
