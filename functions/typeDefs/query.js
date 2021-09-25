@@ -6,9 +6,21 @@ module.exports = gql`
     mongoLatency: Float
   }
 
+  # User
   extend type Query {
     getCurrentUser: User
-    users(pagination: PaginationInput): UsersResult
+    users(pagination: PaginationInput, filter: UsersFilter): UsersResult
+    usersCount: UsersCountResult
+  }
+
+  input UsersFilter {
+    search: String
+  }
+
+  type UsersCountResult {
+    usersCount: Int
+    studentsCount: Int
+    teachersCount: Int
   }
 
   # Course
