@@ -65,9 +65,9 @@ module.exports = {
       const student = await Student.findById(context.user.id);
       if (!student) throw Error("you must be logged in as a student");
 
-      const currentstudent = course.userId;
+      console.log(Student.find({ course }));
 
-      return { data: Course.find({ currentstudent }) };
+      return { data: Student.find({ course }) };
     },
   },
 
