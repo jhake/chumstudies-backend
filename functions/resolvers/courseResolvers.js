@@ -57,6 +57,21 @@ module.exports = {
         },
       };
     },
+    studentCourses: async (_, __, context) => {
+      loginCheck(context);
+
+      const courseStudents = await CourseStudent.find({ student: context.user.id });
+      const filter = {
+        _id: {
+          $in: courseStudents?.map(({ course }) => course) ?? [],
+        },
+      };
+
+      return {
+        data: await Course.find(filter),
+        pagination: null,
+      };
+    },
   },
 
   Mutation: {
