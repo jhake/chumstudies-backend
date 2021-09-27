@@ -15,5 +15,8 @@ module.exports = model(
     user: { type: Schema.Types.ObjectId, ref: "User" },
     course: { type: Schema.Types.ObjectId, ref: "Course" },
     group: { type: Schema.Types.ObjectId, ref: "Group" },
+
+    activity: { type: Schema.Types.ObjectId, ref: "Activity" },
+    groupActivity: { type: Schema.Types.ObjectId, ref: "GroupActivity" },
   })
 );
