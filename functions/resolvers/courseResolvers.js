@@ -85,8 +85,6 @@ module.exports = {
         },
       };
 
-      console.log(filter);
-
       return {
         data: await Course.find(filter),
       };
