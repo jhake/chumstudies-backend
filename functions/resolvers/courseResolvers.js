@@ -84,7 +84,8 @@ module.exports = {
       };
     },
 
-    coursePosts: async (_, { courseId }) => {
+    coursePosts: async (_, { courseId }, context) => {
+      loginCheck(context);
       const filter = { course: courseId };
 
       return {
