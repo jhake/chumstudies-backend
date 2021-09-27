@@ -182,6 +182,11 @@ module.exports = gql`
     group: Group
   }
 
+  type PostsResult {
+    data: [Post]
+    pagination: Pagination
+  }
+
   type Comment {
     id: ID
     content: String
