@@ -1,4 +1,4 @@
-const { Course, Teacher, CourseStudent, Student, Group, Post } = require("../models/index.js");
+const { Course, Teacher, CourseStudent, Student, Group } = require("../models/index.js");
 const { loginCheck, isCourseStudent } = require("../utils/checks.js");
 
 module.exports = {
@@ -81,15 +81,6 @@ module.exports = {
 
       return {
         data: await Course.find(filter),
-      };
-    },
-
-    coursePosts: async (_, { courseId }, context) => {
-      loginCheck(context);
-      const filter = { course: courseId };
-
-      return {
-        data: await Post.find(filter),
       };
     },
   },
