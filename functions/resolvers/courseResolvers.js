@@ -72,6 +72,16 @@ module.exports = {
         pagination: null,
       };
     },
+
+    teacherCourses: async (_, __, context) => {
+      loginCheck(context);
+
+      const filter = { teacher: context.user.id };
+
+      return {
+        data: await Course.find(filter),
+      };
+    },
   },
 
   Mutation: {
