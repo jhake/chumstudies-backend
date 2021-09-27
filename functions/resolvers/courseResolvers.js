@@ -62,13 +62,17 @@ module.exports = {
     studentCourses: async (_, __, context) => {
       loginCheck(context);
 
-      const userId = context.user.id;
-      const student = await Student.findById(context.user.id);
-      if (!student) throw Error("you must be logged in as a student");
+      const courseStudents = await CourseStudent.find({ student: context.user.id });
+      const filter = {
+        _id: {
+          $in: courseStudents?.map(({ course }) => course) ?? [],
+        },
+      };
 
-      console.log(Student.find({ course }));
-
-      return { data: Student.find({ course }) };
+      return {
+        data: await Course.find(filter),
+        pagination: null,
+      };
     },
   },
 
