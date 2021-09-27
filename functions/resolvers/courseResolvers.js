@@ -69,6 +69,8 @@ module.exports = {
         },
       };
 
+      console.log(filter);
+
       return {
         data: await Course.find(filter),
         pagination: null,
@@ -78,12 +80,7 @@ module.exports = {
     teacherCourses: async (_, __, context) => {
       loginCheck(context);
 
-      const courseTeachers = await Course.find({ teacher: context.user.id });
-      const filter = {
-        _id: {
-          $in: courseTeachers?.map(({ course }) => course) ?? [],
-        },
-      };
+      const filter = { teacher: context.user.id };
 
       return {
         data: await Course.find(filter),
