@@ -61,7 +61,7 @@ module.exports = {
       loginCheck(context);
 
       const courseStudents = await CourseStudent.find({ student: context.user.id });
-      console.log(courseStudents);
+
       const filter = {
         _id: {
           $in: courseStudents?.map(({ course }) => course) ?? [],
