@@ -74,6 +74,23 @@ module.exports = {
         pagination: null,
       };
     },
+
+    teacherCourses: async (_, __, context) => {
+      loginCheck(context);
+
+      const courseTeachers = await Course.find({ teacher: context.user.id });
+      const filter = {
+        _id: {
+          $in: courseTeachers?.map(({ course }) => course) ?? [],
+        },
+      };
+
+      console.log(filter);
+
+      return {
+        data: await Course.find(filter),
+      };
+    },
   },
 
   Mutation: {

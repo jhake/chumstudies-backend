@@ -16,6 +16,7 @@ module.exports = gql`
     course(courseId: ID!): Course
     courses(pagination: PaginationInput): CoursesResult
     studentCourses: CoursesResult
+    teacherCourses: CoursesResult
   }
 
   # Group
