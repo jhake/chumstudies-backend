@@ -41,6 +41,8 @@ const accountsPassword = new AccountsPassword({
     // Will be the two factor name displayed to the user
     appName: "Chumstudies",
   },
+
+  notifyUserAfterPasswordChanged: false,
 });
 
 const accountsServer = new AccountsServer(
@@ -49,11 +51,18 @@ const accountsServer = new AccountsServer(
       from: "Chumstudies",
       verifyEmail: {
         subject: (user) => `Chumstudies - Verify your account email ${user.firstName} ${user.lastName}`,
-        text: (url) => `To verify your account email please click on this link: ${url}`,
+        html: (_, url) => `To verify your account email please click on this link: ${url}`,
       },
       resetPassword: {
         subject: (user) => `Chumstudies - Reset your password ${user.firstName} ${user.lastName}`,
-        text: (url) => `To verify your account email please click on this link: ${url}`,
+        html: (_, url) => `To reset your password please click on this link: ${url}`,
+      },
+      enrollAccount: {
+        subject: (user) => {
+          console.log("ASDSA");
+          return `Welcome to Chumstudies, ${user.firstName} ${user.lastName}!`;
+        },
+        html: (_, url) => `Set your password by clicking this link: ${url.replace("enroll-account", "reset-password")}`,
       },
     },
     sendMail: async ({ from, subject, to, text, html }) => {
