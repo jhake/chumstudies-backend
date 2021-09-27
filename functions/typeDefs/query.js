@@ -31,6 +31,11 @@ module.exports = gql`
     teacherCourses: CoursesResult
   }
 
+  # Post
+  extend type Query {
+    coursePosts(courseId: ID!): PostsResult
+  }
+
   # Group
   extend type Query {
     group(groupId: ID!): Group

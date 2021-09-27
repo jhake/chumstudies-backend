@@ -8,6 +8,17 @@ module.exports = {
     user: async (post) => await User.findById(post.user),
   },
 
+  Query: {
+    coursePosts: async (_, { courseId }, context) => {
+      loginCheck(context);
+      const filter = { course: courseId };
+
+      return {
+        data: await Post.find(filter),
+      };
+    },
+  },
+
   Mutation: {
     createPost: async (_, args, context) => {
       loginCheck(context);
