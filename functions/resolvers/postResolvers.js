@@ -1,6 +1,5 @@
 const { validateAttachment, destroy } = require("../utils/cloudinary");
-const { Group } = require("../models/index.js");
-const { Post, User } = require("../models/index.js");
+const { Post, User, Course, Group } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isGroupStudent, isCourseTeacher } = require("../utils/checks");
 
 module.exports = {
@@ -11,12 +10,21 @@ module.exports = {
   Query: {
     coursePosts: async (_, { courseId }, context) => {
       loginCheck(context);
+
+      const userId = context.user.id;
+      const course = await Course.findById(courseId);
+      if (!course) return null;
+
+      const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
+      if (!inCourse) throw Error("not in course");
+
       const filter = { course: courseId };
 
       return {
         data: await Post.find(filter),
       };
     },
+
     groupPosts: async (_, { groupId }, context) => {
       loginCheck(context);
 
