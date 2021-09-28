@@ -35,7 +35,7 @@ module.exports = {
       if (!group) return null;
 
       const allowedToQuery = (await isGroupStudent(userId, groupId)) || (await isCourseTeacher(userId, group.course));
-      if (!allowedToQuery) throw Error("not in a group!");
+      if (!allowedToQuery) throw Error("not allowed to query group");
 
       const filter = { group: groupId };
 
