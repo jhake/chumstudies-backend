@@ -1,5 +1,5 @@
 const { validateAttachment, destroy } = require("../utils/cloudinary");
-const { Post, User, Activity, GroupActivity, Course, Group } = require("../models/index.js");
+const { Post, User, Activity, GroupActivity, Course, Group, Comment } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isGroupStudent, isCourseTeacher } = require("../utils/checks");
 
 module.exports = {
@@ -7,6 +7,9 @@ module.exports = {
     user: async (post) => await User.findById(post.user),
     activity: async (post) => await Activity.findById(post.activity),
     groupActivity: async (post) => await GroupActivity.findById(post.groupActivity),
+    comments: async ({ id }) => ({
+      data: await Comment.find({ post: id }),
+    }),
   },
 
   Query: {
