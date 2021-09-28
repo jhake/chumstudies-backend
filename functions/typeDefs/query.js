@@ -34,6 +34,7 @@ module.exports = gql`
   # Post
   extend type Query {
     coursePosts(courseId: ID!): PostsResult
+    groupPosts(groupId: ID!): PostsResult
   }
 
   # Group
