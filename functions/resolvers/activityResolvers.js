@@ -1,6 +1,6 @@
 const { validateAttachment } = require("../utils/cloudinary");
 
-const { Activity, Course, GroupActivity } = require("../models/index.js");
+const { Activity, Course, GroupActivity, Post } = require("../models/index.js");
 const { loginCheck, isCourseTeacher } = require("../utils/checks");
 
 module.exports = {
@@ -25,7 +25,16 @@ module.exports = {
         course: courseId,
       });
 
-      return await activity.save();
+      const post = new Post({
+        user: context.user.id,
+        course: courseId,
+        activity: activity,
+      });
+
+      await activity.save();
+      await post.save();
+
+      return activity;
     },
     addAttachmentToActivity: async (_, { id: activityId, attachment }, context) => {
       loginCheck(context);
@@ -59,7 +68,16 @@ module.exports = {
         course: courseId,
       });
 
-      return await groupActivity.save();
+      const post = new Post({
+        user: context.user.id,
+        course: courseId,
+        groupActivity: groupActivity,
+      });
+
+      await groupActivity.save();
+      await post.save();
+
+      return groupActivity;
     },
     addAttachmentToGroupActivity: async (_, { id: groupActivityId, attachment }, context) => {
       loginCheck(context);

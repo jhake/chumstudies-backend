@@ -9,5 +9,13 @@ module.exports = model(
     submittedAt: Date,
     group: { type: Schema.Types.ObjectId, ref: "Group" },
     groupActivity: { type: Schema.Types.ObjectId, ref: "GroupActivity" },
+
+    comments: [
+      {
+        content: String,
+        createdAt: { type: Date, required: true, default: Date.now },
+        user: { type: Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
   })
 );
