@@ -10,5 +10,13 @@ module.exports = model(
     type: String,
     createdAt: { type: Date, default: Date.now },
     course: { type: Schema.Types.ObjectId, ref: "Course" },
+
+    comments: [
+      {
+        content: String,
+        createdAt: { type: Date, required: true, default: Date.now },
+        user: { type: Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
   })
 );

@@ -180,6 +180,8 @@ module.exports = gql`
     user: User
     course: Course
     group: Group
+    activity: Activity
+    groupActivity: GroupActivity
   }
 
   type PostsResult {
