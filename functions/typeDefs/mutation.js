@@ -60,4 +60,9 @@ module.exports = gql`
     addAttachmentToPost(id: ID!, attachment: String!): Post
     destroyPost(id: ID!): Boolean
   }
+
+  # Comment
+  extend type Mutation {
+    createPostComment(postId: ID!, content: String!): Comment
+  }
 `;

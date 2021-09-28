@@ -180,6 +180,7 @@ module.exports = gql`
     user: User
     course: Course
     group: Group
+    comments: CommentsResult
     activity: Activity
     groupActivity: GroupActivity
   }
@@ -196,5 +197,10 @@ module.exports = gql`
     createdAt: Date
     user: User
     post: Post
+  }
+
+  type CommentsResult {
+    data: [Comment]
+    pagination: Pagination
   }
 `;
