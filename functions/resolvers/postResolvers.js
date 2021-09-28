@@ -26,7 +26,7 @@ module.exports = {
       const filter = { course: courseId };
 
       return {
-        data: await Post.find(filter),
+        data: await Post.find(filter).sort({ _id: -1 }),
       };
     },
 
@@ -43,7 +43,7 @@ module.exports = {
       const filter = { group: groupId };
 
       return {
-        data: await Post.find(filter),
+        data: await Post.find(filter).sort({ _id: -1 }),
       };
     },
   },
