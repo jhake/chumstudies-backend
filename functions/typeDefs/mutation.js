@@ -64,5 +64,6 @@ module.exports = gql`
   # Comment
   extend type Mutation {
     createPostComment(postId: ID!, content: String!): Comment
+    voteComment(commentId: ID!, vote: Int!): Comment
   }
 `;
