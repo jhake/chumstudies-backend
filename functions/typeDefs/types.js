@@ -197,6 +197,7 @@ module.exports = gql`
     createdAt: Date
     user: User
     post: Post
+    vote: Int
   }
 
   type CommentsResult {
