@@ -12,14 +12,12 @@ module.exports = {
 
       const userId = context.user.id;
       const course = await Course.findById(courseId);
-      console.log(course);
       if (!course) return null;
 
       const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
       if (!inCourse) throw Error("not in course");
 
       const filter = { course: courseId, attachment: { $exists: true } };
-      console.log(filter);
 
       return {
         postData: await Post.find(filter),
