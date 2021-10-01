@@ -7,6 +7,8 @@ module.exports.loginCheck = (context) => {
 };
 
 module.exports.isCourseTeacher = async (teacherId, courseId) => {
+  if (!courseId) return false;
+
   const course = await Course.findById(courseId);
   return course.teacher == teacherId;
 };
@@ -24,6 +26,16 @@ module.exports.isGroupStudent = async (studentId, groupId) => {
   const groupStudent = await GroupStudent.findOne({
     group: groupId,
     student: studentId,
+  });
+
+  return !!groupStudent;
+};
+
+module.exports.isGroupLeader = async (studentId, groupId) => {
+  const groupStudent = await GroupStudent.findOne({
+    group: groupId,
+    student: studentId,
+    type: "leader",
   });
 
   return !!groupStudent;

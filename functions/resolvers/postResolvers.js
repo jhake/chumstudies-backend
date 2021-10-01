@@ -1,11 +1,51 @@
 const { validateAttachment, destroy } = require("../utils/cloudinary");
-
-const { Post, User } = require("../models/index.js");
+const { Post, User, Activity, GroupActivity, Course, Group, Comment } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isGroupStudent, isCourseTeacher } = require("../utils/checks");
 
 module.exports = {
   Post: {
     user: async (post) => await User.findById(post.user),
+    activity: async (post) => await Activity.findById(post.activity),
+    groupActivity: async (post) => await GroupActivity.findById(post.groupActivity),
+    comments: async ({ id }) => ({
+      data: await Comment.find({ post: id }),
+    }),
+  },
+
+  Query: {
+    coursePosts: async (_, { courseId }, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      const course = await Course.findById(courseId);
+      if (!course) return null;
+
+      const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
+      if (!inCourse) throw Error("not in course");
+
+      const filter = { course: courseId };
+
+      return {
+        data: await Post.find(filter).sort({ _id: -1 }),
+      };
+    },
+
+    groupPosts: async (_, { groupId }, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      const group = await Group.findById(groupId);
+      if (!group) return null;
+
+      const allowedToQuery = (await isGroupStudent(userId, groupId)) || (await isCourseTeacher(userId, group.course));
+      if (!allowedToQuery) throw Error("not allowed to query group");
+
+      const filter = { group: groupId };
+
+      return {
+        data: await Post.find(filter).sort({ _id: -1 }),
+      };
+    },
   },
 
   Mutation: {
@@ -30,6 +70,8 @@ module.exports = {
 
       const post = new Post({
         ...args,
+        course: courseId,
+        group: groupId,
         user: context.user.id,
       });
 

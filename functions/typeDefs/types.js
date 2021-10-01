@@ -20,7 +20,8 @@ module.exports = gql`
     schoolIdNumber: String
     profilePicture: String
 
-    private: UserPrivate
+    uploadPreset: String
+    isAdmin: Boolean
     student: Student
     teacher: Teacher
   }
@@ -28,10 +29,6 @@ module.exports = gql`
   type UsersResult {
     data: [User]
     pagination: Pagination
-  }
-
-  type UserPrivate {
-    uploadPreset: String
   }
 
   type Student {
@@ -63,6 +60,7 @@ module.exports = gql`
     startsAt: Date
     endsAt: Date
     isActive: Boolean
+    groups: GroupsResult
     students: StudentsResult
     teacher: Teacher
     activities: ActivitiesResult
@@ -83,6 +81,12 @@ module.exports = gql`
     students: StudentsResult
     leader: Student
     admins: StudentsResult
+    type: GroupType
+  }
+
+  enum GroupType {
+    CLASS
+    STUDY
   }
 
   type GroupsResult {
@@ -95,7 +99,7 @@ module.exports = gql`
     title: String
     description: String
     attachment: String
-    dueDate: Date
+    dueAt: Date
     type: String
     course: Course
     submissions: SubmissionsResult
@@ -111,7 +115,7 @@ module.exports = gql`
     title: String
     description: String
     attachment: String
-    dueDate: Date
+    dueAt: Date
     course: Course
     submissions: GroupSubmissionsResult
   }
@@ -155,7 +159,7 @@ module.exports = gql`
     attachment: String
     description: String
     grade: Int
-    dueDate: Date
+    dueAt: Date
     progress: Int
     student: Student
     groupSubmission: GroupSubmission
@@ -176,6 +180,14 @@ module.exports = gql`
     user: User
     course: Course
     group: Group
+    comments: CommentsResult
+    activity: Activity
+    groupActivity: GroupActivity
+  }
+
+  type PostsResult {
+    data: [Post]
+    pagination: Pagination
   }
 
   type Comment {
@@ -185,5 +197,11 @@ module.exports = gql`
     createdAt: Date
     user: User
     post: Post
+    vote: Int
+  }
+
+  type CommentsResult {
+    data: [Comment]
+    pagination: Pagination
   }
 `;

@@ -3,13 +3,17 @@ const cloudinary = require("cloudinary");
 const { accountsPassword } = require("../accounts.js");
 const { User, Student, Teacher } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
+const generateRandomString = require("../utils/generateRandomString.js");
 
 module.exports = {
   User: {
-    private: (user, _, context) => {
-      if (context.user.id !== user.id) throw Error("can't query other's private data");
-
-      return user;
+    uploadPreset: (user, _, context) => {
+      if (context.user.id !== user.id) throw Error("can't query other's upload preset");
+      return user.uploadPreset;
+    },
+    schoolIdNumber: (user, _, context) => {
+      if (context.user.id !== user.id && !context.user.isAdmin) throw Error("can't query other's school id number");
+      return user.schoolIdNumber;
     },
     student: async (user) => await Student.findById(user.id),
     teacher: async (user) => await Teacher.findById(user.id),
@@ -19,16 +23,32 @@ module.exports = {
     getCurrentUser: async (_, __, context) => {
       loginCheck(context);
 
-      return await User.findById(context.user);
+      return await User.findById(context.user.id);
     },
-    users: async (_, args, context) => {
+    users: async (_, { pagination, filter: filterInput }, context) => {
       loginCheck(context);
+      if (!context.user.isAdmin) throw Error("must be an admin to query users");
 
-      const limit = args?.pagination?.limit ?? 30;
-      const page = args?.pagination?.page ?? 1;
+      const limit = pagination?.limit ?? 30;
+      const page = pagination?.page ?? 1;
       const skip = limit * (page - 1);
 
-      const filter = {};
+      const { search } = filterInput ?? {};
+
+      const filter = {
+        $and: [
+          ...(search
+            ? [
+                {
+                  $text: {
+                    $search: search,
+                  },
+                },
+              ]
+            : []),
+          {},
+        ],
+      };
 
       const totalCount = await User.countDocuments(filter);
       const totalPages = Math.ceil(totalCount / limit);
@@ -39,6 +59,16 @@ module.exports = {
           totalCount,
           totalPages,
         },
+      };
+    },
+    usersCount: async (_, __, context) => {
+      loginCheck(context);
+      if (!context.user.isAdmin) throw Error("must be an admin to query users");
+
+      return {
+        usersCount: await User.countDocuments({}),
+        teachersCount: await Teacher.countDocuments({}),
+        studentsCount: await Student.countDocuments({}),
       };
     },
   },
@@ -66,9 +96,12 @@ module.exports = {
       loginCheck(context);
       if (!context.user.isAdmin) throw Error("must be an admin");
 
+      const password = generateRandomString(12);
+
       // create user
       const userId = await accountsPassword.createUser({
         ...args,
+        password,
         isAdmin: true,
       });
 
@@ -84,6 +117,8 @@ module.exports = {
       const presetName = presetResult.name;
       user.uploadPreset = presetName;
 
+      await accountsPassword.sendEnrollmentEmail(args.email);
+
       return await user.save();
     },
     adminCreateUser: async (_, args, context) => {
@@ -92,9 +127,12 @@ module.exports = {
 
       const { isTeacher } = args;
 
+      const password = generateRandomString(12);
+
       // create user
       const userId = await accountsPassword.createUser({
         ...args,
+        password,
         isAdmin: false,
       });
 
@@ -118,6 +156,8 @@ module.exports = {
       });
       const presetName = presetResult.name;
       user.uploadPreset = presetName;
+
+      await accountsPassword.sendEnrollmentEmail(args.email);
 
       return await user.save();
     },

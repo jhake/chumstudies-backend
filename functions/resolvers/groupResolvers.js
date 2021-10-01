@@ -1,5 +1,11 @@
-const { Group, GroupStudent, Student } = require("../models/index.js");
-const { loginCheck, isCourseTeacher, isCourseStudentMulti, isMemberOfClassGroupMulti } = require("../utils/checks.js");
+const { Group, GroupStudent, Student, Course } = require("../models/index.js");
+const {
+  loginCheck,
+  isCourseTeacher,
+  isCourseStudentMulti,
+  isMemberOfClassGroupMulti,
+  isGroupStudent,
+} = require("../utils/checks.js");
 
 module.exports = {
   Group: {
@@ -37,9 +43,27 @@ module.exports = {
 
       return group.groupCode;
     },
+    course: async (group) => {
+      return await Course.findById(group.course);
+    },
+    type: (group) => {
+      return group.course ? "CLASS" : "STUDY";
+    },
   },
 
   Query: {
+    group: async (_, { groupId }, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      const group = await Group.findById(groupId);
+      if (!group) return null;
+
+      const allowedToQuery = (await isCourseTeacher(userId, group.course)) || (await isGroupStudent(userId, groupId));
+      if (!allowedToQuery) throw Error("can't query group");
+
+      return group;
+    },
     groups: async (_, { pagination }, context) => {
       loginCheck(context);
       const limit = pagination?.limit ?? 30;
@@ -62,41 +86,74 @@ module.exports = {
   },
 
   Mutation: {
-    createClassGroup: async (_, { courseId, name }, context) => {
+    createClassGroup: async (_, { courseId, studentIds }, context) => {
       loginCheck(context);
 
       if (!(await isCourseTeacher(context.user.id, courseId)))
         throw Error("you must be the teacher of the course to create a class group");
 
+      if (!studentIds.length) throw Error("studentIds must not be empty");
+
+      if (!(await isCourseStudentMulti(studentIds, courseId)))
+        throw Error("all students must be a member of the course");
+
+      if (await isMemberOfClassGroupMulti(studentIds, courseId))
+        throw Error("all students must not have a group in the course yet");
+
+      const groupsCount = await Group.countDocuments({ course: courseId });
+
       const group = new Group({
-        name,
+        name: `Group ${groupsCount + 1}`,
         course: courseId,
       });
 
-      return await group.save();
-    },
-    assignStudentsToClassGroup: async (_, { groupId, studentIds }, context) => {
-      loginCheck(context);
-
-      const group = await Group.findById(groupId);
-
-      if (!(await isCourseTeacher(context.user.id, group.course)))
-        throw Error("you must be the teacher of the course to assign students to a class group");
-
-      console.log(await isCourseStudentMulti(studentIds, group.course));
-
-      if (!(await isCourseStudentMulti(studentIds, group.course)))
-        throw Error("all students must be a member of the course");
-
-      if (await isMemberOfClassGroupMulti(studentIds, group.course))
-        throw Error("all students must not have a group in the course yet");
-
       await GroupStudent.insertMany(
         studentIds.map((studentId) => ({
-          group: groupId,
+          group: group.id,
           student: studentId,
         }))
       );
+
+      return await group.save();
+    },
+    becomeLeader: async (_, { groupId }, context) => {
+      loginCheck(context);
+
+      const group = await Group.findById(groupId);
+      if (!group.course) throw Error("not a class group");
+      if (!(await isGroupStudent(context.user.id, groupId))) throw Error("not a member of the group");
+
+      const groupStudentLeader = await GroupStudent.findOne({ group: groupId, type: "leader" });
+      if (groupStudentLeader) throw Error("group already has a leader");
+
+      const groupStudent = await GroupStudent.findOne({ group: groupId, student: context.user.id });
+      groupStudent.type = "leader";
+
+      await groupStudent.save();
+
+      return group;
+    },
+    transferLeadership: async (_, { groupId, studentId }, context) => {
+      loginCheck(context);
+
+      const group = await Group.findById(groupId);
+      if (!group.course) throw Error("not a class group");
+
+      const groupStudentCurrentLeader = await GroupStudent.findOne({
+        group: groupId,
+        student: context.user.id,
+        type: "leader",
+      });
+      if (!groupStudentCurrentLeader) throw Error("not group leader");
+
+      const groupStudentNewLeader = await GroupStudent.findOne({ group: groupId, student: studentId });
+      if (!groupStudentNewLeader) throw Error("can't transfer to a non-member");
+
+      groupStudentCurrentLeader.type = "regular";
+      groupStudentNewLeader.type = "leader";
+
+      await groupStudentCurrentLeader.save();
+      await groupStudentNewLeader.save();
 
       return group;
     },

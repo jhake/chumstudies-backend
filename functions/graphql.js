@@ -1,4 +1,5 @@
 const { ApolloServer } = require("apollo-server-lambda");
+require("dotenv").config();
 
 const typeDefs = require("./typeDefs/index.js");
 const resolvers = require("./resolvers/index.js");
@@ -14,15 +15,16 @@ const server = new ApolloServer({
   },
   introspection: true,
   playground: true,
-  origin: process.env.ALLOWED_ORIGINS,
+  origin: process.env.FRONTEND_URL,
   credentials: true,
 });
 
 const handler = server.createHandler({
   cors: {
-    origin: process.env.ALLOWED_ORIGINS,
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   },
 });
 
+if (process.env.GITHUB_ACTION) console.log("no errors");
 module.exports = { handler };

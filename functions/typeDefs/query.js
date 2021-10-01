@@ -6,23 +6,58 @@ module.exports = gql`
     mongoLatency: Float
   }
 
+  # User
   extend type Query {
     getCurrentUser: User
-    users(pagination: PaginationInput): UsersResult
+    users(pagination: PaginationInput, filter: UsersFilter): UsersResult
+    usersCount: UsersCountResult
+  }
+
+  input UsersFilter {
+    search: String
+  }
+
+  type UsersCountResult {
+    usersCount: Int
+    studentsCount: Int
+    teachersCount: Int
   }
 
   # Course
   extend type Query {
+    course(courseId: ID!): Course
     courses(pagination: PaginationInput): CoursesResult
+    studentCourses: CoursesResult
+    teacherCourses: CoursesResult
+  }
+
+  # Post
+  extend type Query {
+    groupPosts(groupId: ID!): PostsResult
+    coursePosts(courseId: ID!): PostsResult
+  }
+
+  # Comment
+  extend type Query {
+    postComments(postId: ID!): CommentsResult
   }
 
   # Group
   extend type Query {
+    group(groupId: ID!): Group
     groups(pagination: PaginationInput): GroupsResult
   }
+
   # Feed
   extend type Query {
+    studentLeftSidePanel: StudentLeftSidePanelResult
     studentHomeFeed: StudentHomeFeedResult
+  }
+
+  type StudentLeftSidePanelResult {
+    courses: [Course]
+    studyGroups: [Group]
+    classGroups: [Group]
   }
 
   type StudentHomeFeedResult {

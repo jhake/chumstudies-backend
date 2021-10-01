@@ -10,10 +10,9 @@ module.exports = gql`
       lastName: String!
       schoolIdNumber: String!
       email: String!
-      password: String!
       isTeacher: Boolean!
     ): User
-    createAdmin(firstName: String!, middleName: String, lastName: String!, email: String!, password: String!): User
+    createAdmin(firstName: String!, middleName: String, lastName: String!, email: String!): User
   }
 
   extend type CreateUserInput { ## should not be used since admin will create the users
@@ -33,17 +32,18 @@ module.exports = gql`
 
   # Group
   extend type Mutation {
-    createClassGroup(name: String!, courseId: ID!): Group
-    assignStudentsToClassGroup(groupId: ID!, studentIds: [ID!]!): Group
+    createClassGroup(courseId: ID!, studentIds: [ID!]!): Group
+    becomeLeader(groupId: ID!): Group
+    transferLeadership(groupId: ID!, studentId: ID!): Group
     createStudyGroup(name: String!): Group
     joinStudyGroup(groupCode: String!): Group
   }
 
   # Activity / GroupActivity
   extend type Mutation {
-    createActivity(title: String!, description: String!, dueDate: Date!, type: String!, courseId: ID!): Activity
+    createActivity(title: String!, description: String!, dueAt: Date!, type: String!, courseId: ID!): Activity
     addAttachmentToActivity(id: ID!, attachment: String!): Activity
-    createGroupActivity(title: String!, description: String!, dueDate: Date!, courseId: ID!): GroupActivity
+    createGroupActivity(title: String!, description: String!, dueAt: Date!, courseId: ID!): GroupActivity
     addAttachmentToGroupActivity(id: ID!, attachment: String!): GroupActivity
   }
 
@@ -59,5 +59,11 @@ module.exports = gql`
     createPost(groupId: ID, courseId: ID, content: String!, category: String, tags: [String]): Post
     addAttachmentToPost(id: ID!, attachment: String!): Post
     destroyPost(id: ID!): Boolean
+  }
+
+  # Comment
+  extend type Mutation {
+    createPostComment(postId: ID!, content: String!): Comment
+    voteComment(commentId: ID!, vote: Int!): Comment
   }
 `;

@@ -1,8 +1,9 @@
-const { Course, Teacher, CourseStudent, Student } = require("../models/index.js");
-const { loginCheck } = require("../utils/checks.js");
+const { Course, Teacher, CourseStudent, Student, Group } = require("../models/index.js");
+const { loginCheck, isCourseStudent } = require("../utils/checks.js");
 
 module.exports = {
   Course: {
+    groups: async (course) => ({ data: await Group.find({ course }), pagination: null }),
     students: async (course) => {
       const courseStudents = await CourseStudent.find({ course });
       const filter = {
@@ -25,6 +26,18 @@ module.exports = {
   },
 
   Query: {
+    course: async (_, { courseId }, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      const course = await Course.findById(courseId);
+      if (!course) return null;
+
+      const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
+      if (!inCourse) throw Error("not in course");
+
+      return course;
+    },
     courses: async (_, { pagination }, context) => {
       loginCheck(context);
       const limit = pagination?.limit ?? 30;
@@ -42,6 +55,31 @@ module.exports = {
           totalCount,
           totalPages,
         },
+      };
+    },
+    studentCourses: async (_, __, context) => {
+      loginCheck(context);
+
+      const courseStudents = await CourseStudent.find({ student: context.user.id });
+      const filter = {
+        _id: {
+          $in: courseStudents?.map(({ course }) => course) ?? [],
+        },
+      };
+
+      return {
+        data: await Course.find(filter),
+        pagination: null,
+      };
+    },
+
+    teacherCourses: async (_, __, context) => {
+      loginCheck(context);
+
+      const filter = { teacher: context.user.id };
+
+      return {
+        data: await Course.find(filter),
       };
     },
   },
