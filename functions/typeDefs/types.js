@@ -190,6 +190,18 @@ module.exports = gql`
     pagination: Pagination
   }
 
+  type File {
+    attachment: String
+    user: User
+  }
+
+  type FilesResult {
+    postData: [File]
+    activityData: [File]
+    groupActivityData: [File]
+    pagination: Pagination
+  }
+
   type Comment {
     id: ID
     content: String
