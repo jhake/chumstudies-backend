@@ -26,7 +26,7 @@ module.exports = {
       //   if (!(await isGroupStudent(userId, group))) throw Error("not in group");
       // }
 
-      const comments = await Comment.find({ post });
+      const comments = await Comment.find({ post: postId });
 
       return { data: comments };
     },
