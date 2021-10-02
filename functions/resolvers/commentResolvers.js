@@ -12,21 +12,21 @@ module.exports = {
     postComments: async (_, { postId }, context) => {
       loginCheck(context);
 
-      // const userId = context.user.id;
+      const userId = context.user.id;
 
-      // const post = await Post.findById(postId).select({ course: 1, group: 1 });
-      // const { course, group } = post;
+      const post = await Post.findById(postId).select({ course: 1, group: 1 });
+      const { course, group } = post;
 
-      // if (course) {
-      //   if (!(await isCourseStudent(userId, course)) && !(await isCourseTeacher(userId, course)))
-      //     throw Error("not in course");
-      // }
+      if (course) {
+        if (!(await isCourseStudent(userId, course)) && !(await isCourseTeacher(userId, course)))
+          throw Error("not in course");
+      }
 
-      // if (group) {
-      //   if (!(await isGroupStudent(userId, group))) throw Error("not in group");
-      // }
+      if (group) {
+        if (!(await isGroupStudent(userId, group))) throw Error("not in group");
+      }
 
-      const comments = await Comment.find({ post: postId });
+      const comments = await Comment.find({ post });
 
       return { data: comments };
     },
