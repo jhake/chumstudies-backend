@@ -1,4 +1,4 @@
-const { Group, GroupStudent, Student, Course, GroupActivity } = require("../models/index.js");
+const { Group, GroupStudent, Student, Course } = require("../models/index.js");
 const {
   loginCheck,
   isCourseTeacher,
