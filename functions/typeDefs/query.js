@@ -46,6 +46,8 @@ module.exports = gql`
   extend type Query {
     group(groupId: ID!): Group
     groups(pagination: PaginationInput): GroupsResult
+    studentClassGroups(pagination: PaginationInput): GroupsResult
+    studentStudyGroups(pagination: PaginationInput): GroupsResult
   }
 
   # Feed
