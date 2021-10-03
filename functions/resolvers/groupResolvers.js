@@ -83,6 +83,36 @@ module.exports = {
         },
       };
     },
+    studentClassGroups: async (_, __, context) => {
+      loginCheck(context);
+
+      const groupStudents = await GroupStudent.find({ student: context.user.id });
+      const filter = {
+        _id: {
+          $in: groupStudents?.map(({ group }) => group) ?? [],
+        },
+        course: { $exists: true },
+      };
+
+      return {
+        data: await Group.find(filter),
+      };
+    },
+    studentStudyGroups: async (_, __, context) => {
+      loginCheck(context);
+
+      const groupStudents = await GroupStudent.find({ student: context.user.id });
+      const filter = {
+        _id: {
+          $in: groupStudents?.map(({ group }) => group) ?? [],
+        },
+        course: { $exists: false },
+      };
+
+      return {
+        data: await Group.find(filter),
+      };
+    },
   },
 
   Mutation: {
