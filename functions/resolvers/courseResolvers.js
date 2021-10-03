@@ -16,6 +16,7 @@ module.exports = {
         pagination: null,
       };
     },
+    studentCount: async (course) => await CourseStudent.countDocuments({ course }),
     teacher: async (course) => await Teacher.findById(course.teacher),
     courseCode: async (course, _, context) => {
       const courseStudent = await CourseStudent.findOne({ course, student: context.user.id });
