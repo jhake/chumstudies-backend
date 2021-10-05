@@ -33,8 +33,14 @@ module.exports = gql`
 
   # Post
   extend type Query {
-    groupPosts(groupId: ID!): PostsResult
+    groupPosts(groupId: ID!, tags: [String]): PostsResult
+    groupPostTags(groupId: ID!): [Tag]
     coursePosts(courseId: ID!): PostsResult
+  }
+
+  type Tag {
+    name: String
+    count: Int
   }
 
   # Comment
