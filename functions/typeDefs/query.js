@@ -59,22 +59,12 @@ module.exports = gql`
   # Feed
   extend type Query {
     studentLeftSidePanel: StudentLeftSidePanelResult
-    studentHomeFeed: StudentHomeFeedResult
+    studentHomeFeed: PostsResult
   }
 
   type StudentLeftSidePanelResult {
     courses: [Course]
     studyGroups: [Group]
     classGroups: [Group]
-  }
-
-  type StudentHomeFeedResult {
-    items: [FeedItem]
-  }
-
-  type FeedItem {
-    post: Post
-    activity: Activity
-    groupActivity: GroupActivity
   }
 `;

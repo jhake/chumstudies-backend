@@ -1,4 +1,4 @@
-const { CourseStudent, GroupStudent, Post, Activity, GroupActivity, Course, Group } = require("../models/index.js");
+const { CourseStudent, GroupStudent, Post, Course, Group } = require("../models/index.js");
 
 const { loginCheck } = require("../utils/checks.js");
 
@@ -51,8 +51,6 @@ module.exports = {
         student: studentId,
       });
 
-      console.log(courseStudents);
-
       const filter = {
         $or: [
           {
@@ -68,41 +66,9 @@ module.exports = {
         ],
       };
 
-      const posts = (await Post.find(filter).sort("-createdAt")).map((post) => ({
-        ...post._doc,
-        id: post.id,
-        mongooseType: "Post",
-      }));
-      const activities = (await Activity.find(filter)).map((activity) => ({
-        ...activity._doc,
-        id: activity.id,
-        mongooseType: "Activity",
-      }));
-      const groupActivities = (await GroupActivity.find(filter)).map((groupActivity) => ({
-        ...groupActivity._doc,
-        id: groupActivity.id,
-        mongooseType: "GroupActivity",
-      }));
-
-      console.log(posts);
-      console.log(activities);
-      console.log(groupActivities);
-
-      const items = [...posts, ...activities, ...groupActivities];
-
-      const retVal = {
-        items: items.map((item) =>
-          item.mongooseType === "Post"
-            ? { post: item }
-            : item.mongooseType === "Activity"
-            ? { activity: item }
-            : item.mongooseType === "GroupActivity"
-            ? { GroupActivity: item }
-            : null
-        ),
+      return {
+        data: await Post.find(filter).sort({ _id: -1 }),
       };
-
-      return retVal;
     },
   },
 };
