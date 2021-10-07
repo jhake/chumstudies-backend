@@ -10,6 +10,8 @@ module.exports = {
     comments: async ({ id }) => ({
       data: await Comment.find({ post: id }),
     }),
+    course: async ({ course }) => await Course.findById(course),
+    group: async ({ group }) => await Group.findById(group),
   },
 
   Query: {
