@@ -30,8 +30,8 @@ module.exports = {
       };
 
       const courses = await Course.find(courseFilter).limit(3);
-      const studyGroups = await Group.find(studyGroupsFilter);
-      const classGroups = await Group.find(classGroupsFilter);
+      const studyGroups = await Group.find(studyGroupsFilter).limit(3);
+      const classGroups = await Group.find(classGroupsFilter).limit(3);
 
       return {
         courses,
