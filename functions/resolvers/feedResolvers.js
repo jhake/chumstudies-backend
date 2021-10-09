@@ -74,13 +74,16 @@ module.exports = {
       loginCheck(context);
 
       const teacherId = context.user.id;
-
       const courseTeacher = await Course.find({ teacher: teacherId });
 
-      console.log(courseTeacher);
+      const filter = {
+        course: {
+          $in: courseTeacher?.map(({ _id }) => _id) ?? [],
+        },
+      };
 
       return {
-        data: await Post.find().sort({ _id: -1 }),
+        data: await Post.find(filter).sort({ _id: -1 }),
       };
     },
   },
