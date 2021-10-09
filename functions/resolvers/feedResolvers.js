@@ -70,5 +70,18 @@ module.exports = {
         data: await Post.find(filter).sort({ _id: -1 }),
       };
     },
+    teacherHomeFeed: async (_, __, context) => {
+      loginCheck(context);
+
+      const teacherId = context.user.id;
+
+      const courseTeacher = await Course.find({ teacher: teacherId });
+
+      console.log(courseTeacher);
+
+      return {
+        data: await Post.find().sort({ _id: -1 }),
+      };
+    },
   },
 };

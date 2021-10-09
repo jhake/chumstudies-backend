@@ -60,6 +60,7 @@ module.exports = gql`
   extend type Query {
     studentLeftSidePanel: StudentLeftSidePanelResult
     studentHomeFeed: PostsResult
+    teacherHomeFeed: PostsResult
   }
 
   type StudentLeftSidePanelResult {
