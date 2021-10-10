@@ -74,12 +74,29 @@ module.exports = {
       loginCheck(context);
 
       const teacherId = context.user.id;
-      const courseTeacher = await Course.find({ teacher: teacherId });
+      const courses = await Course.find({ teacher: teacherId });
+
+      const groupfilter = {
+        course: {
+          $in: courses?.map(({ _id }) => _id) ?? [],
+        },
+      };
+
+      const groups = await Group.find(groupfilter);
 
       const filter = {
-        course: {
-          $in: courseTeacher?.map(({ _id }) => _id) ?? [],
-        },
+        $or: [
+          {
+            course: {
+              $in: courses?.map(({ _id }) => _id) ?? [],
+            },
+          },
+          {
+            group: {
+              $in: groups?.map(({ _id }) => _id) ?? [],
+            },
+          },
+        ],
       };
 
       return {
