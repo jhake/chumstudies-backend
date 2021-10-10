@@ -70,5 +70,38 @@ module.exports = {
         data: await Post.find(filter).sort({ _id: -1 }),
       };
     },
+    teacherHomeFeed: async (_, __, context) => {
+      loginCheck(context);
+
+      const teacherId = context.user.id;
+      const courses = await Course.find({ teacher: teacherId });
+
+      const groupfilter = {
+        course: {
+          $in: courses?.map(({ _id }) => _id) ?? [],
+        },
+      };
+
+      const groups = await Group.find(groupfilter);
+
+      const filter = {
+        $or: [
+          {
+            course: {
+              $in: courses?.map(({ _id }) => _id) ?? [],
+            },
+          },
+          {
+            group: {
+              $in: groups?.map(({ _id }) => _id) ?? [],
+            },
+          },
+        ],
+      };
+
+      return {
+        data: await Post.find(filter).sort({ _id: -1 }),
+      };
+    },
   },
 };
