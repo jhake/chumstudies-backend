@@ -114,6 +114,23 @@ module.exports = {
         data: await Group.find(filter),
       };
     },
+    teacherClassGroups: async (_, __, context) => {
+      loginCheck(context);
+
+      const teacherId = context.user.id;
+
+      const courses = await Course.find({ teacher: teacherId });
+
+      const filter = {
+        course: {
+          $in: courses?.map(({ _id }) => _id) ?? [],
+        },
+      };
+
+      return {
+        data: await Group.find(filter),
+      };
+    },
   },
 
   Mutation: {
