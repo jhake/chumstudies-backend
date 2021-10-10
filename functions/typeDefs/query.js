@@ -54,6 +54,7 @@ module.exports = gql`
     groups(pagination: PaginationInput): GroupsResult
     studentClassGroups(pagination: PaginationInput): GroupsResult
     studentStudyGroups(pagination: PaginationInput): GroupsResult
+    teacherClassGroups(pagination: PaginationInput): GroupsResult
   }
 
   # Feed
