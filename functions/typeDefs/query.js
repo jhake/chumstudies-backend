@@ -26,6 +26,7 @@ module.exports = gql`
   # Course
   extend type Query {
     course(courseId: ID!): Course
+    courseFromCourseCode(courseCode: String!): Course
     courses(pagination: PaginationInput): CoursesResult
     studentCourses: CoursesResult
     teacherCourses: CoursesResult

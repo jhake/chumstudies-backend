@@ -39,6 +39,14 @@ module.exports = {
 
       return course;
     },
+    courseFromCourseCode: async (_, { courseCode }, context) => {
+      loginCheck(context);
+
+      const course = await Course.findOne({ courseCode }).select({ teacher: 1, courseCode: 1, yearAndSection: 1 });
+      if (!course) throw Error("invalid course code");
+
+      return course;
+    },
     courses: async (_, { pagination }, context) => {
       loginCheck(context);
       const limit = pagination?.limit ?? 30;
