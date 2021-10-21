@@ -65,6 +65,14 @@ module.exports = {
 
       return group;
     },
+    groupFromGroupCode: async (_, { groupCode }, context) => {
+      loginCheck(context);
+
+      const group = await Group.findOne({ groupCode }).select({ name: 1, groupCode: 1 });
+      if (!group) throw Error("invalid group code");
+
+      return group;
+    },
     groups: async (_, { pagination }, context) => {
       loginCheck(context);
       const limit = pagination?.limit ?? 30;
