@@ -37,12 +37,18 @@ module.exports = gql`
     groupPosts(groupId: ID!, tags: [String]): PostsResult
     groupPostTags(groupId: ID!): [Tag]
     coursePosts(courseId: ID!): PostsResult
-    courseFiles(courseId: ID!): FilesResult
+    courseFiles(courseId: ID!): CourseFilesResult
   }
 
   type Tag {
     name: String
     count: Int
+  }
+
+  type CourseFilesResult {
+    postFiles: [File]
+    activityFiles: [File]
+    groupActivityFiles: [File]
   }
 
   # Comment
