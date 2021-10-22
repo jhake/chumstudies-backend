@@ -62,6 +62,7 @@ module.exports = gql`
     isActive: Boolean
     groups: GroupsResult
     students: StudentsResult
+    studentCount: Int
     teacher: Teacher
     activities: ActivitiesResult
     groupActivities: GroupActivitiesResult
@@ -79,6 +80,7 @@ module.exports = gql`
     isActive: Boolean
     course: Course
     students: StudentsResult
+    studentCount: Int
     leader: Student
     admins: StudentsResult
     type: GroupType

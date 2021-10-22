@@ -10,6 +10,8 @@ module.exports = {
     comments: async ({ id }) => ({
       data: await Comment.find({ post: id }),
     }),
+    course: async ({ course }) => await Course.findById(course),
+    group: async ({ group }) => await Group.findById(group),
   },
 
   Query: {
@@ -30,7 +32,7 @@ module.exports = {
       };
     },
 
-    groupPosts: async (_, { groupId }, context) => {
+    groupPosts: async (_, { groupId, tags = [] }, context) => {
       loginCheck(context);
 
       const userId = context.user.id;
@@ -42,9 +44,47 @@ module.exports = {
 
       const filter = { group: groupId };
 
+      if (tags.length > 0) {
+        filter.tags = { $in: tags };
+      }
+
       return {
         data: await Post.find(filter).sort({ _id: -1 }),
       };
+    },
+
+    groupPostTags: async (_, { groupId }, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      const group = await Group.findById(groupId);
+      if (!group) return null;
+
+      const allowedToQuery = (await isGroupStudent(userId, groupId)) || (await isCourseTeacher(userId, group.course));
+      if (!allowedToQuery) throw Error("not allowed to query group");
+
+      const filter = { group: groupId };
+      const posts = await Post.find(filter).select({ tags: 1 }).limit(100).sort({ _id: -1 });
+
+      const tags = {};
+
+      for (const post of posts) {
+        for (const tag of post.tags) {
+          if (tag in tags) {
+            tags[tag] += 1;
+          } else {
+            tags[tag] = 1;
+          }
+        }
+      }
+
+      const retVal = [];
+
+      for (const [key, value] of Object.entries(tags)) {
+        retVal.push({ name: key, count: value });
+      }
+
+      return retVal.sort(({ count: countA }, { count: countB }) => countB - countA);
     },
   },
 

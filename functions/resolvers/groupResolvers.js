@@ -21,6 +21,7 @@ module.exports = {
         pagination: null,
       };
     },
+    studentCount: async (group) => await GroupStudent.countDocuments({ group }),
     admins: async (group) => {
       const groupStudents = await GroupStudent.find({ group, type: "admin" });
       const filter = {
@@ -64,6 +65,14 @@ module.exports = {
 
       return group;
     },
+    groupFromGroupCode: async (_, { groupCode }, context) => {
+      loginCheck(context);
+
+      const group = await Group.findOne({ groupCode }).select({ name: 1, groupCode: 1 });
+      if (!group) throw Error("invalid group code");
+
+      return group;
+    },
     groups: async (_, { pagination }, context) => {
       loginCheck(context);
       const limit = pagination?.limit ?? 30;
@@ -81,6 +90,53 @@ module.exports = {
           totalCount,
           totalPages,
         },
+      };
+    },
+    studentClassGroups: async (_, __, context) => {
+      loginCheck(context);
+
+      const groupStudents = await GroupStudent.find({ student: context.user.id });
+      const filter = {
+        _id: {
+          $in: groupStudents?.map(({ group }) => group) ?? [],
+        },
+        course: { $exists: true },
+      };
+
+      return {
+        data: await Group.find(filter),
+      };
+    },
+    studentStudyGroups: async (_, __, context) => {
+      loginCheck(context);
+
+      const groupStudents = await GroupStudent.find({ student: context.user.id });
+      const filter = {
+        _id: {
+          $in: groupStudents?.map(({ group }) => group) ?? [],
+        },
+        course: { $exists: false },
+      };
+
+      return {
+        data: await Group.find(filter),
+      };
+    },
+    teacherClassGroups: async (_, __, context) => {
+      loginCheck(context);
+
+      const teacherId = context.user.id;
+
+      const courses = await Course.find({ teacher: teacherId });
+
+      const filter = {
+        course: {
+          $in: courses?.map(({ _id }) => _id) ?? [],
+        },
+      };
+
+      return {
+        data: await Group.find(filter),
       };
     },
   },

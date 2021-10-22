@@ -16,6 +16,7 @@ module.exports = {
         pagination: null,
       };
     },
+    studentCount: async (course) => await CourseStudent.countDocuments({ course }),
     teacher: async (course) => await Teacher.findById(course.teacher),
     courseCode: async (course, _, context) => {
       const courseStudent = await CourseStudent.findOne({ course, student: context.user.id });
@@ -35,6 +36,14 @@ module.exports = {
 
       const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
       if (!inCourse) throw Error("not in course");
+
+      return course;
+    },
+    courseFromCourseCode: async (_, { courseCode }, context) => {
+      loginCheck(context);
+
+      const course = await Course.findOne({ courseCode }).select({ teacher: 1, courseCode: 1, yearAndSection: 1 });
+      if (!course) throw Error("invalid course code");
 
       return course;
     },
