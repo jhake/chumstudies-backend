@@ -30,6 +30,7 @@ module.exports = gql`
     courses(pagination: PaginationInput): CoursesResult
     studentCourses: CoursesResult
     teacherCourses: CoursesResult
+    studentsWithoutGroup(courseId: ID!): StudentsResult
   }
 
   # Post
