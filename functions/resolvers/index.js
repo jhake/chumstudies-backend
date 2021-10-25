@@ -17,6 +17,7 @@ const resolvers = [
   require("./activityResolvers.js"),
   require("./submissionResolvers.js"),
   require("./commentResolvers.js"),
+  require("./fileResolvers.js"),
 ];
 
 const dateScalar = new GraphQLScalarType({

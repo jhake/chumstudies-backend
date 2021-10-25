@@ -26,15 +26,30 @@ module.exports = gql`
   # Course
   extend type Query {
     course(courseId: ID!): Course
+    courseFromCourseCode(courseCode: String!): Course
     courses(pagination: PaginationInput): CoursesResult
     studentCourses: CoursesResult
     teacherCourses: CoursesResult
+    studentsWithoutGroup(courseId: ID!): StudentsResult
   }
 
   # Post
   extend type Query {
-    groupPosts(groupId: ID!): PostsResult
+    groupPosts(groupId: ID!, tags: [String]): PostsResult
+    groupPostTags(groupId: ID!): [Tag]
     coursePosts(courseId: ID!): PostsResult
+    courseFiles(courseId: ID!): CourseFilesResult
+  }
+
+  type Tag {
+    name: String
+    count: Int
+  }
+
+  type CourseFilesResult {
+    postFiles: [File]
+    activityFiles: [File]
+    groupActivityFiles: [File]
   }
 
   # Comment
@@ -46,27 +61,22 @@ module.exports = gql`
   extend type Query {
     group(groupId: ID!): Group
     groups(pagination: PaginationInput): GroupsResult
+    groupFromGroupCode(groupCode: String!): Group
+    studentClassGroups(pagination: PaginationInput): GroupsResult
+    studentStudyGroups(pagination: PaginationInput): GroupsResult
+    teacherClassGroups(pagination: PaginationInput): GroupsResult
   }
 
   # Feed
   extend type Query {
     studentLeftSidePanel: StudentLeftSidePanelResult
-    studentHomeFeed: StudentHomeFeedResult
+    studentHomeFeed: PostsResult
+    teacherHomeFeed: PostsResult
   }
 
   type StudentLeftSidePanelResult {
     courses: [Course]
     studyGroups: [Group]
     classGroups: [Group]
-  }
-
-  type StudentHomeFeedResult {
-    items: [FeedItem]
-  }
-
-  type FeedItem {
-    post: Post
-    activity: Activity
-    groupActivity: GroupActivity
   }
 `;

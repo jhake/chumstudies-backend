@@ -1,4 +1,4 @@
-const { CourseStudent, GroupStudent, Post, Activity, GroupActivity, Course, Group } = require("../models/index.js");
+const { CourseStudent, GroupStudent, Post, Course, Group } = require("../models/index.js");
 
 const { loginCheck } = require("../utils/checks.js");
 
@@ -30,8 +30,8 @@ module.exports = {
       };
 
       const courses = await Course.find(courseFilter).limit(3);
-      const studyGroups = await Group.find(studyGroupsFilter);
-      const classGroups = await Group.find(classGroupsFilter);
+      const studyGroups = await Group.find(studyGroupsFilter).limit(3);
+      const classGroups = await Group.find(classGroupsFilter).limit(3);
 
       return {
         courses,
@@ -51,8 +51,6 @@ module.exports = {
         student: studentId,
       });
 
-      console.log(courseStudents);
-
       const filter = {
         $or: [
           {
@@ -68,41 +66,42 @@ module.exports = {
         ],
       };
 
-      const posts = (await Post.find(filter).sort("-createdAt")).map((post) => ({
-        ...post._doc,
-        id: post.id,
-        mongooseType: "Post",
-      }));
-      const activities = (await Activity.find(filter)).map((activity) => ({
-        ...activity._doc,
-        id: activity.id,
-        mongooseType: "Activity",
-      }));
-      const groupActivities = (await GroupActivity.find(filter)).map((groupActivity) => ({
-        ...groupActivity._doc,
-        id: groupActivity.id,
-        mongooseType: "GroupActivity",
-      }));
+      return {
+        data: await Post.find(filter).sort({ _id: -1 }),
+      };
+    },
+    teacherHomeFeed: async (_, __, context) => {
+      loginCheck(context);
 
-      console.log(posts);
-      console.log(activities);
-      console.log(groupActivities);
+      const teacherId = context.user.id;
+      const courses = await Course.find({ teacher: teacherId });
 
-      const items = [...posts, ...activities, ...groupActivities];
-
-      const retVal = {
-        items: items.map((item) =>
-          item.mongooseType === "Post"
-            ? { post: item }
-            : item.mongooseType === "Activity"
-            ? { activity: item }
-            : item.mongooseType === "GroupActivity"
-            ? { GroupActivity: item }
-            : null
-        ),
+      const groupfilter = {
+        course: {
+          $in: courses?.map(({ _id }) => _id) ?? [],
+        },
       };
 
-      return retVal;
+      const groups = await Group.find(groupfilter);
+
+      const filter = {
+        $or: [
+          {
+            course: {
+              $in: courses?.map(({ _id }) => _id) ?? [],
+            },
+          },
+          {
+            group: {
+              $in: groups?.map(({ _id }) => _id) ?? [],
+            },
+          },
+        ],
+      };
+
+      return {
+        data: await Post.find(filter).sort({ _id: -1 }),
+      };
     },
   },
 };

@@ -14,7 +14,7 @@ module.exports = {
 
       const userId = context.user.id;
 
-      const post = await Post.findById(postId);
+      const post = await Post.findById(postId).select({ course: 1, group: 1 });
       const { course, group } = post;
 
       if (course) {

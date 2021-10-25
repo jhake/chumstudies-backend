@@ -1,4 +1,4 @@
-const { Course, Teacher, CourseStudent, Student, Group } = require("../models/index.js");
+const { Course, Teacher, CourseStudent, Student, Group, GroupStudent } = require("../models/index.js");
 const { loginCheck, isCourseStudent } = require("../utils/checks.js");
 
 module.exports = {
@@ -16,6 +16,7 @@ module.exports = {
         pagination: null,
       };
     },
+    studentCount: async (course) => await CourseStudent.countDocuments({ course }),
     teacher: async (course) => await Teacher.findById(course.teacher),
     courseCode: async (course, _, context) => {
       const courseStudent = await CourseStudent.findOne({ course, student: context.user.id });
@@ -35,6 +36,14 @@ module.exports = {
 
       const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
       if (!inCourse) throw Error("not in course");
+
+      return course;
+    },
+    courseFromCourseCode: async (_, { courseCode }, context) => {
+      loginCheck(context);
+
+      const course = await Course.findOne({ courseCode }).select({ teacher: 1, courseCode: 1, yearAndSection: 1 });
+      if (!course) throw Error("invalid course code");
 
       return course;
     },
@@ -80,6 +89,32 @@ module.exports = {
 
       return {
         data: await Course.find(filter),
+      };
+    },
+
+    studentsWithoutGroup: async (_, { courseId }, context) => {
+      loginCheck(context);
+
+      const groups = await Group.find({ course: courseId });
+      const courseStudents = await CourseStudent.find({ course: courseId });
+      const groupStudents = await GroupStudent.find({
+        group: {
+          $in: groups?.map(({ id }) => id) ?? [],
+        },
+      });
+
+      const filter = {
+        _id: {
+          $in: courseStudents
+            ?.map(({ student }) => String(student))
+            .filter((id) => {
+              return !groupStudents.map(({ student }) => String(student)).includes(id);
+            }),
+        },
+      };
+
+      return {
+        data: await Student.find(filter),
       };
     },
   },
