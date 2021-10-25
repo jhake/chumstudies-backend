@@ -20,9 +20,9 @@ module.exports = {
       const filter = { course: courseId, attachment: { $exists: true } };
 
       return {
-        postFiles: await Post.find(filter),
-        activityFiles: await Activity.find(filter),
-        groupActivityFiles: await GroupActivity.find(filter),
+        postFiles: await Post.find(filter).sort({ _id: -1 }),
+        activityFiles: await Activity.find(filter).sort({ _id: -1 }),
+        groupActivityFiles: await GroupActivity.find(filter).sort({ _id: -1 }),
       };
     },
   },
