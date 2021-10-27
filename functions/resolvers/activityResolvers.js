@@ -12,32 +12,32 @@ module.exports = {
   },
 
   Query: {
-    activity: async (_, { courseId, activityId }, context) => {
+    activity: async (_, { activityId }, context) => {
       loginCheck(context);
+
       const userId = context.user.id;
-      const course = await Course.findById(courseId);
-      if (!course) return null;
-
-      const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
-      if (!inCourse) throw Error("not in course");
-
       const activity = await Activity.findById(activityId);
+      if (!activity) return null;
+
+      const inCourse =
+        (await isCourseStudent(userId, activity.course)) || (await isCourseTeacher(userId, activity.course));
+      if (!inCourse) throw Error("not in course");
 
       return activity;
     },
 
-    groupActivity: async (_, { courseId, groupActivityId }, context) => {
+    groupActivity: async (_, { groupActivityId }, context) => {
       loginCheck(context);
-      const userId = context.user.id;
-      const course = await Course.findById(courseId);
-      if (!course) return null;
 
-      const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
+      const userId = context.user.id;
+      const groupActivity = await GroupActivity.findById(groupActivityId);
+      if (!groupActivity) return null;
+
+      const inCourse =
+        (await isCourseStudent(userId, groupActivity.course)) || (await isCourseTeacher(userId, groupActivity.course));
       if (!inCourse) throw Error("not in course");
 
-      const groupactivity = await GroupActivity.findById(groupActivityId);
-
-      return groupactivity;
+      return groupActivity;
     },
 
     courseActivities: async (_, { courseId }, context) => {
