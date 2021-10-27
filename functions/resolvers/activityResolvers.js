@@ -1,7 +1,7 @@
 const { validateAttachment } = require("../utils/cloudinary");
 
 const { Activity, Course, GroupActivity, Post } = require("../models/index.js");
-const { loginCheck, isCourseTeacher } = require("../utils/checks");
+const { loginCheck, isCourseTeacher, isCourseStudent } = require("../utils/checks");
 
 module.exports = {
   Activity: {
@@ -9,6 +9,24 @@ module.exports = {
   },
   GroupActivity: {
     course: async (groupActivity) => await Course.findById(groupActivity.course),
+  },
+  Query: {
+    courseActivities: async (_, { courseId }, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      const course = await Course.findById(courseId);
+      if (!course) return null;
+
+      const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
+      if (!inCourse) throw Error("not in course");
+
+      const filter = { course: courseId };
+
+      return {
+        data: await Activity.find(filter),
+      };
+    },
   },
 
   Mutation: {
