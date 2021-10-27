@@ -12,6 +12,34 @@ module.exports = {
   },
 
   Query: {
+    activity: async (_, { courseId, activityId }, context) => {
+      loginCheck(context);
+      const userId = context.user.id;
+      const course = await Course.findById(courseId);
+      if (!course) return null;
+
+      const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
+      if (!inCourse) throw Error("not in course");
+
+      const activity = await Activity.findById(activityId);
+
+      return activity;
+    },
+
+    groupActivity: async (_, { courseId, groupActivityId }, context) => {
+      loginCheck(context);
+      const userId = context.user.id;
+      const course = await Course.findById(courseId);
+      if (!course) return null;
+
+      const inCourse = (await isCourseStudent(userId, courseId)) || course.teacher == userId;
+      if (!inCourse) throw Error("not in course");
+
+      const groupactivity = await GroupActivity.findById(groupActivityId);
+
+      return groupactivity;
+    },
+
     courseActivities: async (_, { courseId }, context) => {
       loginCheck(context);
 
