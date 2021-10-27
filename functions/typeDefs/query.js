@@ -92,8 +92,8 @@ module.exports = gql`
 
   # Activity
   extend type Query {
-    activity(courseId: ID!, activityId: ID!): Activity
-    groupActivity(courseId: ID!, groupActivityId: ID!): GroupActivity
+    activity(activityId: ID!): Activity
+    groupActivity(groupActivityId: ID!): GroupActivity
     courseActivities(courseId: ID!): ActivitiesResult
     courseGroupActivities(courseId: ID!): GroupActivitiesResult
   }
