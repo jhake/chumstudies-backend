@@ -102,7 +102,6 @@ module.exports = gql`
     description: String
     attachment: String
     dueAt: Date
-    type: String
     course: Course
     submissions: SubmissionsResult
   }
