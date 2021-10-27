@@ -38,12 +38,22 @@ module.exports = gql`
     groupPosts(groupId: ID!, tags: [String]): PostsResult
     groupPostTags(groupId: ID!): [Tag]
     coursePosts(courseId: ID!): PostsResult
-    courseFiles(courseId: ID!): CourseFilesResult
   }
 
   type Tag {
     name: String
     count: Int
+  }
+
+  # File
+  extend type Query {
+    studyGroupFiles(groupId: ID!): GroupFilesResult
+    courseFiles(courseId: ID!): CourseFilesResult
+  }
+
+  type GroupFilesResult {
+    postFiles: [File]
+    groupActivityFiles: [File]
   }
 
   type CourseFilesResult {
