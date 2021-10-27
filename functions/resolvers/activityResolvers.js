@@ -10,6 +10,7 @@ module.exports = {
   GroupActivity: {
     course: async (groupActivity) => await Course.findById(groupActivity.course),
   },
+
   Query: {
     courseActivities: async (_, { courseId }, context) => {
       loginCheck(context);

@@ -81,7 +81,6 @@ module.exports = gql`
   }
 
   #Activity
-
   extend type Query {
     courseActivities(courseId: ID!): ActivitiesResult
   }
