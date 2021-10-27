@@ -90,8 +90,9 @@ module.exports = gql`
     classGroups: [Group]
   }
 
-  #Activity
+  # Activity
   extend type Query {
     courseActivities(courseId: ID!): ActivitiesResult
+    courseGroupActivities(courseId: ID!): ActivitiesResult
   }
 `;
