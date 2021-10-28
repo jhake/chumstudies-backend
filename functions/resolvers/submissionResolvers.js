@@ -9,10 +9,9 @@ module.exports = {
   },
 
   Mutation: {
-    createSubmission: async (_, args, context) => {
+    createSubmission: async (_, { description, activityId }, context) => {
       loginCheck(context);
 
-      const { activityId } = args;
       const activity = await Activity.findById(activityId);
 
       if (!activity) throw Error("activity doesn't exist");
@@ -26,7 +25,8 @@ module.exports = {
       if (submission) throw Error("already has submission in this activity");
 
       const newSubmission = new Submission({
-        ...args,
+        description,
+        activity: activityId,
         student: context.user.id,
       });
 
