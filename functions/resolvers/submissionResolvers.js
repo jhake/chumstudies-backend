@@ -25,7 +25,7 @@ module.exports = {
       });
       if (submission) throw Error("already has submission in this activity");
 
-      const newSubmission = new Activity({
+      const newSubmission = new Submission({
         ...args,
         student: context.user.id,
       });
