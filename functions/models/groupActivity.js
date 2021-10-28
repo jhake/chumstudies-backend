@@ -9,6 +9,7 @@ module.exports = model(
     dueAt: Date,
     createdAt: { type: Date, default: Date.now },
     course: { type: Schema.Types.ObjectId, ref: "Course" },
+    points: Number,
 
     comments: [
       {
