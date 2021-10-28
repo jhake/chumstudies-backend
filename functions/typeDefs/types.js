@@ -132,6 +132,7 @@ module.exports = gql`
 
   type Submission {
     id: ID
+    attachment: String
     description: String
     grade: Int
     submittedAt: Date
