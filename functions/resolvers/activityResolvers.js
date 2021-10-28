@@ -53,7 +53,7 @@ module.exports = {
       const filter = { course: courseId };
 
       return {
-        data: await Activity.find(filter),
+        data: await Activity.find(filter).sort({ _id: -1 }),
       };
     },
     courseGroupActivities: async (_, { courseId }, context) => {
@@ -69,7 +69,7 @@ module.exports = {
       const filter = { course: courseId };
 
       return {
-        data: await GroupActivity.find(filter),
+        data: await GroupActivity.find(filter).sort({ _id: -1 }),
       };
     },
   },
