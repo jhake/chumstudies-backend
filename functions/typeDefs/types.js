@@ -102,8 +102,10 @@ module.exports = gql`
     description: String
     attachment: String
     dueAt: Date
+    createdAt: Date
     course: Course
     submissions: SubmissionsResult
+    points: Int
   }
 
   type ActivitiesResult {
@@ -117,8 +119,10 @@ module.exports = gql`
     description: String
     attachment: String
     dueAt: Date
+    createdAt: Date
     course: Course
     submissions: GroupSubmissionsResult
+    points: Int
   }
 
   type GroupActivitiesResult {
