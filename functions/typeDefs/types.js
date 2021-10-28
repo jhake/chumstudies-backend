@@ -105,6 +105,7 @@ module.exports = gql`
     createdAt: Date
     course: Course
     submissions: SubmissionsResult
+    mySubmission: Submission
     points: Int
   }
 
