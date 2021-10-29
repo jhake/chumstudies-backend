@@ -41,9 +41,9 @@ module.exports = gql`
 
   # Activity / GroupActivity
   extend type Mutation {
-    createActivity(title: String!, description: String!, dueAt: Date!, courseId: ID!): Activity
+    createActivity(title: String!, description: String!, dueAt: Date!, courseId: ID!, points: Int!): Activity
     addAttachmentToActivity(id: ID!, attachment: String!): Activity
-    createGroupActivity(title: String!, description: String!, dueAt: Date!, courseId: ID!): GroupActivity
+    createGroupActivity(title: String!, description: String!, dueAt: Date!, courseId: ID!, points: Int!): GroupActivity
     addAttachmentToGroupActivity(id: ID!, attachment: String!): GroupActivity
   }
 
