@@ -1,11 +1,27 @@
 const { validateAttachment } = require("../utils/cloudinary");
 
 const { Activity, Submission } = require("../models/index.js");
-const { loginCheck, isCourseStudent } = require("../utils/checks");
+const { loginCheck, isCourseStudent, isCourseTeacher } = require("../utils/checks");
 
 module.exports = {
   Submission: {
     activity: async (submission) => await Activity.findById(submission.activity),
+  },
+
+  Query: {
+    activitySubmissions: async (_, { activityId }, context) => {
+      loginCheck(context);
+
+      const activity = await Activity.findById(activityId);
+      if (!(await isCourseTeacher(context.user.id, activity.course)))
+        throw Error("you must be the teacher of the course to see all submissions");
+
+      const filter = { activity: activityId };
+
+      return {
+        data: await Submission.find(filter),
+      };
+    },
   },
 
   Mutation: {
