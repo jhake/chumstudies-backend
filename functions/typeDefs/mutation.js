@@ -52,6 +52,7 @@ module.exports = gql`
     createSubmission(description: String!, activityId: ID!): Submission
     addAttachmentToSubmission(id: ID!, attachment: String!): Submission
     submitSubmission(id: ID!): Submission
+    gradeSubmission(submissionId: ID!, grade: Int!): Submission
   }
 
   # Post

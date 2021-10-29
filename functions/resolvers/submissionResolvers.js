@@ -80,5 +80,22 @@ module.exports = {
 
       return await submission.save();
     },
+    gradeSubmission: async (_, { submissionId, grade }, context) => {
+      loginCheck(context);
+
+      const submission = await Submission.findById(submissionId);
+      const activity = await Activity.findById(submission.activity);
+      if (!(await isCourseTeacher(context.user.id, activity.course)))
+        throw Error("you must be the teacher of the course to grade this submission");
+
+      if (!submission.submittedAt) throw Error("submission not yet final");
+
+      if (grade > activity.points) throw Error("grade is higher than maximum");
+      if (grade < 0) throw Error("grade is negative");
+
+      submission.grade = grade;
+
+      return await submission.save();
+    },
   },
 };
