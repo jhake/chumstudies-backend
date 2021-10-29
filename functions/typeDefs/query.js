@@ -100,6 +100,7 @@ module.exports = gql`
 
   # Submission
   extend type Query {
+    submission(submissionId: ID!): Submission
     activitySubmissions(activityId: ID!): SubmissionsResult
   }
 `;

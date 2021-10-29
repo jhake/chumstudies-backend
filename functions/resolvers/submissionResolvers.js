@@ -10,6 +10,17 @@ module.exports = {
   },
 
   Query: {
+    submission: async (_, { submissionId }, context) => {
+      loginCheck(context);
+
+      const submission = await Submission.findById(submissionId);
+      const activity = await Activity.findById(submission.activity);
+
+      if (!(activity.student == context.user.id || (await isCourseTeacher(context.user.id, activity.course))))
+        throw Error("you must be the teacher of the course to see this submission");
+
+      return submission;
+    },
     activitySubmissions: async (_, { activityId }, context) => {
       loginCheck(context);
 
