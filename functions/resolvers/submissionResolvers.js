@@ -1,11 +1,12 @@
 const { validateAttachment } = require("../utils/cloudinary");
 
-const { Activity, Submission } = require("../models/index.js");
+const { Activity, Submission, Student } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isCourseTeacher } = require("../utils/checks");
 
 module.exports = {
   Submission: {
-    activity: async (submission) => await Activity.findById(submission.activity),
+    activity: async ({ activity }) => await Activity.findById(activity),
+    student: async ({ student }) => await Student.findById(student),
   },
 
   Query: {
