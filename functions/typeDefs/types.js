@@ -136,6 +136,7 @@ module.exports = gql`
     attachment: String
     description: String
     grade: Int
+    createdAt: Date
     submittedAt: Date
     student: Student
     activity: Activity
@@ -151,6 +152,7 @@ module.exports = gql`
     attachment: String
     description: String
     grade: Int
+    createdAt: Date
     submittedAt: Date
     group: Group
     groupActivity: GroupActivity
