@@ -48,6 +48,7 @@ module.exports = {
 
       await validateAttachment(attachment);
       submission.attachment = attachment;
+      submission.submittedAt = Date.now();
 
       return await submission.save();
     },
