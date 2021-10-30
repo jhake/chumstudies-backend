@@ -47,6 +47,7 @@ module.exports = gql`
 
   # File
   extend type Query {
+    classGroupFiles(groupId: ID!): GroupFilesResult
     studyGroupFiles(groupId: ID!): GroupFilesResult
     courseFiles(courseId: ID!): CourseFilesResult
   }
