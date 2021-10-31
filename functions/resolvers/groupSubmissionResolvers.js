@@ -2,7 +2,10 @@ const { GroupActivity, GroupStudent, GroupSubmission, Group } = require("../mode
 const { loginCheck, isCourseTeacher, isGroupStudent } = require("../utils/checks");
 
 module.exports = {
-  GroupSubmission: {},
+  GroupSubmission: {
+    groupActivity: async ({ groupActivity }) => await GroupActivity.findById(groupActivity),
+    group: async ({ group }) => await Group.findById(group),
+  },
 
   Query: {
     groupSubmission: async (_, { groupSubmissionId }, context) => {
