@@ -1,10 +1,26 @@
 const { GroupActivity, GroupStudent, GroupSubmission, Group } = require("../models/index.js");
-const { loginCheck, isCourseTeacher } = require("../utils/checks");
+const { loginCheck, isCourseTeacher, isGroupStudent } = require("../utils/checks");
 
 module.exports = {
   GroupSubmission: {},
 
   Query: {
+    groupSubmission: async (_, { groupSubmissionId }, context) => {
+      loginCheck(context);
+
+      const groupSubmission = await GroupSubmission.findById(groupSubmissionId);
+      if (!groupSubmission) return null;
+
+      const groupActivity = await GroupActivity.findById(groupSubmission.groupActivity);
+
+      const allowedToQuery =
+        (await isCourseTeacher(context.user.id, groupActivity.course)) ||
+        (await isGroupStudent(context.user.id, groupSubmission.group));
+
+      if (!allowedToQuery) throw Error("you must be the teacher of the course to see this submission");
+
+      return groupSubmission;
+    },
     groupActivitySubmissions: async (_, { groupActivityId }, context) => {
       loginCheck(context);
 
