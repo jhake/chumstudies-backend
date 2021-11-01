@@ -2,7 +2,6 @@ const cloudinary = require("cloudinary");
 
 const { accountsPassword } = require("../accounts.js");
 const { User, Student, Teacher } = require("../models/index.js");
-const user = require("../models/user.js");
 const { loginCheck } = require("../utils/checks.js");
 const { destroy, validateAttachment } = require("../utils/cloudinary.js");
 const generateRandomString = require("../utils/generateRandomString.js");
