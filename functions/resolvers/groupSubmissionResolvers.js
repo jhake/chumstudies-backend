@@ -1,10 +1,14 @@
-const { GroupActivity, GroupStudent, GroupSubmission, Group } = require("../models/index.js");
+const { GroupActivity, GroupStudent, GroupSubmission, Group, Task } = require("../models/index.js");
 const { loginCheck, isCourseTeacher, isGroupStudent } = require("../utils/checks");
 
 module.exports = {
   GroupSubmission: {
     groupActivity: async ({ groupActivity }) => await GroupActivity.findById(groupActivity),
     group: async ({ group }) => await Group.findById(group),
+    tasks: async ({ id }) => ({
+      data: await Task.find({ groupSubmission: id }),
+    }),
+    myTask: async ({ id }, _, context) => await Task.findOne({ groupSubmission: id, student: context.user.id }),
   },
 
   Query: {

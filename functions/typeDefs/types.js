@@ -158,6 +158,8 @@ module.exports = gql`
     submittedAt: Date
     group: Group
     groupActivity: GroupActivity
+    tasks: TasksResult
+    myTask: Task
   }
 
   type GroupSubmissionsResult {
