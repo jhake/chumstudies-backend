@@ -3,7 +3,7 @@ const cloudinary = require("cloudinary");
 const { accountsPassword } = require("../accounts.js");
 const { User, Student, Teacher } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
-const { destroy, validateAttachment } = require("../utils/cloudinary.js");
+const { destroyFile, validateAttachment } = require("../utils/cloudinary.js");
 const generateRandomString = require("../utils/generateRandomString.js");
 
 module.exports = {
@@ -170,7 +170,7 @@ module.exports = {
       const cloudinaryObject = JSON.parse(profilePicture);
       if (!cloudinaryObject.public_id.includes(`User_${user.id}`)) throw Error("public_id not valid profile picture");
       if (user.profilePicture) {
-        await destroy(user.profilePicture);
+        await destroyFile(user.profilePicture);
       }
 
       await validateAttachment(profilePicture);

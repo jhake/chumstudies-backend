@@ -1,4 +1,4 @@
-const { validateAttachment, destroy } = require("../utils/cloudinary");
+const { validateAttachment, destroyFile } = require("../utils/cloudinary");
 const { Post, User, Activity, GroupActivity, Course, Group, Comment } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isGroupStudent, isCourseTeacher } = require("../utils/checks");
 
@@ -144,7 +144,7 @@ module.exports = {
       if (!post) throw Error("post not found");
       if (post.user != context.user.id) throw Error("not your post");
 
-      if (post.attachment) await destroy(post.attachment);
+      if (post.attachment) await destroyFile(post.attachment);
 
       await Post.findOneAndDelete(args.id);
       return true;
