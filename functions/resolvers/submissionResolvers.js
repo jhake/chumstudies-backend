@@ -1,4 +1,4 @@
-const { validateAttachment } = require("../utils/cloudinary");
+const { validateFile } = require("../utils/cloudinary");
 
 const { Activity, Submission, Student } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isCourseTeacher } = require("../utils/checks");
@@ -74,7 +74,7 @@ module.exports = {
       if (!cloudinaryObject.public_id.includes(`Submission_${submissionId}`))
         throw Error("public_id not valid attachment for the post");
 
-      await validateAttachment(attachment);
+      await validateFile(attachment);
       submission.attachment = attachment;
       submission.submittedAt = Date.now();
 

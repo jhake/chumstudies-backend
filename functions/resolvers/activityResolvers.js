@@ -1,4 +1,4 @@
-const { validateAttachment } = require("../utils/cloudinary");
+const { validateFile } = require("../utils/cloudinary");
 
 const {
   Activity,
@@ -133,7 +133,7 @@ module.exports = {
       if (!cloudinaryObject.public_id.includes(`Activity_${activityId}`))
         throw Error("public_id not valid attachment for the post");
 
-      await validateAttachment(attachment);
+      await validateFile(attachment);
       activity.attachment = attachment;
 
       return await activity.save();
@@ -176,7 +176,7 @@ module.exports = {
       if (!cloudinaryObject.public_id.includes(`GroupActivity_${groupActivityId}`))
         throw Error("public_id not valid attachment for the post");
 
-      await validateAttachment(attachment);
+      await validateFile(attachment);
       groupActivity.attachment = attachment;
 
       return await groupActivity.save();

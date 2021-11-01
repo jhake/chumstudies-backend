@@ -1,4 +1,4 @@
-const { validateAttachment, destroyFile } = require("../utils/cloudinary");
+const { validateFile, destroyFile } = require("../utils/cloudinary");
 const { Post, User, Activity, GroupActivity, Course, Group, Comment } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isGroupStudent, isCourseTeacher } = require("../utils/checks");
 
@@ -131,7 +131,7 @@ module.exports = {
       if (!cloudinaryObject.public_id.includes(`Post_${args.id}`))
         throw Error("public_id not valid attachment for the post");
 
-      await validateAttachment(args.attachment);
+      await validateFile(args.attachment);
       post.attachment = args.attachment;
 
       return await post.save();

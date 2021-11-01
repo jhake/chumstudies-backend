@@ -3,7 +3,7 @@ const cloudinary = require("cloudinary");
 const { accountsPassword } = require("../accounts.js");
 const { User, Student, Teacher } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
-const { destroyFile, validateAttachment } = require("../utils/cloudinary.js");
+const { destroyFile, validateFile } = require("../utils/cloudinary.js");
 const generateRandomString = require("../utils/generateRandomString.js");
 
 module.exports = {
@@ -173,7 +173,7 @@ module.exports = {
         await destroyFile(user.profilePicture);
       }
 
-      await validateAttachment(profilePicture);
+      await validateFile(profilePicture);
       return await User.findByIdAndUpdate(user.id, { profilePicture }, { new: true });
     },
   },
