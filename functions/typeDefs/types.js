@@ -158,6 +158,8 @@ module.exports = gql`
     submittedAt: Date
     group: Group
     groupActivity: GroupActivity
+    tasks: TasksResult
+    myTask: Task
   }
 
   type GroupSubmissionsResult {
@@ -174,6 +176,15 @@ module.exports = gql`
     progress: Int
     student: Student
     groupSubmission: GroupSubmission
+    status: TaskStatus
+  }
+
+  enum TaskStatus {
+    TODO
+    IN_PROGRESS
+    UNDER_REVIEW
+    MISSING
+    DONE
   }
 
   type TasksResult {
