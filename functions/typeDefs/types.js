@@ -60,6 +60,7 @@ module.exports = gql`
     startsAt: Date
     endsAt: Date
     isActive: Boolean
+    myGroup: Group
     groups: GroupsResult
     students: StudentsResult
     studentCount: Int
