@@ -47,12 +47,17 @@ module.exports = gql`
     addAttachmentToGroupActivity(id: ID!, attachment: String!): GroupActivity
   }
 
-  # Submission
+  # Submission / GroupSubmission
   extend type Mutation {
     createSubmission(description: String!, activityId: ID!): Submission
     addAttachmentToSubmission(id: ID!, attachment: String!): Submission
     submitSubmission(id: ID!): Submission
     gradeSubmission(submissionId: ID!, grade: Int!): Submission
+  }
+
+  # GroupSubmission
+  extend type Mutation {
+    createGroupSubmission(groupActivityId: ID!): GroupSubmission
   }
 
   # Post

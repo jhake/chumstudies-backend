@@ -16,6 +16,7 @@ const resolvers = [
   require("./groupResolvers.js"),
   require("./activityResolvers.js"),
   require("./submissionResolvers.js"),
+  require("./groupSubmissionResolvers.js"),
   require("./commentResolvers.js"),
   require("./fileResolvers.js"),
 ];

@@ -123,6 +123,7 @@ module.exports = gql`
     createdAt: Date
     course: Course
     submissions: GroupSubmissionsResult
+    mySubmission: GroupSubmission
     points: Int
   }
 
