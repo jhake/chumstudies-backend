@@ -75,8 +75,8 @@ module.exports = gql`
 
   # Task
   extend type Mutation {
-    createTask(groupSubmissionId: ID!, studentId: ID!, dueAt: Date!): Task
+    createTask(groupSubmissionId: ID!, studentId: ID!, description: String!, dueAt: Date!): Task
     changeTaskStatus(taskId: ID!, status: TaskStatus!): Task
-    submitTask(taskId: ID!, description: String!, attachment: String!): Task
+    submitTask(taskId: ID!, attachment: String!): Task
   }
 `;

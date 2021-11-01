@@ -4,7 +4,7 @@ const { validateAttachment } = require("../utils/cloudinary");
 
 module.exports = {
   Mutation: {
-    createTask: async (_, { groupSubmissionId, studentId, dueAt }, context) => {
+    createTask: async (_, { groupSubmissionId, studentId, description, dueAt }, context) => {
       loginCheck(context);
 
       const task = await Task.findOne({ groupSubmission: groupSubmissionId, student: studentId });
@@ -33,6 +33,7 @@ module.exports = {
       const newTask = new Task({
         groupSubmission: groupSubmissionId,
         student: studentId,
+        description: description,
         dueAt: dueAt,
       });
 
@@ -63,7 +64,7 @@ module.exports = {
 
       return await task.save();
     },
-    submitTask: async (_, { taskId, description, attachment }, context) => {
+    submitTask: async (_, { taskId, attachment }, context) => {
       loginCheck(context);
 
       const task = await Task.findById(taskId);
@@ -79,7 +80,6 @@ module.exports = {
       await validateAttachment(attachment);
 
       task.attachment = attachment;
-      task.description = description;
 
       return await task.save();
     },
