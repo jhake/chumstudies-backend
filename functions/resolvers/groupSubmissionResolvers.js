@@ -54,7 +54,6 @@ module.exports = {
       });
 
       if (!groupStudent) throw Error("you are not assigned to this group activity");
-      if (groupStudent.type !== "leader") throw Error("you are not the leader of the group");
 
       const groupSubmission = await GroupSubmission.findOne({
         groupActivity,
