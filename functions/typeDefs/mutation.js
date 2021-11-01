@@ -72,4 +72,11 @@ module.exports = gql`
     createPostComment(postId: ID!, content: String!): Comment
     voteComment(commentId: ID!, vote: Int!): Comment
   }
+
+  # Task
+  extend type Mutation {
+    createTask(groupSubmissionId: ID!, studentId: ID!, dueAt: Date!): Task
+    changeTaskStatus(taskId: ID!, status: TaskStatus!): Task
+    submitTask(taskId: ID!, description: String!, attachment: String!): Task
+  }
 `;
