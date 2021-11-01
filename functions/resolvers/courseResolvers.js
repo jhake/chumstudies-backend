@@ -24,6 +24,17 @@ module.exports = {
 
       return course.courseCode;
     },
+    myGroup: async ({ id }, _, context) => {
+      const groups = await Group.find({ course: id });
+      const groupStudent = await GroupStudent.findOne({
+        student: context.user.id,
+        group: { $in: groups },
+      });
+
+      if (!groupStudent) return null;
+
+      return await Group.findById(groupStudent.group);
+    },
   },
 
   Query: {
