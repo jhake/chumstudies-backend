@@ -13,6 +13,7 @@ module.exports = gql`
       isTeacher: Boolean!
     ): User
     createAdmin(firstName: String!, middleName: String, lastName: String!, email: String!): User
+    changeProfilePicture(profilePicture: String!): User
   }
 
   extend type CreateUserInput { ## should not be used since admin will create the users
