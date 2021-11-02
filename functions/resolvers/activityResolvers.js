@@ -160,6 +160,9 @@ module.exports = {
       await groupActivity.save();
       await post.save();
 
+      const groups = await Group.find({ course: courseId });
+      await GroupSubmission.insertMany(groups.map(({ id }) => ({ group: id, groupActivity: groupActivity.id })));
+
       return groupActivity;
     },
     addAttachmentToGroupActivity: async (_, { id: groupActivityId, attachment }, context) => {
