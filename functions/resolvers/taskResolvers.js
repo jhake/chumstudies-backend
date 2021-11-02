@@ -1,6 +1,6 @@
 const { GroupSubmission, GroupActivity, Group, GroupStudent, Task } = require("../models");
 const { loginCheck } = require("../utils/checks");
-const { validateAttachment } = require("../utils/cloudinary");
+const { validateFile } = require("../utils/cloudinary");
 
 module.exports = {
   Mutation: {
@@ -77,7 +77,7 @@ module.exports = {
       if (!cloudinaryObject.public_id.includes(`Task_${taskId}`))
         throw Error("public_id not valid attachment for the task");
 
-      await validateAttachment(attachment);
+      await validateFile(attachment);
 
       task.attachment = attachment;
 
