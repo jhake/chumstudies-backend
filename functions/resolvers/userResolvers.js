@@ -161,5 +161,16 @@ module.exports = {
 
       return await user.save();
     },
+    editUserInfo: async (_, args, context) => {
+      loginCheck(context);
+
+      const user = context.user;
+
+      return await User.findByIdAndUpdate(
+        user.id,
+        { $set: { firstName: args.firstName, middleName: args.middleName, lastName: args.lastName } },
+        { new: true }
+      );
+    },
   },
 };
