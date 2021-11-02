@@ -13,6 +13,7 @@ module.exports = gql`
       isTeacher: Boolean!
     ): User
     createAdmin(firstName: String!, middleName: String, lastName: String!, email: String!): User
+    editUserInfo(firstName: String, middleName: String, lastName: String): User
     changeProfilePicture(profilePicture: String!): User
   }
 

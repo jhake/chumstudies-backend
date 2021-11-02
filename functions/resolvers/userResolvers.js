@@ -162,6 +162,7 @@ module.exports = {
 
       return await user.save();
     },
+
     changeProfilePicture: async (_, { profilePicture }, context) => {
       loginCheck(context);
 
@@ -175,6 +176,18 @@ module.exports = {
 
       await validateFile(profilePicture);
       return await User.findByIdAndUpdate(user.id, { profilePicture }, { new: true });
+    },
+
+    editUserInfo: async (_, args, context) => {
+      loginCheck(context);
+
+      const user = context.user;
+
+      return await User.findByIdAndUpdate(
+        user.id,
+        { firstName: args.firstName, middleName: args.middleName, lastName: args.lastName },
+        { new: true }
+      );
     },
   },
 };
