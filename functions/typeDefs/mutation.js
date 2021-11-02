@@ -13,6 +13,8 @@ module.exports = gql`
       isTeacher: Boolean!
     ): User
     createAdmin(firstName: String!, middleName: String, lastName: String!, email: String!): User
+    editUserInfo(firstName: String, middleName: String, lastName: String): User
+    changeProfilePicture(profilePicture: String!): User
   }
 
   extend type CreateUserInput { ## should not be used since admin will create the users
@@ -41,17 +43,23 @@ module.exports = gql`
 
   # Activity / GroupActivity
   extend type Mutation {
-    createActivity(title: String!, description: String!, dueAt: Date!, type: String!, courseId: ID!): Activity
+    createActivity(title: String!, description: String!, dueAt: Date!, courseId: ID!, points: Int!): Activity
     addAttachmentToActivity(id: ID!, attachment: String!): Activity
-    createGroupActivity(title: String!, description: String!, dueAt: Date!, courseId: ID!): GroupActivity
+    createGroupActivity(title: String!, description: String!, dueAt: Date!, courseId: ID!, points: Int!): GroupActivity
     addAttachmentToGroupActivity(id: ID!, attachment: String!): GroupActivity
   }
 
-  # Submission
+  # Submission / GroupSubmission
   extend type Mutation {
     createSubmission(description: String!, activityId: ID!): Submission
     addAttachmentToSubmission(id: ID!, attachment: String!): Submission
     submitSubmission(id: ID!): Submission
+    gradeSubmission(submissionId: ID!, grade: Int!): Submission
+  }
+
+  # GroupSubmission
+  extend type Mutation {
+    createGroupSubmission(groupActivityId: ID!): GroupSubmission
   }
 
   # Post
@@ -65,5 +73,12 @@ module.exports = gql`
   extend type Mutation {
     createPostComment(postId: ID!, content: String!): Comment
     voteComment(commentId: ID!, vote: Int!): Comment
+  }
+
+  # Task
+  extend type Mutation {
+    createTask(groupSubmissionId: ID!, studentId: ID!, description: String!, dueAt: Date!): Task
+    changeTaskStatus(taskId: ID!, status: TaskStatus!): Task
+    submitTask(taskId: ID!, attachment: String!): Task
   }
 `;

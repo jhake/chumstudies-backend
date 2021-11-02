@@ -5,7 +5,8 @@ module.exports = model(
   Schema({
     attachment: String,
     description: String,
-    grade: { type: Number, min: 0, max: 100 },
+    grade: { type: Number, min: 0 },
+    createdAt: { type: Date, default: Date.now },
     submittedAt: Date,
     group: { type: Schema.Types.ObjectId, ref: "Group" },
     groupActivity: { type: Schema.Types.ObjectId, ref: "GroupActivity" },

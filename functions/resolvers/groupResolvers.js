@@ -192,6 +192,8 @@ module.exports = {
     transferLeadership: async (_, { groupId, studentId }, context) => {
       loginCheck(context);
 
+      if (studentId == context.user.id) throw Error("can't transfer to self");
+
       const group = await Group.findById(groupId);
       if (!group.course) throw Error("not a class group");
 

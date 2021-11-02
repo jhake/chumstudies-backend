@@ -60,6 +60,7 @@ module.exports = gql`
     startsAt: Date
     endsAt: Date
     isActive: Boolean
+    myGroup: Group
     groups: GroupsResult
     students: StudentsResult
     studentCount: Int
@@ -102,9 +103,11 @@ module.exports = gql`
     description: String
     attachment: String
     dueAt: Date
-    type: String
+    createdAt: Date
     course: Course
     submissions: SubmissionsResult
+    mySubmission: Submission
+    points: Int
   }
 
   type ActivitiesResult {
@@ -118,8 +121,11 @@ module.exports = gql`
     description: String
     attachment: String
     dueAt: Date
+    createdAt: Date
     course: Course
     submissions: GroupSubmissionsResult
+    mySubmission: GroupSubmission
+    points: Int
   }
 
   type GroupActivitiesResult {
@@ -129,8 +135,10 @@ module.exports = gql`
 
   type Submission {
     id: ID
+    attachment: String
     description: String
     grade: Int
+    createdAt: Date
     submittedAt: Date
     student: Student
     activity: Activity
@@ -146,9 +154,12 @@ module.exports = gql`
     attachment: String
     description: String
     grade: Int
+    createdAt: Date
     submittedAt: Date
     group: Group
     groupActivity: GroupActivity
+    tasks: TasksResult
+    myTask: Task
   }
 
   type GroupSubmissionsResult {
@@ -165,6 +176,15 @@ module.exports = gql`
     progress: Int
     student: Student
     groupSubmission: GroupSubmission
+    status: TaskStatus
+  }
+
+  enum TaskStatus {
+    TODO
+    IN_PROGRESS
+    UNDER_REVIEW
+    MISSING
+    DONE
   }
 
   type TasksResult {

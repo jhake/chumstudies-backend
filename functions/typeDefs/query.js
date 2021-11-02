@@ -38,12 +38,23 @@ module.exports = gql`
     groupPosts(groupId: ID!, tags: [String]): PostsResult
     groupPostTags(groupId: ID!): [Tag]
     coursePosts(courseId: ID!): PostsResult
-    courseFiles(courseId: ID!): CourseFilesResult
   }
 
   type Tag {
     name: String
     count: Int
+  }
+
+  # File
+  extend type Query {
+    classGroupFiles(groupId: ID!): GroupFilesResult
+    studyGroupFiles(groupId: ID!): GroupFilesResult
+    courseFiles(courseId: ID!): CourseFilesResult
+  }
+
+  type GroupFilesResult {
+    postFiles: [File]
+    groupActivityFiles: [File]
   }
 
   type CourseFilesResult {
@@ -78,5 +89,25 @@ module.exports = gql`
     courses: [Course]
     studyGroups: [Group]
     classGroups: [Group]
+  }
+
+  # Activity
+  extend type Query {
+    activity(activityId: ID!): Activity
+    groupActivity(groupActivityId: ID!): GroupActivity
+    courseActivities(courseId: ID!): ActivitiesResult
+    courseGroupActivities(courseId: ID!): GroupActivitiesResult
+  }
+
+  # Submission
+  extend type Query {
+    submission(submissionId: ID!): Submission
+    activitySubmissions(activityId: ID!): SubmissionsResult
+  }
+
+  # GroupSubmission
+  extend type Query {
+    groupSubmission(groupSubmissionId: ID!): GroupSubmission
+    groupActivitySubmissions(groupActivityId: ID!): GroupSubmissionsResult
   }
 `;
