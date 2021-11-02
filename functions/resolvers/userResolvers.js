@@ -168,7 +168,7 @@ module.exports = {
 
       return await User.findByIdAndUpdate(
         user.id,
-        { $set: { firstName: args.firstName, middleName: args.middleName, lastName: args.lastName } },
+        { firstName: args.firstName, middleName: args.middleName, lastName: args.lastName },
         { new: true }
       );
     },
