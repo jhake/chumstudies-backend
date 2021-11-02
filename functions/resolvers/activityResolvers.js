@@ -1,6 +1,15 @@
-const { validateAttachment } = require("../utils/cloudinary");
+const { validateFile } = require("../utils/cloudinary");
 
-const { Activity, Course, GroupActivity, Post, Submission } = require("../models/index.js");
+const {
+  Activity,
+  Course,
+  GroupActivity,
+  Post,
+  Submission,
+  Group,
+  GroupStudent,
+  GroupSubmission,
+} = require("../models/index.js");
 const { loginCheck, isCourseTeacher, isCourseStudent } = require("../utils/checks");
 
 module.exports = {
@@ -10,6 +19,16 @@ module.exports = {
   },
   GroupActivity: {
     course: async (groupActivity) => await Course.findById(groupActivity.course),
+    mySubmission: async ({ id, course }, _, context) => {
+      const groups = await Group.find({ course: course });
+      const groupStudent = await GroupStudent.findOne({
+        student: context.user.id,
+        group: { $in: groups },
+      });
+
+      if (!groupStudent) return null;
+      return await GroupSubmission.findOne({ groupActivity: id, group: groupStudent.group });
+    },
   },
 
   Query: {
@@ -114,7 +133,7 @@ module.exports = {
       if (!cloudinaryObject.public_id.includes(`Activity_${activityId}`))
         throw Error("public_id not valid attachment for the post");
 
-      await validateAttachment(attachment);
+      await validateFile(attachment);
       activity.attachment = attachment;
 
       return await activity.save();
@@ -157,7 +176,7 @@ module.exports = {
       if (!cloudinaryObject.public_id.includes(`GroupActivity_${groupActivityId}`))
         throw Error("public_id not valid attachment for the post");
 
-      await validateAttachment(attachment);
+      await validateFile(attachment);
       groupActivity.attachment = attachment;
 
       return await groupActivity.save();

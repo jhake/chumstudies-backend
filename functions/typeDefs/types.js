@@ -60,6 +60,7 @@ module.exports = gql`
     startsAt: Date
     endsAt: Date
     isActive: Boolean
+    myGroup: Group
     groups: GroupsResult
     students: StudentsResult
     studentCount: Int
@@ -123,6 +124,7 @@ module.exports = gql`
     createdAt: Date
     course: Course
     submissions: GroupSubmissionsResult
+    mySubmission: GroupSubmission
     points: Int
   }
 
@@ -156,6 +158,8 @@ module.exports = gql`
     submittedAt: Date
     group: Group
     groupActivity: GroupActivity
+    tasks: TasksResult
+    myTask: Task
   }
 
   type GroupSubmissionsResult {
@@ -172,6 +176,15 @@ module.exports = gql`
     progress: Int
     student: Student
     groupSubmission: GroupSubmission
+    status: TaskStatus
+  }
+
+  enum TaskStatus {
+    TODO
+    IN_PROGRESS
+    UNDER_REVIEW
+    MISSING
+    DONE
   }
 
   type TasksResult {

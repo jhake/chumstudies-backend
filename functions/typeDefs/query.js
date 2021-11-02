@@ -47,6 +47,7 @@ module.exports = gql`
 
   # File
   extend type Query {
+    classGroupFiles(groupId: ID!): GroupFilesResult
     studyGroupFiles(groupId: ID!): GroupFilesResult
     courseFiles(courseId: ID!): CourseFilesResult
   }
@@ -96,5 +97,17 @@ module.exports = gql`
     groupActivity(groupActivityId: ID!): GroupActivity
     courseActivities(courseId: ID!): ActivitiesResult
     courseGroupActivities(courseId: ID!): GroupActivitiesResult
+  }
+
+  # Submission
+  extend type Query {
+    submission(submissionId: ID!): Submission
+    activitySubmissions(activityId: ID!): SubmissionsResult
+  }
+
+  # GroupSubmission
+  extend type Query {
+    groupSubmission(groupSubmissionId: ID!): GroupSubmission
+    groupActivitySubmissions(groupActivityId: ID!): GroupSubmissionsResult
   }
 `;

@@ -1,11 +1,39 @@
-const { validateAttachment } = require("../utils/cloudinary");
+const { validateFile } = require("../utils/cloudinary");
 
-const { Activity, Submission } = require("../models/index.js");
-const { loginCheck, isCourseStudent } = require("../utils/checks");
+const { Activity, Submission, Student } = require("../models/index.js");
+const { loginCheck, isCourseStudent, isCourseTeacher } = require("../utils/checks");
 
 module.exports = {
   Submission: {
-    activity: async (submission) => await Activity.findById(submission.activity),
+    activity: async ({ activity }) => await Activity.findById(activity),
+    student: async ({ student }) => await Student.findById(student),
+  },
+
+  Query: {
+    submission: async (_, { submissionId }, context) => {
+      loginCheck(context);
+
+      const submission = await Submission.findById(submissionId);
+      const activity = await Activity.findById(submission.activity);
+
+      if (!(activity.student == context.user.id || (await isCourseTeacher(context.user.id, activity.course))))
+        throw Error("you must be the teacher of the course to see this submission");
+
+      return submission;
+    },
+    activitySubmissions: async (_, { activityId }, context) => {
+      loginCheck(context);
+
+      const activity = await Activity.findById(activityId);
+      if (!(await isCourseTeacher(context.user.id, activity.course)))
+        throw Error("you must be the teacher of the course to see all submissions");
+
+      const filter = { activity: activityId };
+
+      return {
+        data: await Submission.find(filter),
+      };
+    },
   },
 
   Mutation: {
@@ -46,7 +74,7 @@ module.exports = {
       if (!cloudinaryObject.public_id.includes(`Submission_${submissionId}`))
         throw Error("public_id not valid attachment for the post");
 
-      await validateAttachment(attachment);
+      await validateFile(attachment);
       submission.attachment = attachment;
       submission.submittedAt = Date.now();
 
@@ -61,6 +89,23 @@ module.exports = {
       if (submission.submittedAt) throw Error("already submitted");
 
       submission.submittedAt = Date.now();
+
+      return await submission.save();
+    },
+    gradeSubmission: async (_, { submissionId, grade }, context) => {
+      loginCheck(context);
+
+      const submission = await Submission.findById(submissionId);
+      const activity = await Activity.findById(submission.activity);
+      if (!(await isCourseTeacher(context.user.id, activity.course)))
+        throw Error("you must be the teacher of the course to grade this submission");
+
+      if (!submission.submittedAt) throw Error("submission not yet final");
+
+      if (grade > activity.points) throw Error("grade is higher than maximum");
+      if (grade < 0) throw Error("grade is negative");
+
+      submission.grade = grade;
 
       return await submission.save();
     },

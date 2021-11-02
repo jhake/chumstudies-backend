@@ -1,4 +1,4 @@
-const { validateAttachment, destroy } = require("../utils/cloudinary");
+const { validateFile, destroyFile } = require("../utils/cloudinary");
 const { Post, User, Activity, GroupActivity, Course, Group, Comment } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isGroupStudent, isCourseTeacher } = require("../utils/checks");
 
@@ -131,7 +131,7 @@ module.exports = {
       if (!cloudinaryObject.public_id.includes(`Post_${args.id}`))
         throw Error("public_id not valid attachment for the post");
 
-      await validateAttachment(args.attachment);
+      await validateFile(args.attachment);
       post.attachment = args.attachment;
 
       return await post.save();
@@ -144,7 +144,7 @@ module.exports = {
       if (!post) throw Error("post not found");
       if (post.user != context.user.id) throw Error("not your post");
 
-      if (post.attachment) await destroy(post.attachment);
+      if (post.attachment) await destroyFile(post.attachment);
 
       await Post.findOneAndDelete(args.id);
       return true;

@@ -1,6 +1,6 @@
 const cloudinary = require("cloudinary");
 
-module.exports.validateAttachment = async (cloudinaryString) => {
+module.exports.validateFile = async (cloudinaryString) => {
   const cloudinaryData = JSON.parse(cloudinaryString);
   const { public_id, resource_type } = cloudinaryData;
 
@@ -13,7 +13,7 @@ module.exports.validateAttachment = async (cloudinaryString) => {
   );
 };
 
-module.exports.destroy = async (cloudinaryString) => {
+module.exports.destroyFile = async (cloudinaryString) => {
   const cloudinaryData = JSON.parse(cloudinaryString);
   const { public_id, resource_type } = cloudinaryData;
 

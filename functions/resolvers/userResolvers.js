@@ -3,6 +3,7 @@ const cloudinary = require("cloudinary");
 const { accountsPassword } = require("../accounts.js");
 const { User, Student, Teacher } = require("../models/index.js");
 const { loginCheck } = require("../utils/checks.js");
+const { destroyFile, validateFile } = require("../utils/cloudinary.js");
 const generateRandomString = require("../utils/generateRandomString.js");
 
 module.exports = {
@@ -161,6 +162,22 @@ module.exports = {
 
       return await user.save();
     },
+
+    changeProfilePicture: async (_, { profilePicture }, context) => {
+      loginCheck(context);
+
+      const user = context.user;
+
+      const cloudinaryObject = JSON.parse(profilePicture);
+      if (!cloudinaryObject.public_id.includes(`User_${user.id}`)) throw Error("public_id not valid profile picture");
+      if (user.profilePicture) {
+        await destroyFile(user.profilePicture);
+      }
+
+      await validateFile(profilePicture);
+      return await User.findByIdAndUpdate(user.id, { profilePicture }, { new: true });
+    },
+
     editUserInfo: async (_, args, context) => {
       loginCheck(context);
 
