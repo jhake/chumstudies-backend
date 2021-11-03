@@ -9,7 +9,7 @@ module.exports = {
   },
 
   Mutation: {
-    createTask: async (_, { groupSubmissionId, studentId, description, dueAt }, context) => {
+    createTask: async (_, { groupSubmissionId, studentId, title, note, dueAt }, context) => {
       loginCheck(context);
 
       const task = await Task.findOne({ groupSubmission: groupSubmissionId, student: studentId });
@@ -38,8 +38,9 @@ module.exports = {
       const newTask = new Task({
         groupSubmission: groupSubmissionId,
         student: studentId,
-        description: description,
-        dueAt: dueAt,
+        title,
+        note,
+        dueAt,
       });
 
       return await newTask.save();
@@ -69,7 +70,7 @@ module.exports = {
 
       return await task.save();
     },
-    submitTask: async (_, { taskId, attachment }, context) => {
+    submitTask: async (_, { taskId, attachment, description }, context) => {
       loginCheck(context);
 
       const task = await Task.findById(taskId);
@@ -85,6 +86,8 @@ module.exports = {
       await validateFile(attachment);
 
       task.attachment = attachment;
+      task.description = description;
+      task.submittedAt = Date.now();
 
       return await task.save();
     },
