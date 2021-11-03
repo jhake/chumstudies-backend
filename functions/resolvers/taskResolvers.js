@@ -1,8 +1,13 @@
-const { GroupSubmission, GroupActivity, Group, GroupStudent, Task } = require("../models");
+const { GroupSubmission, GroupActivity, Group, GroupStudent, Task, Student } = require("../models");
 const { loginCheck } = require("../utils/checks");
 const { validateFile } = require("../utils/cloudinary");
 
 module.exports = {
+  Task: {
+    student: async ({ student }) => await Student.findById(student),
+    groupSubmission: async ({ groupSubmission }) => await GroupSubmission.findById(groupSubmission),
+  },
+
   Mutation: {
     createTask: async (_, { groupSubmissionId, studentId, description, dueAt }, context) => {
       loginCheck(context);
