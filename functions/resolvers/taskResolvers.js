@@ -1,11 +1,26 @@
 const { GroupSubmission, GroupActivity, Group, GroupStudent, Task, Student } = require("../models");
-const { loginCheck } = require("../utils/checks");
+const { loginCheck, isGroupStudent } = require("../utils/checks");
 const { validateFile } = require("../utils/cloudinary");
 
 module.exports = {
   Task: {
     student: async ({ student }) => await Student.findById(student),
     groupSubmission: async ({ groupSubmission }) => await GroupSubmission.findById(groupSubmission),
+  },
+
+  Query: {
+    task: async (_, { taskId }, context) => {
+      loginCheck(context);
+
+      const task = await Task.findById(taskId);
+      if (!task) return null;
+      const groupSubmission = await GroupSubmission.findById(task.groupSubmission);
+      const allowedToQuery = await isGroupStudent(context.user.id, groupSubmission.group);
+
+      if (!allowedToQuery) throw Error("you must be a groupmate to view this");
+
+      return task;
+    },
   },
 
   Mutation: {
