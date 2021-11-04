@@ -156,6 +156,7 @@ module.exports = gql`
     grade: Int
     createdAt: Date
     submittedAt: Date
+    submittedBy: Student
     group: Group
     groupActivity: GroupActivity
     tasks: TasksResult
