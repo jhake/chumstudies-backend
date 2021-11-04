@@ -60,6 +60,7 @@ module.exports = gql`
   # GroupSubmission
   extend type Mutation {
     createGroupSubmission(groupActivityId: ID!): GroupSubmission
+    submitGroupSubmission(groupSubmissionId: ID!, description: String!, attachment: String): GroupSubmission
   }
 
   # Post

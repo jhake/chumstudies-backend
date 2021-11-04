@@ -1,9 +1,11 @@
-const { GroupActivity, GroupStudent, GroupSubmission, Group, Task } = require("../models/index.js");
+const { GroupActivity, GroupStudent, GroupSubmission, Group, Task, Student } = require("../models/index.js");
 const { loginCheck, isCourseTeacher, isGroupStudent } = require("../utils/checks");
+const { validateFile } = require("../utils/cloudinary.js");
 
 module.exports = {
   GroupSubmission: {
     groupActivity: async ({ groupActivity }) => await GroupActivity.findById(groupActivity),
+    submittedBy: async ({ submittedBy }) => await Student.findById(submittedBy),
     group: async ({ group }) => await Group.findById(group),
     tasks: async ({ id }) => ({
       data: await Task.find({ groupSubmission: id }),
@@ -71,6 +73,31 @@ module.exports = {
       });
 
       return await newGroupSubmission.save();
+    },
+    submitGroupSubmission: async (_, { groupSubmissionId, description, attachment }, context) => {
+      loginCheck(context);
+
+      const groupSubmission = await GroupSubmission.findById(groupSubmissionId);
+      if (!(await isGroupStudent(context.user.id, groupSubmission.group))) throw Error("not your submission");
+
+      if (groupSubmission.submittedAt) throw Error("already submitted");
+
+      if (attachment) {
+        const cloudinaryObject = JSON.parse(attachment);
+
+        if (!cloudinaryObject.public_id.includes(`GroupSubmission_${groupSubmissionId}`))
+          throw Error("public_id not valid attachment for the submission");
+
+        await validateFile(attachment);
+
+        groupSubmission.attachment = attachment;
+      }
+
+      groupSubmission.description = description;
+      groupSubmission.submittedBy = context.user.id;
+      groupSubmission.submittedAt = Date.now();
+
+      return await groupSubmission.save();
     },
   },
 };

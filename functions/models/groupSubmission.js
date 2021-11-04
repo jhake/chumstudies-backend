@@ -8,6 +8,7 @@ module.exports = model(
     grade: { type: Number, min: 0 },
     createdAt: { type: Date, default: Date.now },
     submittedAt: Date,
+    submittedBy: { type: Schema.Types.ObjectId, ref: "Student" },
     group: { type: Schema.Types.ObjectId, ref: "Group" },
     groupActivity: { type: Schema.Types.ObjectId, ref: "GroupActivity" },
 
