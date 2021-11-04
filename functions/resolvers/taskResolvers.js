@@ -91,16 +91,19 @@ module.exports = {
       const task = await Task.findById(taskId);
       if (!task) throw Error("task not found");
       if (task.student != context.user.id) throw Error("not your task");
-      if (task.attachment) throw Error("already submitted");
+      if (task.submittedAt) throw Error("already submitted");
 
-      const cloudinaryObject = JSON.parse(attachment);
+      if (attachment) {
+        const cloudinaryObject = JSON.parse(attachment);
 
-      if (!cloudinaryObject.public_id.includes(`Task_${taskId}`))
-        throw Error("public_id not valid attachment for the task");
+        if (!cloudinaryObject.public_id.includes(`Task_${taskId}`))
+          throw Error("public_id not valid attachment for the task");
 
-      await validateFile(attachment);
+        await validateFile(attachment);
 
-      task.attachment = attachment;
+        task.attachment = attachment;
+      }
+
       task.description = description;
       task.submittedAt = Date.now();
 
