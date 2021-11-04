@@ -41,7 +41,7 @@ module.exports = {
 
       if (!allowedToQuery) throw Error("not allowed to query");
 
-      return await GroupSubmission.find({ groupActivity: groupActivityId, group: groupId });
+      return await GroupSubmission.findOne({ groupActivity: groupActivityId, group: groupId });
     },
     groupActivitySubmissions: async (_, { groupActivityId }, context) => {
       loginCheck(context);
