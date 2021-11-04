@@ -34,7 +34,7 @@ const accountsPassword = new AccountsPassword({
   // This option is called when a new user create an account
   // Inside we can apply our logic to validate the user fields
   validateNewUser: (user) => {
-    return { ...user, isAdmin: false };
+    return { ...user };
   },
 
   twoFactor: {
