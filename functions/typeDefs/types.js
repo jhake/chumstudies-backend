@@ -156,6 +156,7 @@ module.exports = gql`
     grade: Int
     createdAt: Date
     submittedAt: Date
+    submittedBy: Student
     group: Group
     groupActivity: GroupActivity
     tasks: TasksResult
@@ -169,11 +170,14 @@ module.exports = gql`
 
   type Task {
     id: ID
+    title: String
+    note: String
     attachment: String
     description: String
     grade: Int
     dueAt: Date
-    progress: Int
+    createdAt: Date
+    submittedAt: Date
     student: Student
     groupSubmission: GroupSubmission
     status: TaskStatus

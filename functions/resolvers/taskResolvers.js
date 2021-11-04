@@ -1,10 +1,30 @@
-const { GroupSubmission, GroupActivity, Group, GroupStudent, Task } = require("../models");
-const { loginCheck } = require("../utils/checks");
+const { GroupSubmission, GroupActivity, Group, GroupStudent, Task, Student } = require("../models");
+const { loginCheck, isGroupStudent } = require("../utils/checks");
 const { validateFile } = require("../utils/cloudinary");
 
 module.exports = {
+  Task: {
+    student: async ({ student }) => await Student.findById(student),
+    groupSubmission: async ({ groupSubmission }) => await GroupSubmission.findById(groupSubmission),
+  },
+
+  Query: {
+    task: async (_, { taskId }, context) => {
+      loginCheck(context);
+
+      const task = await Task.findById(taskId);
+      if (!task) return null;
+      const groupSubmission = await GroupSubmission.findById(task.groupSubmission);
+      const allowedToQuery = await isGroupStudent(context.user.id, groupSubmission.group);
+
+      if (!allowedToQuery) throw Error("you must be a groupmate to view this");
+
+      return task;
+    },
+  },
+
   Mutation: {
-    createTask: async (_, { groupSubmissionId, studentId, description, dueAt }, context) => {
+    createTask: async (_, { groupSubmissionId, studentId, title, note, dueAt }, context) => {
       loginCheck(context);
 
       const task = await Task.findOne({ groupSubmission: groupSubmissionId, student: studentId });
@@ -33,8 +53,9 @@ module.exports = {
       const newTask = new Task({
         groupSubmission: groupSubmissionId,
         student: studentId,
-        description: description,
-        dueAt: dueAt,
+        title,
+        note,
+        dueAt,
       });
 
       return await newTask.save();
@@ -64,22 +85,27 @@ module.exports = {
 
       return await task.save();
     },
-    submitTask: async (_, { taskId, attachment }, context) => {
+    submitTask: async (_, { taskId, attachment, description }, context) => {
       loginCheck(context);
 
       const task = await Task.findById(taskId);
       if (!task) throw Error("task not found");
       if (task.student != context.user.id) throw Error("not your task");
-      if (task.attachment) throw Error("already submitted");
+      if (task.submittedAt) throw Error("already submitted");
 
-      const cloudinaryObject = JSON.parse(attachment);
+      if (attachment) {
+        const cloudinaryObject = JSON.parse(attachment);
 
-      if (!cloudinaryObject.public_id.includes(`Task_${taskId}`))
-        throw Error("public_id not valid attachment for the task");
+        if (!cloudinaryObject.public_id.includes(`Task_${taskId}`))
+          throw Error("public_id not valid attachment for the task");
 
-      await validateFile(attachment);
+        await validateFile(attachment);
 
-      task.attachment = attachment;
+        task.attachment = attachment;
+      }
+
+      task.description = description;
+      task.submittedAt = Date.now();
 
       return await task.save();
     },

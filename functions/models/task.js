@@ -4,6 +4,8 @@ module.exports = model(
   "Task",
   Schema({
     attachment: String,
+    title: String,
+    note: String,
     description: String,
     dueAt: Date,
     student: { type: Schema.Types.ObjectId, ref: "Student" },
@@ -13,6 +15,8 @@ module.exports = model(
       enum: ["TODO", "IN_PROGRESS", "UNDER_REVIEW", "MISSING", "DONE"],
       default: "TODO",
     },
+    createdAt: { type: Date, default: Date.now },
+    submittedAt: Date,
 
     comments: [
       {
