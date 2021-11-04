@@ -30,6 +30,19 @@ module.exports = {
 
       return groupSubmission;
     },
+    groupSubmissionOfGroup: async (_, { groupActivityId, groupId }, context) => {
+      loginCheck(context);
+
+      const groupActivity = await GroupActivity.findById(groupActivityId);
+
+      const allowedToQuery =
+        (await isCourseTeacher(context.user.id, groupActivity.course)) ||
+        (await isGroupStudent(context.user.id, groupId));
+
+      if (!allowedToQuery) throw Error("not allowed to query");
+
+      return await GroupSubmission.find({ groupActivity: groupActivityId, group: groupId });
+    },
     groupActivitySubmissions: async (_, { groupActivityId }, context) => {
       loginCheck(context);
 
