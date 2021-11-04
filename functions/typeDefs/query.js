@@ -108,6 +108,7 @@ module.exports = gql`
   # GroupSubmission
   extend type Query {
     groupSubmission(groupSubmissionId: ID!): GroupSubmission
+    groupSubmissionOfGroup(groupActivityId: ID!, groupId: ID!): GroupSubmission
     groupActivitySubmissions(groupActivityId: ID!): GroupSubmissionsResult
   }
 
