@@ -1,5 +1,6 @@
 const { Course, Teacher, CourseStudent, Student, Group, GroupStudent } = require("../models/index.js");
-const { loginCheck, isCourseStudent } = require("../utils/checks.js");
+const { loginCheck, isCourseStudent, isCourseTeacher } = require("../utils/checks.js");
+const generateRandomString = require("../utils/generateRandomString.js");
 
 module.exports = {
   Course: {
@@ -167,6 +168,29 @@ module.exports = {
       await newCourseStudent.save();
 
       return course;
+    },
+
+    editCourseInfo: async (_, args, context) => {
+      loginCheck(context);
+
+      const courseId = args.courseId;
+
+      if (!(await isCourseTeacher(context.user.id, courseId)))
+        throw Error("you must be the teacher of this course to edit the information of the course");
+
+      return await Course.findByIdAndUpdate(
+        courseId,
+        {
+          name: args.name,
+          subjCode: args.subjCode,
+          yearAndSection: args.yearAndSection,
+          courseCode: `${args.subjCode}-${args.yearAndSection}-${generateRandomString(5)}`,
+          startsAt: args.startsAt,
+          endsAt: args.endsAt,
+          isActive: args.isActive,
+        },
+        { new: true }
+      );
     },
   },
 };
