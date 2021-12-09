@@ -29,6 +29,15 @@ module.exports = gql`
   # Course
   extend type Mutation {
     createCourse(name: String!, subjCode: String!, yearAndSection: String!, startsAt: Date!, endsAt: Date!): Course
+    editCourseInfo(
+      courseId: ID!
+      name: String
+      subjCode: String
+      yearAndSection: String
+      startsAt: Date
+      endsAt: Date
+      isActive: Boolean
+    ): Course
     joinCourse(courseCode: String!): Course
   }
 
