@@ -1,5 +1,6 @@
 const { Course, Teacher, CourseStudent, Student, Group, GroupStudent } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isCourseTeacher } = require("../utils/checks.js");
+const generateRandomString = require("../utils/generateRandomString.js");
 
 module.exports = {
   Course: {
@@ -183,8 +184,10 @@ module.exports = {
           name: args.name,
           subjCode: args.subjCode,
           yearAndSection: args.yearAndSection,
+          courseCode: `${args.subjCode}-${args.yearAndSection}-${generateRandomString(5)}`,
           startsAt: args.startsAt,
           endsAt: args.endsAt,
+          isActive: args.isActive,
         },
         { new: true }
       );

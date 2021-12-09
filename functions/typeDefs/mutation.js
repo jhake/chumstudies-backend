@@ -36,6 +36,7 @@ module.exports = gql`
       yearAndSection: String
       startsAt: Date
       endsAt: Date
+      isActive: Boolean
     ): Course
     joinCourse(courseCode: String!): Course
   }
