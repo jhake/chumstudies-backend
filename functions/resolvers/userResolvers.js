@@ -185,7 +185,12 @@ module.exports = {
 
       return await User.findByIdAndUpdate(
         user.id,
-        { firstName: args.firstName, middleName: args.middleName, lastName: args.lastName },
+        {
+          firstName: args.firstName,
+          middleName: args.middleName,
+          lastName: args.lastName,
+          "emails.0.address": args.email,
+        },
         { new: true }
       );
     },
