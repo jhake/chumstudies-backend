@@ -31,6 +31,16 @@ module.exports = gql`
     studentCourses: CoursesResult
     teacherCourses: CoursesResult
     studentsWithoutGroup(courseId: ID!): StudentsResult
+    courseActivitiesAndSubmissions(courseId: ID!, studentId: ID!): CourseActivitiesAndSubmissionsResult
+  }
+
+  type CourseActivitiesAndSubmissionsResult {
+    data: [ActivityAndSubmission]
+  }
+
+  type ActivityAndSubmission {
+    activity: Activity
+    submission: Submission
   }
 
   # Post
