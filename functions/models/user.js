@@ -9,6 +9,7 @@ module.exports = model(
     middleName: String,
     lastName: String,
 
+    yearLevel: String,
     schoolIdNumber: String,
     isAdmin: Boolean,
 
