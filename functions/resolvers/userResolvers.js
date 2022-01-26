@@ -198,7 +198,6 @@ module.exports = {
       loginCheck(context);
       if (!context.user.isAdmin) throw Error("must be an admin");
 
-
       return await User.findByIdAndUpdate(
         args.id,
         {
