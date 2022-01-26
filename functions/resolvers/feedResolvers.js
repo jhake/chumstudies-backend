@@ -52,6 +52,8 @@ module.exports = {
     agendaRightSidePanel: async (_, __, context) => {
       loginCheck(context);
 
+      const studentId = context.user.id;
+
       const taskStudents = await taskStudents.find({ student: studentId });
       const taskFilter = {
         _id: {
