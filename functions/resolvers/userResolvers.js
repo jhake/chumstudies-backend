@@ -194,5 +194,21 @@ module.exports = {
         { new: true }
       );
     },
+    adminEditUserInfo: async (_, args, context) => {
+      loginCheck(context);
+      if (!context.user.isAdmin) throw Error("must be an admin");
+
+
+      return await User.findByIdAndUpdate(
+        args.id,
+        {
+          firstName: args.firstName,
+          middleName: args.middleName,
+          lastName: args.lastName,
+          "emails.0.address": args.email,
+        },
+        { new: true }
+      );
+    },
   },
 };
