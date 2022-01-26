@@ -93,12 +93,19 @@ module.exports = gql`
     studentLeftSidePanel: StudentLeftSidePanelResult
     studentHomeFeed: PostsResult
     teacherHomeFeed: PostsResult
+    agendaRightSidePanel: AgendaRightSidePanel
   }
 
   type StudentLeftSidePanelResult {
     courses: [Course]
     studyGroups: [Group]
     classGroups: [Group]
+  }
+
+  type AgendaRightSidePanel {
+    activity: [Activity]
+    groupActivity: [GroupActivity]
+    task: [Task]
   }
 
   # Activity
