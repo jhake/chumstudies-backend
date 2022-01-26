@@ -35,6 +35,7 @@ module.exports = gql`
   }
 
   type CourseActivitiesAndSubmissionsResult {
+    student: Student
     data: [ActivityAndSubmission]
   }
 

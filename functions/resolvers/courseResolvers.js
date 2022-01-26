@@ -166,7 +166,10 @@ module.exports = {
         submission: submissions[index],
       }));
 
-      return { data: retVal };
+      return {
+        student: await Student.findById(studentId),
+        data: retVal,
+      };
     },
   },
 
