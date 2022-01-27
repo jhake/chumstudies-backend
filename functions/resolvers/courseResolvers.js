@@ -161,14 +161,15 @@ module.exports = {
           )
         ))();
 
-      const retVal = activities.map((activity, index) => ({
+      const activitiesAndSubmissions = activities.map((activity, index) => ({
         activity,
         submission: submissions[index],
       }));
 
       return {
+        course,
         student: await Student.findById(studentId),
-        data: retVal,
+        data: activitiesAndSubmissions,
       };
     },
   },
