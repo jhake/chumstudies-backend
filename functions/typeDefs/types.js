@@ -20,6 +20,8 @@ module.exports = gql`
     schoolIdNumber: String
     profilePicture: String
     yearLevel: String
+    courseDept: String
+    section: Int
 
     uploadPreset: String
     isAdmin: Boolean
