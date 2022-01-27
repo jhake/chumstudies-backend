@@ -7,6 +7,8 @@ const {
   Task,
   Activity,
   GroupActivity,
+  Submission,
+  GroupSubmission,
 } = require("../models/index.js");
 
 const { loginCheck } = require("../utils/checks.js");
@@ -54,30 +56,51 @@ module.exports = {
 
       const studentId = context.user.id;
 
-      const taskStudents = await taskStudents.find({ student: studentId });
-      const taskFilter = {
-        _id: {
-          $in: taskStudents?.map(({ task }) => task) ?? [],
-        },
-      };
+      const tasks = await Task.find({ student: studentId, submittedAt: null }).sort({ dueAt: 1 }).limit(2);
+      const submissions = await Submission.find({ student: studentId });
 
-      const activityStudents = await activityStudents.find({ student: studentId });
+      const courseStudents = await CourseStudent.find({
+        student: studentId,
+      });
       const activityFilter = {
-        _id: {
-          $in: activityStudents?.map(({ activity }) => activity) ?? [],
-        },
+        $and: [
+          {
+            course: {
+              $in: courseStudents.map(({ course }) => course),
+            },
+          },
+          {
+            _id: {
+              $nin: submissions.map(({ activity }) => activity),
+            },
+          },
+        ],
       };
+      const activities = await Activity.find(activityFilter).sort({ dueAt: 1 }).limit(2);
 
-      const groupActivityStudents = await groupActivityStudents.find({ student: studentId });
+      const groupStudents = await GroupStudent.find({
+        student: studentId,
+      });
+      const groupSubmissions = await GroupSubmission.find({
+        group: {
+          $in: groupStudents.map(({ group }) => group),
+        },
+      });
       const groupActivityFilter = {
-        _id: {
-          $in: groupActivityStudents?.map(({ groupActivity }) => groupActivity) ?? [],
-        },
+        $and: [
+          {
+            course: {
+              $in: courseStudents.map(({ course }) => course),
+            },
+          },
+          {
+            _id: {
+              $nin: groupSubmissions.map(({ groupActivity }) => groupActivity),
+            },
+          },
+        ],
       };
-
-      const tasks = await Task.find(taskFilter).limit(2);
-      const activities = await Activity.find(activityFilter).limit(2);
-      const groupActivities = await GroupActivity.find(groupActivityFilter).limit(2);
+      const groupActivities = await GroupActivity.find(groupActivityFilter).sort({ dueAt: 1 }).limit(2);
 
       return {
         tasks,
