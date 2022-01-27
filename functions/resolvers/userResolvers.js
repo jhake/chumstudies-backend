@@ -204,6 +204,8 @@ module.exports = {
           firstName: args.firstName,
           middleName: args.middleName,
           lastName: args.lastName,
+          yearLevel: args.yearLevel,
+          schoolIdNumber: args.schoolIdNumber,
           "emails.0.address": args.email,
         },
         { new: true }

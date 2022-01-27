@@ -1,4 +1,15 @@
-const { CourseStudent, GroupStudent, Post, Course, Group } = require("../models/index.js");
+const {
+  CourseStudent,
+  GroupStudent,
+  Post,
+  Course,
+  Group,
+  Task,
+  Activity,
+  GroupActivity,
+  Submission,
+  GroupSubmission,
+} = require("../models/index.js");
 
 const { loginCheck } = require("../utils/checks.js");
 
@@ -39,6 +50,65 @@ module.exports = {
         classGroups,
       };
     },
+
+    agendaRightSidePanel: async (_, __, context) => {
+      loginCheck(context);
+
+      const studentId = context.user.id;
+
+      const tasks = await Task.find({ student: studentId, submittedAt: null }).sort({ dueAt: 1 }).limit(2);
+      const submissions = await Submission.find({ student: studentId });
+
+      const courseStudents = await CourseStudent.find({
+        student: studentId,
+      });
+      const activityFilter = {
+        $and: [
+          {
+            course: {
+              $in: courseStudents.map(({ course }) => course),
+            },
+          },
+          {
+            _id: {
+              $nin: submissions.map(({ activity }) => activity),
+            },
+          },
+        ],
+      };
+      const activities = await Activity.find(activityFilter).sort({ dueAt: 1 }).limit(2);
+
+      const groupStudents = await GroupStudent.find({
+        student: studentId,
+      });
+      const groupSubmissions = await GroupSubmission.find({
+        group: {
+          $in: groupStudents.map(({ group }) => group),
+        },
+      });
+      const groupActivityFilter = {
+        $and: [
+          {
+            course: {
+              $in: courseStudents.map(({ course }) => course),
+            },
+          },
+          {
+            _id: {
+              $nin: groupSubmissions.map(({ groupActivity }) => groupActivity),
+            },
+          },
+        ],
+      };
+      const groupActivities = await GroupActivity.find(groupActivityFilter).sort({ dueAt: 1 }).limit(2);
+
+      return {
+        tasks,
+        activities,
+        groupActivities,
+      };
+    },
+
     studentHomeFeed: async (_, __, context) => {
       loginCheck(context);
 
