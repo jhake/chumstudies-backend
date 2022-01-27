@@ -166,7 +166,11 @@ module.exports = {
         submission: submissions[index],
       }));
 
+      const groupStudents = await GroupStudent.find({ student: studentId });
+      const group = await Group.findOne({ _id: { $in: groupStudents.map(({ group }) => group) }, course: courseId });
+
       return {
+        group,
         course,
         student: await Student.findById(studentId),
         data: activitiesAndSubmissions,
