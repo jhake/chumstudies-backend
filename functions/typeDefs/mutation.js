@@ -10,6 +10,9 @@ module.exports = gql`
       lastName: String!
       schoolIdNumber: String!
       yearLevel: String!
+      courseDept: String!
+      section: Int!
+
       email: String!
       isTeacher: Boolean!
     ): User
