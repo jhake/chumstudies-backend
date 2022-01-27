@@ -23,7 +23,9 @@ module.exports = gql`
       firstName: String
       middleName: String
       lastName: String
+      courseDept: String
       yearLevel: String
+      section: Int
       schoolIdNumber: String
       email: String
     ): User
@@ -35,7 +37,9 @@ module.exports = gql`
     middleName: String
     lastName: String!
     schoolIdNumber: String!
+    courseDept: String!
     yearLevel: String!
+    section: Int
     email: String!
     password: String!
   }
