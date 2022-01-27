@@ -1,5 +1,15 @@
-const { Course, Teacher, CourseStudent, Student, Group, GroupStudent } = require("../models/index.js");
-const { loginCheck, isCourseStudent } = require("../utils/checks.js");
+const {
+  Course,
+  Teacher,
+  CourseStudent,
+  Student,
+  Group,
+  GroupStudent,
+  Activity,
+  Submission,
+} = require("../models/index.js");
+const { loginCheck, isCourseStudent, isCourseTeacher } = require("../utils/checks.js");
+const generateRandomString = require("../utils/generateRandomString.js");
 
 module.exports = {
   Course: {
@@ -128,6 +138,40 @@ module.exports = {
         data: await Student.find(filter),
       };
     },
+
+    courseActivitiesAndSubmissions: async (_, { courseId, studentId }, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      const course = await Course.findById(courseId);
+      if (!course) return null;
+
+      if (course.teacher != userId) throw Error("not the course teacher");
+
+      const filter = { course: courseId };
+
+      const activities = await Activity.find(filter).sort({ _id: -1 });
+      const submissions = await (async () =>
+        Promise.all(
+          activities.map((activity) =>
+            Submission.findOne({
+              activity,
+              student: studentId,
+            })
+          )
+        ))();
+
+      const activitiesAndSubmissions = activities.map((activity, index) => ({
+        activity,
+        submission: submissions[index],
+      }));
+
+      return {
+        course,
+        student: await Student.findById(studentId),
+        data: activitiesAndSubmissions,
+      };
+    },
   },
 
   Mutation: {
@@ -167,6 +211,29 @@ module.exports = {
       await newCourseStudent.save();
 
       return course;
+    },
+
+    editCourseInfo: async (_, args, context) => {
+      loginCheck(context);
+
+      const courseId = args.courseId;
+
+      if (!(await isCourseTeacher(context.user.id, courseId)))
+        throw Error("you must be the teacher of this course to edit the information of the course");
+
+      return await Course.findByIdAndUpdate(
+        courseId,
+        {
+          name: args.name,
+          subjCode: args.subjCode,
+          yearAndSection: args.yearAndSection,
+          courseCode: `${args.subjCode}-${args.yearAndSection}-${generateRandomString(5)}`,
+          startsAt: args.startsAt,
+          endsAt: args.endsAt,
+          isActive: args.isActive,
+        },
+        { new: true }
+      );
     },
   },
 };

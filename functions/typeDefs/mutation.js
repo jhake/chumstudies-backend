@@ -9,11 +9,21 @@ module.exports = gql`
       middleName: String
       lastName: String!
       schoolIdNumber: String!
+      yearLevel: String!
       email: String!
       isTeacher: Boolean!
     ): User
     createAdmin(firstName: String!, middleName: String, lastName: String!, email: String!): User
-    editUserInfo(firstName: String, middleName: String, lastName: String): User
+    editUserInfo(firstName: String, middleName: String, lastName: String, email: String): User
+    adminEditUserInfo(
+      id: ID!
+      firstName: String
+      middleName: String
+      lastName: String
+      yearLevel: String
+      schoolIdNumber: String
+      email: String
+    ): User
     changeProfilePicture(profilePicture: String!): User
   }
 
@@ -22,6 +32,7 @@ module.exports = gql`
     middleName: String
     lastName: String!
     schoolIdNumber: String!
+    yearLevel: String!
     email: String!
     password: String!
   }
@@ -29,6 +40,15 @@ module.exports = gql`
   # Course
   extend type Mutation {
     createCourse(name: String!, subjCode: String!, yearAndSection: String!, startsAt: Date!, endsAt: Date!): Course
+    editCourseInfo(
+      courseId: ID!
+      name: String
+      subjCode: String
+      yearAndSection: String
+      startsAt: Date
+      endsAt: Date
+      isActive: Boolean
+    ): Course
     joinCourse(courseCode: String!): Course
   }
 

@@ -31,6 +31,18 @@ module.exports = gql`
     studentCourses: CoursesResult
     teacherCourses: CoursesResult
     studentsWithoutGroup(courseId: ID!): StudentsResult
+    courseActivitiesAndSubmissions(courseId: ID!, studentId: ID!): CourseActivitiesAndSubmissionsResult
+  }
+
+  type CourseActivitiesAndSubmissionsResult {
+    course: Course
+    student: Student
+    data: [ActivityAndSubmission]
+  }
+
+  type ActivityAndSubmission {
+    activity: Activity
+    submission: Submission
   }
 
   # Post
@@ -83,12 +95,19 @@ module.exports = gql`
     studentLeftSidePanel: StudentLeftSidePanelResult
     studentHomeFeed: PostsResult
     teacherHomeFeed: PostsResult
+    agendaRightSidePanel: AgendaRightSidePanelResult
   }
 
   type StudentLeftSidePanelResult {
     courses: [Course]
     studyGroups: [Group]
     classGroups: [Group]
+  }
+
+  type AgendaRightSidePanelResult {
+    activities: [Activity]
+    groupActivities: [GroupActivity]
+    tasks: [Task]
   }
 
   # Activity
@@ -108,6 +127,7 @@ module.exports = gql`
   # GroupSubmission
   extend type Query {
     groupSubmission(groupSubmissionId: ID!): GroupSubmission
+    groupSubmissionOfGroup(groupActivityId: ID!, groupId: ID!): GroupSubmission
     groupActivitySubmissions(groupActivityId: ID!): GroupSubmissionsResult
   }
 
