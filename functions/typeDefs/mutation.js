@@ -11,7 +11,7 @@ module.exports = gql`
       schoolIdNumber: String!
       yearLevel: String!
       courseDept: String!
-      section: Int!
+      section: String!
 
       email: String!
       isTeacher: Boolean!
@@ -25,7 +25,7 @@ module.exports = gql`
       lastName: String
       courseDept: String
       yearLevel: String
-      section: Int
+      section: String
       schoolIdNumber: String
       email: String
     ): User
@@ -39,7 +39,7 @@ module.exports = gql`
     schoolIdNumber: String!
     courseDept: String!
     yearLevel: String!
-    section: Int
+    section: String
     email: String!
     password: String!
   }
