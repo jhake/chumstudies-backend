@@ -10,6 +10,8 @@ module.exports = model(
     lastName: String,
 
     yearLevel: String,
+    courseDept: String,
+    section: { type: Number, default: 0 },
     schoolIdNumber: String,
     isAdmin: Boolean,
 

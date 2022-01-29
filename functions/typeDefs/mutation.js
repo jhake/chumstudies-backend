@@ -10,6 +10,9 @@ module.exports = gql`
       lastName: String!
       schoolIdNumber: String!
       yearLevel: String!
+      courseDept: String!
+      section: Int!
+
       email: String!
       isTeacher: Boolean!
     ): User
@@ -20,7 +23,9 @@ module.exports = gql`
       firstName: String
       middleName: String
       lastName: String
+      courseDept: String
       yearLevel: String
+      section: Int
       schoolIdNumber: String
       email: String
     ): User
@@ -32,7 +37,9 @@ module.exports = gql`
     middleName: String
     lastName: String!
     schoolIdNumber: String!
+    courseDept: String!
     yearLevel: String!
+    section: Int
     email: String!
     password: String!
   }
@@ -75,12 +82,10 @@ module.exports = gql`
     addAttachmentToSubmission(id: ID!, attachment: String!): Submission
     submitSubmission(id: ID!): Submission
     gradeSubmission(submissionId: ID!, grade: Int!): Submission
-  }
 
-  # GroupSubmission
-  extend type Mutation {
     createGroupSubmission(groupActivityId: ID!): GroupSubmission
     submitGroupSubmission(groupSubmissionId: ID!, description: String!, attachment: String): GroupSubmission
+    gradeGroupSubmission(groupSubmissionId: ID!, grade: Int!): GroupSubmission
   }
 
   # Post
