@@ -11,7 +11,7 @@ module.exports = model(
 
     yearLevel: String,
     courseDept: String,
-    section: { type: Number, default: 0 },
+    section: String,
     schoolIdNumber: String,
     isAdmin: Boolean,
 
