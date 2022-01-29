@@ -112,5 +112,22 @@ module.exports = {
 
       return await groupSubmission.save();
     },
+    gradeGroupSubmission: async (_, { groupSubmissionId, grade }, context) => {
+      loginCheck(context);
+
+      const groupSubmission = await GroupSubmission.findById(groupSubmissionId);
+      const groupActivity = await GroupActivity.findById(groupSubmission.groupActivity);
+      if (!(await isCourseTeacher(context.user.id, groupActivity.course)))
+        throw Error("you must be the teacher of the course to grade this submission");
+
+      if (!groupSubmission.submittedAt) throw Error("submission not yet final");
+
+      if (grade > groupActivity.points) throw Error("grade is higher than maximum");
+      if (grade < 0) throw Error("grade is negative");
+
+      groupSubmission.grade = grade;
+
+      return await groupSubmission.save();
+    },
   },
 };
