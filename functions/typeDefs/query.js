@@ -115,8 +115,8 @@ module.exports = gql`
   extend type Query {
     activity(activityId: ID!): Activity
     groupActivity(groupActivityId: ID!): GroupActivity
-    courseActivities(courseId: ID!): ActivitiesResult
-    courseGroupActivities(courseId: ID!): GroupActivitiesResult
+    courseActivities(courseId: ID!, sortByDueAt: Boolean): ActivitiesResult
+    courseGroupActivities(courseId: ID!, sortByDueAt: Boolean): GroupActivitiesResult
   }
 
   # Submission
