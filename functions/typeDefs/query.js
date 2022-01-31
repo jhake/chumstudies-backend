@@ -136,4 +136,9 @@ module.exports = gql`
   extend type Query {
     task(taskId: ID!): Task
   }
+
+  # Agenda
+  extend type Query {
+    allAgendas: AgendasResult
+  }
 `;
