@@ -107,4 +107,29 @@ module.exports = gql`
     changeTaskStatus(taskId: ID!, status: TaskStatus!): Task
     submitTask(taskId: ID!, attachment: String, description: String!): Task
   }
+
+  # Agenda
+  extend type Mutation {
+    createAgenda(
+      title: String!
+      startsAt: Date
+      endsAt: Date
+      repeat: String
+      attachment: String
+      description: String
+      status: String
+    ): Agenda
+    addAttachmentToAgenda(id: ID!, attachment: String!): Post
+    destroyAgenda(id: ID!): Boolean
+    editAgenda(
+      id: ID!
+      title: String
+      startsAt: Date
+      endsAt: Date
+      repeat: String
+      attachment: String
+      description: String
+      status: String
+    ): Agenda
+  }
 `;
