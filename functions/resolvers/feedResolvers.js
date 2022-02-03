@@ -85,6 +85,7 @@ module.exports = {
         group: {
           $in: groupStudents.map(({ group }) => group),
         },
+        submittedAt: { $exists: true },
       });
       const groupActivityFilter = {
         $and: [
