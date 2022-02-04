@@ -115,8 +115,8 @@ module.exports = gql`
   extend type Query {
     activity(activityId: ID!): Activity
     groupActivity(groupActivityId: ID!): GroupActivity
-    courseActivities(courseId: ID!): ActivitiesResult
-    courseGroupActivities(courseId: ID!): GroupActivitiesResult
+    courseActivities(courseId: ID!, sortByDueAt: Boolean): ActivitiesResult
+    courseGroupActivities(courseId: ID!, sortByDueAt: Boolean): GroupActivitiesResult
   }
 
   # Submission
@@ -135,5 +135,10 @@ module.exports = gql`
   # Task
   extend type Query {
     task(taskId: ID!): Task
+  }
+
+  # Agenda
+  extend type Query {
+    allAgendas: AgendasResult
   }
 `;

@@ -238,4 +238,21 @@ module.exports = gql`
     data: [Comment]
     pagination: Pagination
   }
+
+  type Agenda {
+    id: ID
+    title: String
+    startsAt: Date
+    endsAt: Date
+    repeat: String
+    attachment: String
+    description: String
+    status: String
+    user: User
+  }
+
+  type AgendasResult {
+    data: [Agenda]
+    pagination: Pagination
+  }
 `;

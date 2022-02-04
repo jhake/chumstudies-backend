@@ -60,7 +60,7 @@ module.exports = {
       return groupActivity;
     },
 
-    courseActivities: async (_, { courseId }, context) => {
+    courseActivities: async (_, { courseId, sortByDueAt }, context) => {
       loginCheck(context);
 
       const userId = context.user.id;
@@ -71,12 +71,13 @@ module.exports = {
       if (!inCourse) throw Error("not in course");
 
       const filter = { course: courseId };
+      const sorting = sortByDueAt ? { dueAt: 1 } : { _id: -1 };
 
       return {
-        data: await Activity.find(filter).sort({ _id: -1 }),
+        data: await Activity.find(filter).sort(sorting),
       };
     },
-    courseGroupActivities: async (_, { courseId }, context) => {
+    courseGroupActivities: async (_, { courseId, sortByDueAt }, context) => {
       loginCheck(context);
 
       const userId = context.user.id;
@@ -87,9 +88,10 @@ module.exports = {
       if (!inCourse) throw Error("not in course");
 
       const filter = { course: courseId };
+      const sorting = sortByDueAt ? { dueAt: 1 } : { _id: -1 };
 
       return {
-        data: await GroupActivity.find(filter).sort({ _id: -1 }),
+        data: await GroupActivity.find(filter).sort(sorting),
       };
     },
   },

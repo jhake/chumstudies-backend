@@ -20,6 +20,7 @@ const resolvers = [
   require("./commentResolvers.js"),
   require("./fileResolvers.js"),
   require("./taskResolvers.js"),
+  require("./agendaResolvers"),
 ];
 
 const dateScalar = new GraphQLScalarType({
