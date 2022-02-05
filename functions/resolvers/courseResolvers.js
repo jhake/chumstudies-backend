@@ -7,6 +7,8 @@ const {
   GroupStudent,
   Activity,
   Submission,
+  GroupActivity,
+  GroupSubmission,
 } = require("../models/index.js");
 const { loginCheck, isCourseStudent, isCourseTeacher } = require("../utils/checks.js");
 const generateRandomString = require("../utils/generateRandomString.js");
@@ -174,6 +176,40 @@ module.exports = {
         course,
         student: await Student.findById(studentId),
         data: activitiesAndSubmissions,
+      };
+    },
+
+    courseGroupActivitiesAndGroupSubmissions: async (_, { courseId, groupId }, context) => {
+      loginCheck(context);
+
+      const userId = context.user.id;
+      const course = await Course.findById(courseId);
+      if (!course) return null;
+
+      if (course.teacher != userId) throw Error("not the course teacher");
+
+      const filter = { course: courseId };
+
+      const groupActivities = await GroupActivity.find(filter).sort({ _id: -1 });
+      const groupSubmissions = await (async () =>
+        Promise.all(
+          groupActivities.map((groupActivity) =>
+            Submission.findOne({
+              groupActivity,
+              group: groupId,
+            })
+          )
+        ))();
+
+      const groupActivitiesAndGroupSubmissions = groupActivities.map((groupActivity, index) => ({
+        groupActivity,
+        groupSubmission: groupSubmissions[index],
+      }));
+
+      return {
+        group: await Group.findById(groupId),
+        course,
+        data: groupActivitiesAndGroupSubmissions,
       };
     },
   },
