@@ -194,7 +194,7 @@ module.exports = {
       const groupSubmissions = await (async () =>
         Promise.all(
           groupActivities.map((groupActivity) =>
-            Submission.findOne({
+            GroupSubmission.findOne({
               groupActivity,
               group: groupId,
             })
